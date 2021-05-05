@@ -42,25 +42,35 @@
             @mouseover="visibilityMenuItem(menuItem.key, true)"
             @mouseleave="visibilityMenuItem(menuItem.key, false)"
           >
-            <div class="menu__item-text">
+            <NuxtLink
+              :to="`/${menuItem._id}`"
+              tag="div"
+              class="menu__item-text"
+            >
               {{ menuItem.name }}
-            </div>
+            </NuxtLink>
             <div
               v-show="menuItemsVisibility[menuItem.key]"
               class="menu__item-categories"
             >
               <template v-for="category in menuItem.categories">
                 <div :key="category._id" class="category__item">
-                  <div class="category__item-text">
+                  <NuxtLink
+                    tag="div"
+                    :to="`/${menuItem._id}/${category._id}`"
+                    class="category__item-text"
+                  >
                     {{ category.name }}
-                  </div>
-                  <div
+                  </NuxtLink>
+                  <NuxtLink
                     v-for="childCategory in category.categories"
                     :key="`${menuItem.key}${childCategory._id}`"
+                    tag="div"
+                    :to="`/${menuItem._id}/${childCategory._id}`"
                     class="category__item-child"
                   >
                     {{ childCategory.name }}
-                  </div>
+                  </NuxtLink>
                 </div>
               </template>
             </div>
@@ -274,16 +284,20 @@ export default {
   position: relative;
 
   &__wrapper {
-    background-color: white;
+    background-color: #f3f3f3;
   }
 
   &__item {
     color: black;
     cursor: pointer;
+    font-size: 18px;
+
+    &:hover {
+      background-color: white;
+    }
 
     &-text {
       padding: 15px;
-      font-size: 18px;
 
       &:hover {
         color: #5fc9cb;
@@ -291,6 +305,7 @@ export default {
     }
 
     &-categories {
+      z-index: 100;
       position: absolute;
       left: 0;
       width: 960px;
@@ -303,7 +318,6 @@ export default {
           &-text,
           &-child {
             padding: 5px 15px;
-            font-size: 18px;
 
             &:hover {
               color: #5fc9cb;

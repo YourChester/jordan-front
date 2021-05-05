@@ -2,7 +2,7 @@
   <div class="products-list__wrapper">
     <div class="products-list">
       <v-product-card
-        v-for="product in poroducts"
+        v-for="product in products"
         :key="product._id"
         :product="product"
       />
@@ -18,7 +18,7 @@ export default {
     VProductCard,
   },
   props: {
-    poroducts: {
+    products: {
       type: Array,
       default: () => [],
     },
@@ -26,4 +26,20 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.products-list {
+  display: grid;
+  grid-template-rows: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
+
+  &::v-deep {
+    .product__wrapper {
+      margin: 10px auto;
+    }
+  }
+
+  &__wrapper {
+    width: 100%;
+  }
+}
+</style>

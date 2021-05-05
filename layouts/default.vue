@@ -1,5 +1,5 @@
 <template>
-  <div class="main">
+  <div class="main" :class="$route.path === '/' ? 'home-page' : ''">
     <v-header />
     <div class="container">
       <Nuxt />
@@ -22,10 +22,12 @@ export default {
 
 <style lang="scss" scoped>
 .main {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  background: url('~/assets/img/main-back.jpg') no-repeat center top;
+  &.home-page {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: url('~/assets/img/main-back.jpg') no-repeat center top;
+  }
 
   .container {
     flex-grow: 1;

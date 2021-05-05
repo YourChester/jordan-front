@@ -23,7 +23,7 @@ export default {
       },
     ],
   },
-  css: ['~/assets/css/style.css'],
+  css: ['~/assets/css/style.css', '~/assets/scss/catalog.scss'],
   plugins: [],
   components: true,
   buildModules: ['@nuxtjs/eslint-module'],

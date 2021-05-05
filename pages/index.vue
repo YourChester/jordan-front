@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="products">
     <v-slider :slides="slides" />
     <div class="products__list">
       <v-product-card
@@ -108,7 +108,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .products {
   &__list {
     width: 960px;
