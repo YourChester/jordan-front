@@ -4,13 +4,15 @@
       <div class="slider__slides--wrapper">
         <div ref="slides" class="slider__slides">
           <template v-for="(slide, index) in getCurrentSlides">
-            <div
+            <NuxtLink
               :id="slide.key"
               :key="index + slide.name"
+              tag="div"
+              :to="slide.link"
               class="slider__slide"
             >
               <img :src="slide.img" :alt="slide.nam" />
-            </div>
+            </NuxtLink>
           </template>
         </div>
       </div>
@@ -69,8 +71,7 @@ export default {
   },
   mounted() {
     this.setSettingsValue()
-    this.$refs.slides.addEventListener('transitionend', () => {
-      console.log(this.$refs.slides.childNodes[this.activeSlideIndex])
+    this.$refs.slides.addEventListener('transitionstart', () => {
       if (
         this.$refs.slides.childNodes[this.activeSlideIndex].id === 'lastSlide'
       ) {
@@ -106,7 +107,13 @@ export default {
         -this.slideItemWidth * this.activeSlideIndex
       }px)`
     },
-    selectslide(index) {},
+    selectslide(index) {
+      this.$refs.slides.style.transition = 'transform 0.4s ease-in-out'
+      this.activeSlideIndex = index + 1
+      this.$refs.slides.style.transform = `translateX(${
+        -this.slideItemWidth * this.activeSlideIndex
+      }px)`
+    },
     preSlide() {
       this.$refs.slides.style.transition = 'transform 0.4s ease-in-out'
       this.activeSlideIndex--
@@ -150,6 +157,7 @@ export default {
   &__slide {
     min-width: 100%;
     height: 100%;
+    cursor: pointer;
 
     img {
       width: 100%;
@@ -169,8 +177,14 @@ export default {
       font-size: 16px;
       color: black;
       background-color: white;
+      cursor: pointer;
 
       &.active {
+        color: white;
+        background-color: black;
+      }
+
+      &:hover {
         color: white;
         background-color: black;
       }

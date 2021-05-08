@@ -80,7 +80,6 @@ export default {
 
     h1 {
       color: white;
-      margin: 0;
     }
   }
 }

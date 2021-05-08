@@ -1,17 +1,11 @@
 <template>
   <div>
-    <v-admin-header />
     <Nuxt />
   </div>
 </template>
 
 <script>
-import VAdminHeader from '@/components/VAdminHeader'
-
 export default {
-  components: {
-    VAdminHeader,
-  },
   middleware: 'authAdmin',
 }
 </script>

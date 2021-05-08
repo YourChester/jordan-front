@@ -89,18 +89,22 @@ export default {
         {
           img: '/img/slide_nikeman.jpg',
           name: 'Nike Men',
+          link: '/1',
         },
         {
           img: '/img/slide_nikewomen.jpg',
           name: 'Nike Women',
+          link: '/2',
         },
         {
           img: '/img/slide_jordan.jpg',
           name: 'Jordan',
+          link: '/3',
         },
         {
           img: '/img/slide_shop.jpg',
           name: 'Shop',
+          link: '/4',
         },
       ],
     }

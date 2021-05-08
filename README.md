@@ -12,9 +12,13 @@ $ npm run dev
 # build for production and launch server
 $ npm run build
 $ npm run start
-
-# generate static project
-$ npm run generate
 ```
 
-For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
+
+Создайте файл ```.env``` c настройками:
+```bash
+HOST_PORT=3001
+HOST_URL="localhost"
+API_URL="http://localhost:3000/api"
+HOST_NAME="Jordan Brand :: интернет-магазин"
+```

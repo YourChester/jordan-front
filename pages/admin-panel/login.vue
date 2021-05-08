@@ -7,10 +7,10 @@
       <div class="auth-form__main">
         <div class="input-group">
           <input
-            v-model="form.email"
+            v-model="form.login"
             type="text"
             name="login"
-            placeholder="Email"
+            placeholder="Login"
           />
         </div>
         <div class="input-group">
@@ -31,11 +31,11 @@
 
 <script>
 export default {
-  layout: 'admin',
+  layout: 'auth',
   data: () => {
     return {
       form: {
-        email: '',
+        login: '',
         password: '',
       },
     }

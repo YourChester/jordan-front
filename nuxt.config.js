@@ -45,12 +45,12 @@ export default {
           property: 'token',
         },
         user: {
-          property: 'user',
+          property: 'seller',
         },
         endpoints: {
-          login: { url: '/admin/login', method: 'post' },
-          logout: { url: '/admin/logout', method: 'post' },
-          user: { url: '/admin/loginInfo', method: 'get' },
+          login: { url: '/admin/auth/login', method: 'post' },
+          logout: { url: '/admin/auth/logout', method: 'post' },
+          user: { url: '/admin/auth/user-info', method: 'get' },
         },
       },
     },
