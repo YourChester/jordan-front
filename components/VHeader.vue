@@ -35,12 +35,12 @@
     </div>
     <div class="menu__wrapper">
       <div class="menu">
-        <template v-for="menuItem in menuItems">
+        <template v-for="(menuItem, index) in menuItems">
           <div
             :key="menuItem._id"
             class="menu__item"
-            @mouseover="visibilityMenuItem(menuItem.key, true)"
-            @mouseleave="visibilityMenuItem(menuItem.key, false)"
+            @mouseover="visibilityMenuItem(index, true)"
+            @mouseleave="visibilityMenuItem(index, false)"
           >
             <NuxtLink
               :to="`/${menuItem._id}`"
@@ -50,7 +50,7 @@
               {{ menuItem.name }}
             </NuxtLink>
             <div
-              v-show="menuItemsVisibility[menuItem.key]"
+              v-show="menuItemsVisibility[index]"
               class="menu__item-categories"
             >
               <template v-for="category in menuItem.categories">
@@ -63,8 +63,8 @@
                     {{ category.name }}
                   </NuxtLink>
                   <NuxtLink
-                    v-for="childCategory in category.categories"
-                    :key="`${menuItem.key}${childCategory._id}`"
+                    v-for="childCategory in category.childs"
+                    :key="`${index}${childCategory._id}`"
                     tag="div"
                     :to="`/${menuItem._id}/${childCategory._id}`"
                     class="category__item-child"
@@ -82,135 +82,23 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
   data() {
     return {
       address: 'Донецк, пр. Титова, 8б',
       firstPhone: '+38 095 161 72 67',
       secondPhone: '+38 071 361 97 67',
-      menuItems: [
-        {
-          _id: 1,
-          name: 'Мужчины',
-          key: 'men',
-          categories: [
-            {
-              _id: 4,
-              name: 'Обувь',
-              categories: [
-                {
-                  _id: 7,
-                  name: 'Категория',
-                },
-              ],
-            },
-            {
-              _id: 5,
-              name: 'Одежда',
-              categories: [
-                {
-                  _id: 8,
-                  name: 'Категория',
-                },
-              ],
-            },
-            {
-              _id: 6,
-              name: 'Аксессуары',
-              categories: [
-                {
-                  _id: 9,
-                  name: 'Категория',
-                },
-              ],
-            },
-          ],
-        },
-        {
-          _id: 2,
-          name: 'Женщины',
-          key: 'women',
-          categories: [
-            {
-              _id: 4,
-              name: 'Обувь',
-              categories: [
-                {
-                  _id: 7,
-                  name: 'Категория',
-                },
-              ],
-            },
-            {
-              _id: 5,
-              name: 'Одежда',
-              categories: [
-                {
-                  _id: 8,
-                  name: 'Категория',
-                },
-              ],
-            },
-            {
-              _id: 6,
-              name: 'Аксессуары',
-              categories: [
-                {
-                  _id: 9,
-                  name: 'Категория',
-                },
-              ],
-            },
-          ],
-        },
-        {
-          _id: 3,
-          name: 'Дети',
-          key: 'children',
-          categories: [
-            {
-              _id: 4,
-              name: 'Обувь',
-              categories: [
-                {
-                  _id: 7,
-                  name: 'Категория',
-                },
-              ],
-            },
-            {
-              _id: 5,
-              name: 'Одежда',
-              categories: [
-                {
-                  _id: 8,
-                  name: 'Категория',
-                },
-              ],
-            },
-            {
-              _id: 6,
-              name: 'Аксессуары',
-              categories: [
-                {
-                  _id: 9,
-                  name: 'Категория',
-                },
-              ],
-            },
-          ],
-        },
-      ],
-      menuItemsVisibility: {
-        men: false,
-        women: false,
-        children: false,
-      },
+      menuItemsVisibility: [false, false, false, false],
     }
   },
+  computed: {
+    ...mapGetters({ menuItems: 'codeBooks/menuTree' }),
+  },
   methods: {
-    visibilityMenuItem(key, state) {
-      this.menuItemsVisibility[key] = state
+    visibilityMenuItem(index, state) {
+      this.$set(this.menuItemsVisibility, index, state)
     },
   },
 }

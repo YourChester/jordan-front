@@ -6,7 +6,7 @@
       </div>
       <div class="catalog__right-side">
         <div class="right-side">
-          <h1 class="right-side__title">{{ filters.category }}</h1>
+          <h1 class="right-side__title">{{ getTitlePage }}</h1>
           <div class="right-side__count-filter">Показать товаров</div>
         </div>
         <v-products-list :products="products" />
@@ -16,6 +16,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import VProductsFilters from '@/components/VProductsFilters'
 import VProductsList from '@/components/VProductsList'
 
@@ -24,81 +25,30 @@ export default {
     VProductsList,
     VProductsFilters,
   },
-  data() {
-    return {
-      products: [
-        {
-          _id: 1,
-          name: 'Nike Jordan',
-          articul: 'BV9299-010',
-          price: '12490',
-        },
-        {
-          _id: 2,
-          name: 'Nike Jordan',
-          articul: 'BV9299-010',
-          price: '12490',
-        },
-        {
-          _id: 3,
-          name: 'Nike Jordan Nike Jordan Nike Jordan',
-          articul: 'BV9299-010',
-          price: '12490',
-        },
-        {
-          _id: 4,
-          name: 'Nike Jordan',
-          articul: 'BV9299-010',
-          price: '12490',
-        },
-        {
-          _id: 5,
-          name: 'Nike Jordan',
-          articul: 'BV9299-010',
-          price: '12490',
-        },
-        {
-          _id: 6,
-          name: 'Nike Jordan',
-          articul: 'BV9299-010',
-          price: '12490',
-        },
-        {
-          _id: 7,
-          name: 'Nike Jordan',
-          articul: 'BV9299-010',
-          price: '12490',
-        },
-        {
-          _id: 8,
-          name: 'Nike Jordan',
-          articul: 'BV9299-010',
-          price: '12490',
-          discount: 10,
-        },
-        {
-          _id: 9,
-          name: 'Nike Jordan Nike Jordan Nike Jordan',
-          articul: 'BV9299-010',
-          price: '12490',
-        },
-        {
-          _id: 10,
-          name: 'Nike Jordan',
-          articul: 'BV9299-010',
-          price: '12490',
-        },
-      ],
-      filters: {
-        gender: '',
-        category: '',
-        brand: '',
+  async asyncData({ $axios, params }) {
+    const titlePage = params.category
+    const filters = {
+      gender: params.gender || '',
+      category: params.category || '',
+      brand: '',
+    }
+    const productsData = await $axios.get('/products', {
+      params: {
+        limit: 25,
+        ...params,
       },
+    })
+    return {
+      products: productsData.data.products,
+      filters,
+      titlePage,
     }
   },
-  created() {
-    this.filters.gender = this.$route.params.gender
-    this.filters.category = this.$route.params.category
+  computed: {
+    ...mapGetters({ categories: 'codeBooks/categories' }),
+    getTitlePage() {
+      return this.categories.find((el) => el._id === this.titlePage)?.name || ''
+    },
   },
   methods: {
     clearFilters() {

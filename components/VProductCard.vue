@@ -27,7 +27,7 @@
         <span v-show="isProductHaveDiscount" class="discount_price">
           {{ getDiscountPrice }} РУБ
         </span>
-        <span class="price"> {{ product.price }} РУБ </span>
+        <span class="price"> {{ product.priceOut }} РУБ </span>
       </div>
     </div>
   </NuxtLink>
@@ -50,8 +50,8 @@ export default {
     },
     getDiscountPrice() {
       return (
-        this.product?.price -
-        (this.product?.price * this.product?.discount) / 100
+        this.product?.priceOut -
+        (this.product?.priceOut * this.product?.discount) / 100
       )
     },
   },

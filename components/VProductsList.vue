@@ -4,7 +4,7 @@
       <v-product-card
         v-for="product in products"
         :key="product._id"
-        :product="product"
+        :product="product.products[0]"
       />
     </div>
   </div>

@@ -5,7 +5,7 @@
       <v-product-card
         v-for="product in products"
         :key="product._id"
-        :product="product"
+        :product="product.products[0]"
       />
     </div>
   </div>
@@ -20,71 +20,16 @@ export default {
     VProductCard,
     VSlider,
   },
+  async asyncData({ $axios }) {
+    const productsData = await $axios.get('/products', {
+      params: { limit: 10 },
+    })
+    return {
+      products: productsData.data.products,
+    }
+  },
   data() {
     return {
-      products: [
-        {
-          _id: 1,
-          name: 'Nike Jordan',
-          articul: 'BV9299-010',
-          price: '12490',
-        },
-        {
-          _id: 2,
-          name: 'Nike Jordan',
-          articul: 'BV9299-010',
-          price: '12490',
-        },
-        {
-          _id: 3,
-          name: 'Nike Jordan Nike Jordan Nike Jordan',
-          articul: 'BV9299-010',
-          price: '12490',
-        },
-        {
-          _id: 4,
-          name: 'Nike Jordan',
-          articul: 'BV9299-010',
-          price: '12490',
-        },
-        {
-          _id: 5,
-          name: 'Nike Jordan',
-          articul: 'BV9299-010',
-          price: '12490',
-        },
-        {
-          _id: 6,
-          name: 'Nike Jordan',
-          articul: 'BV9299-010',
-          price: '12490',
-        },
-        {
-          _id: 7,
-          name: 'Nike Jordan',
-          articul: 'BV9299-010',
-          price: '12490',
-        },
-        {
-          _id: 8,
-          name: 'Nike Jordan',
-          articul: 'BV9299-010',
-          price: '12490',
-          discount: 10,
-        },
-        {
-          _id: 9,
-          name: 'Nike Jordan Nike Jordan Nike Jordan',
-          articul: 'BV9299-010',
-          price: '12490',
-        },
-        {
-          _id: 10,
-          name: 'Nike Jordan',
-          articul: 'BV9299-010',
-          price: '12490',
-        },
-      ],
       slides: [
         {
           img: '/img/slide_nikeman.jpg',

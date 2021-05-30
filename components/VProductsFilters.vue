@@ -10,10 +10,10 @@
         </div>
         <div class="products-filters__filters-active">
           <div v-show="filters.gender" class="filters-active__gender">
-            Пол: {{ filters.gender }}
+            Пол: {{ getGendersName }}
           </div>
           <div v-show="filters.category" class="filters-active__category">
-            Категория: {{ filters.category }}
+            Категория: {{ getCategoryName }}
           </div>
           <div v-show="filters.brand" class="filters-active__brand">
             Бренд: {{ filters.brand }}
@@ -29,6 +29,8 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
   props: {
     filters: {
@@ -37,6 +39,10 @@ export default {
     },
   },
   computed: {
+    ...mapGetters({
+      categories: 'codeBooks/categories',
+      genders: 'codeBooks/genders',
+    }),
     isFiltersEmpty() {
       let haveSomeFilters = false
       for (const key in this.filters) {
@@ -45,6 +51,17 @@ export default {
         }
       }
       return haveSomeFilters
+    },
+    getCategoryName() {
+      return (
+        this.categories.find((el) => el._id === this.filters.category)?.name ||
+        ''
+      )
+    },
+    getGendersName() {
+      return (
+        this.genders.find((el) => el._id === this.filters.gender)?.name || ''
+      )
     },
   },
   methods: {
