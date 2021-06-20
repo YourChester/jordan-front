@@ -21,15 +21,20 @@ export default {
     VSlider,
   },
   async asyncData({ $axios }) {
-    const productsData = await $axios.get('/products', {
-      params: { limit: 10 },
-    })
-    return {
-      products: productsData.data.products,
+    try {
+      const productsData = await $axios.get('/products', {
+        params: { limit: 10 },
+      })
+      return {
+        products: productsData.data.products,
+      }
+    } catch (e) {
+      console.log(e)
     }
   },
   data() {
     return {
+      products: [],
       slides: [
         {
           img: '/img/slide_nikeman.jpg',
@@ -62,6 +67,7 @@ export default {
   &__list {
     width: 960px;
     margin: 0 auto;
+    padding: 20px 0;
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;

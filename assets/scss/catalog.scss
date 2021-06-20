@@ -21,7 +21,35 @@
       padding: 0 13px;
 
       &__count-filter {
+        display: flex;
+        width: 54%;
+        justify-content: space-between;
+        align-items: center;
         font-size: 14px;
+
+        .filter-count {
+          &__title {
+            margin-right: 15px;
+          }
+
+          &__item {
+            padding: 0 12px;
+            border-left: 1px solid black;
+            cursor: pointer;
+
+            &:last-child {
+              border-right: 1px solid black;
+            }
+
+            &:hover {
+              background-color: #f3f3f3;
+            }
+
+            &.active {
+              font-weight: 600;
+            }
+          }
+        } 
       }
     }
   }

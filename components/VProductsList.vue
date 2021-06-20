@@ -5,6 +5,7 @@
         v-for="product in products"
         :key="product._id"
         :product="product.products[0]"
+        :images="product.images"
       />
     </div>
   </div>

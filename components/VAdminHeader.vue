@@ -33,12 +33,32 @@ export default {
     return {
       links: [
         {
-          name: 'Товар',
+          name: 'Склад',
           path: '/admin-panel',
         },
         {
-          name: 'Бренд',
-          path: '/admin-panel/brands',
+          name: 'Продажи',
+          path: '/admin-panel/sold',
+        },
+        {
+          name: 'Приход',
+          path: '/admin-panel/new-product',
+        },
+        {
+          name: 'Карты',
+          path: '/admin-panel/discount-card',
+        },
+        {
+          name: 'Новые карты',
+          path: '/admin-panel/new-discount-card',
+        },
+        {
+          name: 'Клиенты',
+          path: '/admin-panel/client',
+        },
+        {
+          name: 'Новые клиенты',
+          path: '/admin-panel/new-client',
         },
       ],
     }

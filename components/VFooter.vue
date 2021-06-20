@@ -30,6 +30,7 @@ export default {
   color: white;
 
   &__wrapper {
+    padding: 20px 0;
     background-color: #282828;
   }
 

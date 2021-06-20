@@ -33,10 +33,11 @@ export default {
 
 <style lang="scss" scoped>
 .main {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+
   &.home-page {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
     background: url('~/assets/img/main-back.jpg') no-repeat center top;
   }
 

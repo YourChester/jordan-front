@@ -14,6 +14,7 @@
             :key="`${index}${header.title}`"
             :class="header.class"
             :style="header.style"
+            @click="$emit('click', item)"
           >
             <slot :name="header.key" :row="item" :header="header">
               {{ item[header.key] }}
@@ -50,10 +51,11 @@ export default {
   border-collapse: collapse;
 
   th {
-    padding: 8px;
-    font-size: 14px;
+    padding: 4px;
+    font-size: 12px;
     text-align: left;
     border-bottom: 1px solid black;
+    border-top: 1px solid black;
     font-weight: 600;
   }
 
@@ -66,9 +68,11 @@ export default {
   }
 
   td {
-    padding: 8px;
-    font-size: 14px;
-    font-weight: 400;
+    border-bottom: 1px solid black;
+    border-top: 1px solid black;
+    padding: 4px;
+    font-size: 12px;
+    font-weight: 500;
   }
 }
 </style>

@@ -30,6 +30,7 @@ export default {
   styleResources: {
     scss: [],
   },
+  env: process.env,
   modules: ['@nuxtjs/style-resources', '@nuxtjs/axios', '@nuxtjs/auth-next'],
   axios: {
     baseURL: process.env.API_URL,

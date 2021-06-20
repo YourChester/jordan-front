@@ -46,6 +46,7 @@
               :to="`/${menuItem._id}`"
               tag="div"
               class="menu__item-text"
+              @click.native="visibilityMenuItem(index, false)"
             >
               {{ menuItem.name }}
             </NuxtLink>
@@ -59,6 +60,7 @@
                     tag="div"
                     :to="`/${menuItem._id}/${category._id}`"
                     class="category__item-text"
+                    @click.native="visibilityMenuItem(index, false)"
                   >
                     {{ category.name }}
                   </NuxtLink>
@@ -68,6 +70,7 @@
                     tag="div"
                     :to="`/${menuItem._id}/${childCategory._id}`"
                     class="category__item-child"
+                    @click.native="visibilityMenuItem(index, false)"
                   >
                     {{ childCategory.name }}
                   </NuxtLink>

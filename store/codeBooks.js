@@ -2,12 +2,14 @@ export const state = () => ({
   menuTree: [],
   genders: [],
   categories: [],
+  sizes: [],
 })
 
 export const getters = {
   menuTree: (state) => state.menuTree,
   genders: (state) => state.genders,
   categories: (state) => state.categories,
+  sizes: (state) => state.sizes,
 }
 
 export const mutations = {
@@ -20,6 +22,9 @@ export const mutations = {
   SET_CATEGORIES(state, value) {
     state.categories = value
   },
+  SET_SIZES(state, value) {
+    state.sizes = value
+  },
 }
 
 export const actions = {
@@ -31,5 +36,8 @@ export const actions = {
   },
   setCategories({ commit }, value) {
     commit('SET_CATEGORIES', value)
+  },
+  setSizes({ commit }, value) {
+    commit('SET_SIZES', value)
   },
 }

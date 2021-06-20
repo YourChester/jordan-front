@@ -1,10 +1,10 @@
 <template>
-  <NuxtLink to="/" class="product__wrapper">
+  <NuxtLink :to="`/product/${product._id}`" class="product__wrapper">
     <div class="product">
       <div class="product__image">
         <img
           v-if="isProductHaveImages"
-          :src="product.images[0]"
+          :src="`${url}${images[0]}`"
           :alt="product.name"
         />
         <img
@@ -40,10 +40,19 @@ export default {
       type: Object,
       default: () => {},
     },
+    images: {
+      type: Array,
+      default: () => [],
+    },
+  },
+  data: () => {
+    return {
+      url: process.env.IMG_URL,
+    }
   },
   computed: {
     isProductHaveImages() {
-      return this.product?.images?.length
+      return this.images.length
     },
     isProductHaveDiscount() {
       return this.product?.discount
