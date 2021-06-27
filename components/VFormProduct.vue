@@ -77,8 +77,8 @@
           <input v-model="product.codeBox" type="text" />
         </label>
         <label>
-          Распаковка:
-          <input type="checkbox" />
+          Распаровка:
+          <input v-model="product.notPair" type="checkbox" />
         </label>
         <label>
           Дата получения:
@@ -142,6 +142,7 @@ export default {
         comment: '',
         dateIn: '',
         visibility: true,
+        notPair: false,
       },
     }
   },
@@ -175,6 +176,7 @@ export default {
     },
   },
   created() {
+    console.log(this.$router.currentRoute)
     this.debounceSerch = debounce(this.getProductByArticul, 1000)
     if (this.productProps) {
       this.images = this.productProps.images
@@ -184,6 +186,10 @@ export default {
         ...this.productProps,
         dateIn: getDateTimeForInput(this.productProps.dateIn),
       }
+    }
+    if (this.$router.currentRoute.query.articul) {
+      this.product.articul = this.$router.currentRoute.query.articul
+      this.getProductByArticul()
     }
   },
   methods: {
@@ -199,10 +205,12 @@ export default {
           this.product = {
             ...this.product,
             ...productsData.data.product,
+            visibility: true,
             articul: this.product.articul,
             discount: 0,
             size: '',
             dateIn: getDateTimeForInput(new Date()),
+            createAt: getDateTimeForInput(new Date()),
           }
 
           delete this.product._id

@@ -17,8 +17,17 @@ export default {
     }
   },
   methods: {
-    saveProduct(form) {
-      console.log(form)
+    async saveProduct(form) {
+      try {
+        const payload = JSON.parse(JSON.stringify(form))
+
+        payload.dateIn = payload.dateIn ? new Date(payload.dateIn) : ''
+
+        await this.$axios.put(`/admin/products/${this.product._id}`, payload)
+        this.$router.push('/admin-panel')
+      } catch (e) {
+        console.log(e)
+      }
     },
   },
 }

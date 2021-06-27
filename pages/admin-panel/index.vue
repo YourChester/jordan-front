@@ -1,5 +1,6 @@
 <template>
   <div class="store">
+    <h1>Склад</h1>
     <div class="store__table-filter">
       <label class="table-filter__search">
         Поиск
@@ -19,7 +20,7 @@
           <th colspan="2">Штрих код</th>
           <th rowspan="2" width="130px">Дата получения</th>
           <th rowspan="3" width="150px">Пол</th>
-          <th rowspan="2" colspan="3">Действия</th>
+          <th rowspan="2" colspan="2">Действия</th>
         </tr>
         <tr>
           <th width="130px">Товара</th>
@@ -37,7 +38,6 @@
           <td></td>
           <td></td>
           <th>Прих.</th>
-          <th>Прод.</th>
           <th>Прав.</th>
         </tr>
         <tr v-for="product in products" :key="product._id">
@@ -89,11 +89,19 @@
                 type="checkbox"
                 name=""
                 :value="gender._id"
+                @change="changeGender(product)"
               />
             </label>
           </td>
-          <td></td>
-          <td></td>
+          <td>
+            <NuxtLink
+              class="link"
+              :to="`/admin-panel/new-product?articul=${product.articul}`"
+              tag="div"
+            >
+              +
+            </NuxtLink>
+          </td>
           <td>
             <NuxtLink
               class="link"
@@ -212,6 +220,15 @@ export default {
     visibilityImageModal(imgUrl, state) {
       this.imageUrl = imgUrl
       this.modalVisibility = state
+    },
+    async changeGender(product) {
+      try {
+        await this.$axios.put(`/admin/products/${product._id}`, {
+          gender: product.gender,
+        })
+      } catch (e) {
+        console.log(e)
+      }
     },
   },
 }

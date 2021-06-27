@@ -20,6 +20,7 @@
           {{ getSellerShorName }} - {{ getSellerRole }}
         </div>
         <div class="user__actions">
+          <button @click="$router.push('/')">На сайт</button>
           <button @click="logOut">Выйти</button>
         </div>
       </div>
@@ -37,12 +38,12 @@ export default {
           path: '/admin-panel',
         },
         {
-          name: 'Продажи',
-          path: '/admin-panel/sold',
-        },
-        {
           name: 'Приход',
           path: '/admin-panel/new-product',
+        },
+        {
+          name: 'Продажи',
+          path: '/admin-panel/sold',
         },
         {
           name: 'Карты',
@@ -50,7 +51,7 @@ export default {
         },
         {
           name: 'Новые карты',
-          path: '/admin-panel/new-discount-card',
+          path: '/admin-panel/discount-card/new-discount-card',
         },
         {
           name: 'Клиенты',
@@ -65,8 +66,8 @@ export default {
   },
   computed: {
     getSellerShorName() {
-      const { firstName, lastName, middleName } = this.$auth.$state.user
-      return `${firstName} ${lastName?.[0]}. ${middleName?.[0]}`
+      const { name } = this.$auth.$state.user
+      return `${name}`
     },
     getSellerRole() {
       const { role } = this.$auth.$state.user

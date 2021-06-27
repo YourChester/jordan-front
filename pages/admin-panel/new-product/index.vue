@@ -16,6 +16,7 @@ export default {
         await this.$axios.post(`/admin/products`, {
           ...form,
         })
+        this.$router.push('/admin-panel')
       } catch (e) {
         console.log(e)
       }
