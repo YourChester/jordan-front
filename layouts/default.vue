@@ -1,5 +1,5 @@
 <template>
-  <div class="main" :class="$route.path === '/' ? 'home-page' : ''">
+  <div class="main" :class="$route.fullPath === '/' ? 'home' : ''">
     <v-header />
     <div class="container">
       <Nuxt />
@@ -41,7 +41,7 @@ export default {
   display: flex;
   flex-direction: column;
 
-  &.home-page {
+  &.home {
     background: url('~/assets/img/main-back.jpg') no-repeat center top;
   }
 

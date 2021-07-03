@@ -92,7 +92,7 @@ export default {
     getSizes() {
       const sizes = []
       this.products.forEach((el) => {
-        if (el.size) {
+        if (el.size && !sizes.includes(el.size)) {
           sizes.push(el.size)
         }
       })
