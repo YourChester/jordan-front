@@ -225,6 +225,9 @@ export default {
     categoryData(newVal) {
       this.$emit('set-filter', { key: 'category', value: newVal })
     },
+    gendersData(newVal) {
+      this.$emit('set-filter', { key: 'gender', value: newVal })
+    },
   },
   created() {
     this.categoryData = this.filters.category

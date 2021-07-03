@@ -176,7 +176,6 @@ export default {
     },
   },
   created() {
-    console.log(this.$router.currentRoute)
     this.debounceSerch = debounce(this.getProductByArticul, 1000)
     if (this.productProps) {
       this.images = this.productProps.images

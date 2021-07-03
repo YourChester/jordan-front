@@ -57,9 +57,7 @@
       </table>
     </div>
     <div class="discount-card__pagination">
-      <div class="discount-card__pagination-total">
-        Всего на складе: {{ totalCount }}
-      </div>
+      <div class="discount-card__pagination-total">Всего: {{ totalCount }}</div>
       <div
         v-show="totalPages > 1"
         class="discount-card__pagination-page_control"
@@ -92,17 +90,21 @@ import { getDateWithTime } from '@/assets/utils/date'
 export default {
   layout: 'admin',
   async asyncData({ $axios }) {
-    const discountCardsData = await $axios.get('/admin/discount-cards', {
-      params: {
-        limit: 100,
-        page: 1,
-      },
-    })
-    return {
-      currentPage: 1,
-      totalCount: discountCardsData.data.totalCount,
-      totalPages: discountCardsData.data.totalPages,
-      discountCards: discountCardsData.data.discountCards,
+    try {
+      const discountCardsData = await $axios.get('/admin/discount-cards', {
+        params: {
+          limit: 100,
+          page: 1,
+        },
+      })
+      return {
+        currentPage: 1,
+        totalCount: discountCardsData.data.totalCount,
+        totalPages: discountCardsData.data.totalPages,
+        discountCards: discountCardsData.data.discountCards,
+      }
+    } catch (e) {
+      console.log(e)
     }
   },
   data() {
@@ -120,21 +122,29 @@ export default {
       return getDateWithTime(data)
     },
     async getList() {
-      const {
-        data: { discountCards, totalCount, totalPages },
-      } = await this.$axios.get('/admin/discount-cards', {
-        params: {
-          limit: 100,
-          page: this.currentPage,
-        },
-      })
-      this.discountCards = discountCards
-      this.totalCount = totalCount
-      this.totalPages = totalPages
+      try {
+        const {
+          data: { discountCards, totalCount, totalPages },
+        } = await this.$axios.get('/admin/discount-cards', {
+          params: {
+            limit: 100,
+            page: this.currentPage,
+          },
+        })
+        this.discountCards = discountCards
+        this.totalCount = totalCount
+        this.totalPages = totalPages
+      } catch (e) {
+        console.log(e)
+      }
     },
     async deleteCard(id) {
-      await this.$axios.delete(`/admin/discount-cards/${id}`)
-      this.getList()
+      try {
+        await this.$axios.delete(`/admin/discount-cards/${id}`)
+        this.getList()
+      } catch (e) {
+        console.log(e)
+      }
     },
   },
 }

@@ -24,7 +24,7 @@ export default {
     ],
   },
   css: ['~/assets/css/style.css', '~/assets/scss/catalog.scss'],
-  plugins: [],
+  plugins: ['~/plugins/axios'],
   components: true,
   buildModules: ['@nuxtjs/eslint-module'],
   styleResources: {
@@ -38,7 +38,7 @@ export default {
   auth: {
     redirect: {
       login: '/admin-panel/login',
-      home: '/admin-panel',
+      home: '/admin-panel/products',
     },
     strategies: {
       local: {

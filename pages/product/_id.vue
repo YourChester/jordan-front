@@ -505,13 +505,17 @@ import { mapGetters } from 'vuex'
 
 export default {
   async asyncData({ $axios, params }) {
-    const productData = await $axios.get(`/products/${params.id}`)
-    const product = productData.data.product
-    const currentImage = 0
+    try {
+      const productData = await $axios.get(`/products/${params.id}`)
+      const product = productData.data.product
+      const currentImage = 0
 
-    return {
-      product,
-      currentImage,
+      return {
+        product,
+        currentImage,
+      }
+    } catch (e) {
+      console.log(e)
     }
   },
   data: () => {

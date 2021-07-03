@@ -11,7 +11,7 @@
       </div>
       <div class="catalog__right-side">
         <div class="right-side">
-          <h1 class="right-side__title">{{ getTitlePage }}</h1>
+          <h1 class="right-side__title">Весь каталог</h1>
           <div class="right-side__count-filter">
             <div class="filter-count__title">Показать товаров</div>
             <div
@@ -88,37 +88,31 @@ export default {
     VProductsFilters,
   },
   async asyncData({ $axios, params }) {
-    const titlePage = params.category
-    const filters = {
-      gender: params.gender || '',
-      category: params.category || '',
-      brand: [],
-      size: [],
-      limit: 12,
-    }
-    const productsData = await $axios.get('/products', {
-      params: {
-        ...filters,
-      },
-    })
-    const filtersSize = await $axios.get('/filters/filter-size', {
-      params: {
-        ...filters,
-      },
-    })
-    const filtersBrand = await $axios.get('/filters/filter-brand', {
-      params: {
-        ...filters,
-      },
-    })
-    return {
-      filtersValue: {
-        sizes: filtersSize.data.sizes,
-        brands: filtersBrand.data.brands,
-      },
-      products: productsData.data.products,
-      filters,
-      titlePage,
+    try {
+      const titlePage = params.category
+      const filters = {
+        gender: params.gender || '',
+        category: params.category || '',
+        brand: [],
+        size: [],
+        limit: 12,
+      }
+      const productsData = await $axios.get('/products', {
+        params: {
+          ...filters,
+        },
+      })
+      return {
+        filtersValue: {
+          sizes: [],
+          brands: [],
+        },
+        products: productsData.data.products,
+        filters,
+        titlePage,
+      }
+    } catch (e) {
+      console.log(e)
     }
   },
   data: () => {
@@ -127,6 +121,7 @@ export default {
       products: [],
       filters: {},
       titlePage: '',
+      limit: 12,
     }
   },
   computed: {
@@ -137,34 +132,29 @@ export default {
   },
   methods: {
     async getData() {
-      const productsData = await this.$axios.get('/products', {
-        params: {
-          limit: 25,
-          ...this.filters,
-        },
-      })
-      const filtersSize = await this.$axios.get('/filters/filter-size', {
-        params: {
-          ...this.filters,
-        },
-      })
-      const filtersBrand = await this.$axios.get('/filters/filter-brand', {
-        params: {
-          ...this.filters,
-        },
-      })
-      this.filtersValue = {
-        sizes: filtersSize.data.sizes,
-        brands: filtersBrand.data.brands,
+      try {
+        const productsData = await this.$axios.get('/products', {
+          params: {
+            limit: 25,
+            ...this.filters,
+          },
+        })
+        this.filtersValue = {
+          sizes: [],
+          brands: [],
+        }
+        this.products = productsData.data.products
+      } catch (e) {
+        console.log(e)
       }
-      this.products = productsData.data.products
     },
     clearFilters() {
       this.filters = {
-        gender: '',
-        category: '',
-        brand: '',
-        size: '',
+        filtersValue: {},
+        products: [],
+        filters: {},
+        titlePage: '',
+        limit: 12,
       }
       this.getData()
     },
@@ -172,7 +162,13 @@ export default {
       this.filters[key] = value
       if (key === 'category') {
         this.$router.push(
-          `/${this.filters.gender}${
+          `/store/${this.filters.gender}${
+            this.filters.category ? '/' + this.filters.category : ''
+          }`
+        )
+      } else if (key === 'gender') {
+        this.$router.push(
+          `/store/${this.filters.gender}${
             this.filters.category ? '/' + this.filters.category : ''
           }`
         )

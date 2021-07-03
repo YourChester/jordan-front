@@ -83,7 +83,6 @@ export default {
       } else if (
         this.$refs.slides.childNodes[this.activeSlideIndex].id === 'firstSlide'
       ) {
-        console.log(1)
         this.$refs.slides.style.transition = 'none'
         this.activeSlideIndex = 1
         this.$refs.slides.style.transform = `translateX(${

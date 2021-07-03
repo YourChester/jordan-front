@@ -74,16 +74,20 @@ export default {
   },
   methods: {
     async saveCard() {
-      if (this.localCard._id) {
-        await this.$axios.put(`/admin/discount-cards/${this.localCard.id}`, {
-          ...this.localCard,
-        })
-      } else {
-        await this.$axios.post(`/admin/discount-cards/`, {
-          ...this.localCard,
-        })
+      try {
+        if (this.localCard._id) {
+          await this.$axios.put(`/admin/discount-cards/${this.localCard._id}`, {
+            ...this.localCard,
+          })
+        } else {
+          await this.$axios.post(`/admin/discount-cards/`, {
+            ...this.localCard,
+          })
+        }
+        this.$router.push('/admin-panel/discount-card')
+      } catch (e) {
+        console.log(e)
       }
-      this.$router.push('/admin-panel/discount-card')
     },
   },
 }

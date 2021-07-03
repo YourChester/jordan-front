@@ -14,11 +14,15 @@ export default {
   },
   layout: 'admin',
   async asyncData({ $axios, params }) {
-    const discountCardsData = await $axios.get(
-      `/admin/discount-cards/${params.id}`
-    )
-    return {
-      discountCard: discountCardsData.data.discountCard,
+    try {
+      const discountCardsData = await $axios.get(
+        `/admin/discount-cards/${params.id}`
+      )
+      return {
+        discountCard: discountCardsData.data.discountCard,
+      }
+    } catch (e) {
+      console.log(e)
     }
   },
 }

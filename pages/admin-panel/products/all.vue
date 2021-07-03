@@ -10,23 +10,34 @@
     <table cellpadding="0" cellspacing="0" class="store__table-product">
       <tbody>
         <tr>
-          <th rowspan="2" width="100px">Тип</th>
-          <th rowspan="2" width="80px">Бренд</th>
-          <th rowspan="2" width="250px">Название</th>
-          <th rowspan="2" width="80px">Цена</th>
-          <th rowspan="2" width="60px">Скидка</th>
-          <th rowspan="2" width="60px">Размер</th>
-          <th rowspan="2" width="150px">Артикул</th>
+          <th rowspan="2">Тип</th>
+          <th rowspan="2">Бренд</th>
+          <th rowspan="2">Название</th>
+          <th colspan="4">Цена</th>
+          <th rowspan="2">Размер</th>
+          <th rowspan="2">Артикул</th>
           <th colspan="2">Штрих код</th>
-          <th rowspan="2" width="130px">Дата получения</th>
-          <th rowspan="3" width="150px">Пол</th>
-          <th rowspan="2" colspan="2">Действия</th>
+          <th colspan="3">Дата</th>
+          <th rowspan="3">Статус</th>
+          <th rowspan="3">Пол</th>
+          <th rowspan="2" colspan="3">Действия</th>
         </tr>
         <tr>
-          <th width="130px">Товара</th>
-          <th width="130px">Коробка</th>
+          <th>Прих.</th>
+          <th>Витр.</th>
+          <th>Прод.</th>
+          <th>Скидка</th>
+          <th>Товара</th>
+          <th>Коробка</th>
+          <th>Получено</th>
+          <th>Продано</th>
+          <th>Создано</th>
         </tr>
         <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
           <td></td>
           <td></td>
           <td></td>
@@ -39,6 +50,7 @@
           <td></td>
           <th>Прих.</th>
           <th>Прав.</th>
+          <th>Удал.</th>
         </tr>
         <tr v-for="product in products" :key="product._id">
           <td>
@@ -51,7 +63,13 @@
             {{ product.name }}
           </td>
           <td>
+            {{ product.priceIn }}
+          </td>
+          <td>
             {{ product.priceOut }}
+          </td>
+          <td>
+            {{ product.priseSold }}
           </td>
           <td>
             {{ product.discount }}
@@ -80,6 +98,15 @@
           </td>
           <td>
             {{ getCurrentDate(product.dateIn) }}
+          </td>
+          <td>
+            {{ getCurrentDate(product.dateOut) }}
+          </td>
+          <td>
+            {{ getCurrentDate(product.createAt) }}
+          </td>
+          <td>
+            {{ Number(product.priseSold) ? 'Продано' : 'Склад' }}
           </td>
           <td>
             <label v-for="gender in genders" :key="gender._id">
@@ -111,10 +138,20 @@
               E
             </NuxtLink>
           </td>
+          <td>
+            <button class="link" @click="deleteProduct(product._id)">X</button>
+          </td>
         </tr>
       </tbody>
     </table>
     <div class="store__pagination">
+      <div class="store__pagination-perpage">
+        <select v-model="perPage" @change="getList">
+          <option value="10">10</option>
+          <option value="100">100</option>
+          <option value="1000">1000</option>
+        </select>
+      </div>
       <div class="store__pagination-total">
         Всего на складе: {{ totalCount }}
       </div>
@@ -174,6 +211,7 @@ export default {
   },
   data() {
     return {
+      perPage: 10,
       debounceSerch: null,
       modalVisibility: false,
       imageUrl: '',
@@ -208,7 +246,7 @@ export default {
         } = await this.$axios.get('/admin/products', {
           params: {
             search: this.search,
-            limit: 10,
+            limit: this.perPage,
             page: this.currentPage,
           },
         })
@@ -234,6 +272,13 @@ export default {
         await this.$axios.put(`/admin/products/${product._id}`, {
           gender: product.gender,
         })
+      } catch (e) {
+        console.log(e)
+      }
+    },
+    async deleteProduct(id) {
+      try {
+        await this.$axios.delete(`/admin/products/${id}`)
       } catch (e) {
         console.log(e)
       }
@@ -289,6 +334,8 @@ export default {
       .link {
         text-decoration: underline;
         cursor: pointer;
+        border: none;
+        background-color: transparent;
       }
 
       .articul {
@@ -304,6 +351,10 @@ export default {
   }
 
   &__pagination {
+    &-perpage {
+      margin-top: 10px;
+    }
+
     &-total {
       padding: 10px 0;
       font-size: 16px;
@@ -312,6 +363,7 @@ export default {
     &-page_control {
       cursor: pointer;
       display: flex;
+      flex-wrap: wrap;
 
       div {
         padding: 5px;

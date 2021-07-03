@@ -3,6 +3,8 @@ export const state = () => ({
   genders: [],
   categories: [],
   sizes: [],
+  sellers: [],
+  roles: [],
 })
 
 export const getters = {
@@ -10,6 +12,8 @@ export const getters = {
   genders: (state) => state.genders,
   categories: (state) => state.categories,
   sizes: (state) => state.sizes,
+  sellers: (state) => state.sellers,
+  roles: (state) => state.roles,
 }
 
 export const mutations = {
@@ -25,6 +29,12 @@ export const mutations = {
   SET_SIZES(state, value) {
     state.sizes = value
   },
+  SET_SELLER(state, value) {
+    state.sellers = value
+  },
+  SET_ROLES(state, value) {
+    state.roles = value
+  },
 }
 
 export const actions = {
@@ -39,5 +49,11 @@ export const actions = {
   },
   setSizes({ commit }, value) {
     commit('SET_SIZES', value)
+  },
+  setSellers({ commit }, value) {
+    commit('SET_SELLER', value)
+  },
+  setRoles({ commit }, value) {
+    commit('SET_ROLES', value)
   },
 }

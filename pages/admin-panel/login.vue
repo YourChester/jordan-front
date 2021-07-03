@@ -44,7 +44,13 @@ export default {
     async getAuth() {
       try {
         await this.$auth.loginWith('local', { data: this.form })
-        this.$router.push('/admin-panel')
+        this.$router.push('/admin-panel/products')
+        const intervalLogOut = setInterval(async () => {
+          if (!this.$auth.strategy.token.status().valid()) {
+            await this.$auth.logout()
+            clearInterval(intervalLogOut)
+          }
+        }, 5000)
       } catch (e) {
         alert(e.message)
       }

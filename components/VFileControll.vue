@@ -78,8 +78,8 @@ export default {
           formData
         )
         this.files.push(result.data)
-      } catch (error) {
-        console.log(error)
+      } catch (e) {
+        console.log(e)
       }
     },
     async deleteFile(file) {
@@ -87,8 +87,8 @@ export default {
         await this.$axios.delete(`/admin/file/${file}`)
         const index = this.files.indexOf(file)
         this.files.splice(index, 1)
-      } catch (error) {
-        console.log(error)
+      } catch (e) {
+        console.log(e)
       }
     },
     noArticul() {

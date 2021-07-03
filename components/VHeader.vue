@@ -43,7 +43,7 @@
             @mouseleave="visibilityMenuItem(index, false)"
           >
             <NuxtLink
-              :to="`/${menuItem._id}`"
+              :to="`/store/${menuItem._id}`"
               tag="div"
               class="menu__item-text"
               @click.native="visibilityMenuItem(index, false)"
@@ -58,7 +58,7 @@
                 <div :key="category._id" class="category__item">
                   <NuxtLink
                     tag="div"
-                    :to="`/${menuItem._id}/${category._id}`"
+                    :to="`/store/${menuItem._id}/${category._id}`"
                     class="category__item-text"
                     @click.native="visibilityMenuItem(index, false)"
                   >
@@ -68,7 +68,7 @@
                     v-for="childCategory in category.childs"
                     :key="`${index}${childCategory._id}`"
                     tag="div"
-                    :to="`/${menuItem._id}/${childCategory._id}`"
+                    :to="`/store/${menuItem._id}/${childCategory._id}`"
                     class="category__item-child"
                     @click.native="visibilityMenuItem(index, false)"
                   >

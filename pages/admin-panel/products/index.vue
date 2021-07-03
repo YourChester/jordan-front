@@ -10,21 +10,21 @@
     <table cellpadding="0" cellspacing="0" class="store__table-product">
       <tbody>
         <tr>
-          <th rowspan="2" width="100px">Тип</th>
-          <th rowspan="2" width="80px">Бренд</th>
-          <th rowspan="2" width="250px">Название</th>
-          <th rowspan="2" width="80px">Цена</th>
-          <th rowspan="2" width="60px">Скидка</th>
-          <th rowspan="2" width="60px">Размер</th>
-          <th rowspan="2" width="150px">Артикул</th>
+          <th rowspan="2">Тип</th>
+          <th rowspan="2">Бренд</th>
+          <th rowspan="2">Название</th>
+          <th rowspan="2">Цена</th>
+          <th rowspan="2">Скидка</th>
+          <th rowspan="2">Размер</th>
+          <th rowspan="2">Артикул</th>
           <th colspan="2">Штрих код</th>
-          <th rowspan="2" width="130px">Дата получения</th>
-          <th rowspan="3" width="150px">Пол</th>
+          <th rowspan="2">Дата получения</th>
+          <th rowspan="3">Пол</th>
           <th rowspan="2" colspan="2">Действия</th>
         </tr>
         <tr>
-          <th width="130px">Товара</th>
-          <th width="130px">Коробка</th>
+          <th>Товара</th>
+          <th>Коробка</th>
         </tr>
         <tr>
           <td></td>
@@ -115,6 +115,13 @@
       </tbody>
     </table>
     <div class="store__pagination">
+      <div class="store__pagination-perpage">
+        <select v-model="perPage" @change="getList">
+          <option value="10">10</option>
+          <option value="100">100</option>
+          <option value="1000">1000</option>
+        </select>
+      </div>
       <div class="store__pagination-total">
         Всего на складе: {{ totalCount }}
       </div>
@@ -157,6 +164,7 @@ export default {
     try {
       const productsData = await $axios.get('/admin/products', {
         params: {
+          visibility: true,
           limit: 10,
           page: 1,
         },
@@ -174,6 +182,7 @@ export default {
   },
   data() {
     return {
+      perPage: 10,
       debounceSerch: null,
       modalVisibility: false,
       imageUrl: '',
@@ -207,8 +216,9 @@ export default {
           data: { products, totalCount, totalPages },
         } = await this.$axios.get('/admin/products', {
           params: {
+            visibility: true,
             search: this.search,
-            limit: 10,
+            limit: this.perPage,
             page: this.currentPage,
           },
         })
@@ -304,6 +314,10 @@ export default {
   }
 
   &__pagination {
+    &-perpage {
+      margin-top: 10px;
+    }
+
     &-total {
       padding: 10px 0;
       font-size: 16px;
@@ -312,6 +326,7 @@ export default {
     &-page_control {
       cursor: pointer;
       display: flex;
+      flex-wrap: wrap;
 
       div {
         padding: 5px;

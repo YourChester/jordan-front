@@ -35,11 +35,15 @@ export default {
       links: [
         {
           name: 'Склад',
-          path: '/admin-panel',
+          path: '/admin-panel/products',
+        },
+        {
+          name: 'Все',
+          path: '/admin-panel/products/all',
         },
         {
           name: 'Приход',
-          path: '/admin-panel/new-product',
+          path: '/admin-panel/products/new',
         },
         {
           name: 'Продажи',
@@ -54,12 +58,8 @@ export default {
           path: '/admin-panel/discount-card/new-discount-card',
         },
         {
-          name: 'Клиенты',
-          path: '/admin-panel/client',
-        },
-        {
-          name: 'Новые клиенты',
-          path: '/admin-panel/new-client',
+          name: 'Менеджеры',
+          path: '/admin-panel/manager',
         },
       ],
     }

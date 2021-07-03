@@ -18,15 +18,19 @@ export default {
     VFooter,
   },
   async created() {
-    const menuResult = await this.$axios.get('/codebooks/menu-tree')
-    const gendersResult = await this.$axios.get('/codebooks/genders')
-    const categoriesResult = await this.$axios.get('/codebooks/categories')
-    this.$store.dispatch('codeBooks/setMenuTree', menuResult.data.menu)
-    this.$store.dispatch('codeBooks/setGenders', gendersResult.data.genders)
-    this.$store.dispatch(
-      'codeBooks/setCategories',
-      categoriesResult.data.categories
-    )
+    try {
+      const menuResult = await this.$axios.get('/codebooks/menu-tree')
+      const gendersResult = await this.$axios.get('/codebooks/genders')
+      const categoriesResult = await this.$axios.get('/codebooks/categories')
+      this.$store.dispatch('codeBooks/setMenuTree', menuResult.data.menu)
+      this.$store.dispatch('codeBooks/setGenders', gendersResult.data.genders)
+      this.$store.dispatch(
+        'codeBooks/setCategories',
+        categoriesResult.data.categories
+      )
+    } catch (e) {
+      console.log(e)
+    }
   },
 }
 </script>
