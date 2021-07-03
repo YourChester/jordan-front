@@ -2,7 +2,13 @@
   <div class="slider__wrapper">
     <div class="slider">
       <div class="slider__slides--wrapper">
-        <div ref="slides" class="slider__slides">
+        <div
+          ref="slides"
+          class="slider__slides"
+          @touchend="changeSlide"
+          @touchstart="(e) => (touchXStart = e.touches[0].clientX)"
+          @touchmove="(e) => (touchXEnd = e.touches[0].clientX)"
+        >
           <template v-for="(slide, index) in getCurrentSlides">
             <NuxtLink
               :id="slide.key"
@@ -49,6 +55,8 @@ export default {
     return {
       activeSlideIndex: 1,
       slideItemWidth: 0,
+      touchXEnd: 0,
+      touchXStart: 0,
     }
   },
   computed: {
@@ -90,8 +98,18 @@ export default {
         }px)`
       }
     })
+    window.addEventListener('resize', () => {
+      this.setSettingsValue()
+    })
   },
   methods: {
+    changeSlide() {
+      if (this.touchXStart > this.touchXEnd) {
+        this.nextSlide()
+      } else {
+        this.preSlide()
+      }
+    },
     setSettingsValue() {
       if (!this.$refs.slides) {
         return
@@ -140,6 +158,10 @@ export default {
   &__wrapper {
     width: 960px;
     margin: 10px auto;
+
+    @media (max-width: 960px) {
+      width: 100%;
+    }
   }
 
   &__slides {
@@ -202,6 +224,10 @@ export default {
   &__next-btn {
     cursor: pointer;
     position: absolute;
+
+    @media (max-width: 960px) {
+      display: none;
+    }
   }
   &__pre-btn {
     top: calc(50% - 20px);

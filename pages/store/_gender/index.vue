@@ -10,64 +10,103 @@
         />
       </div>
       <div class="catalog__right-side">
-        <div class="right-side">
-          <h1 class="right-side__title">Весь каталог</h1>
-          <div class="right-side__count-filter">
-            <div class="filter-count__title">Показать товаров</div>
-            <div
-              class="filter-count__item"
-              :class="filters.limit === 12 ? 'active' : ''"
-              @click="
-                filters.limit === 12
-                  ? null
-                  : setNewFilter({ key: 'limit', value: 12 })
-              "
-            >
-              12
+        <div>
+          <div class="right-side">
+            <h1 class="right-side__title">Весь каталог</h1>
+            <div class="right-side__count-filter">
+              <div class="filter-count__title">Показать товаров</div>
+              <div
+                class="filter-count__item"
+                :class="filters.limit === 12 ? 'active' : ''"
+                @click="
+                  filters.limit === 12
+                    ? null
+                    : setNewFilter({ key: 'limit', value: 12 })
+                "
+              >
+                12
+              </div>
+              <div
+                class="filter-count__item"
+                :class="filters.limit === 24 ? 'active' : ''"
+                @click="
+                  filters.limit === 24
+                    ? null
+                    : setNewFilter({ key: 'limit', value: 24 })
+                "
+              >
+                24
+              </div>
+              <div
+                class="filter-count__item"
+                :class="filters.limit === 36 ? 'active' : ''"
+                @click="
+                  filters.limit === 36
+                    ? null
+                    : setNewFilter({ key: 'limit', value: 36 })
+                "
+              >
+                36
+              </div>
+              <div
+                class="filter-count__item"
+                :class="filters.limit === 72 ? 'active' : ''"
+                @click="
+                  filters.limit === 72
+                    ? null
+                    : setNewFilter({ key: 'limit', value: 72 })
+                "
+              >
+                72
+              </div>
+              <div
+                class="filter-count__item"
+                :class="filters.limit === 100000 ? 'active' : ''"
+                @click="
+                  filters.limit === 100000
+                    ? null
+                    : setNewFilter({ key: 'limit', value: 100000 })
+                "
+              >
+                Все
+              </div>
             </div>
-            <div
-              class="filter-count__item"
-              :class="filters.limit === 24 ? 'active' : ''"
-              @click="
-                filters.limit === 24
-                  ? null
-                  : setNewFilter({ key: 'limit', value: 24 })
-              "
-            >
-              24
-            </div>
-            <div
-              class="filter-count__item"
-              :class="filters.limit === 36 ? 'active' : ''"
-              @click="
-                filters.limit === 36
-                  ? null
-                  : setNewFilter({ key: 'limit', value: 36 })
-              "
-            >
-              36
-            </div>
-            <div
-              class="filter-count__item"
-              :class="filters.limit === 72 ? 'active' : ''"
-              @click="
-                filters.limit === 72
-                  ? null
-                  : setNewFilter({ key: 'limit', value: 72 })
-              "
-            >
-              72
-            </div>
-            <div
-              class="filter-count__item"
-              :class="filters.limit === 100000 ? 'active' : ''"
-              @click="
-                filters.limit === 100000
-                  ? null
-                  : setNewFilter({ key: 'limit', value: 100000 })
-              "
-            >
-              Все
+          </div>
+          <div class="right-side__sort">
+            <div></div>
+            <div v-show="totalPages > 1" class="right-side__paginations">
+              <div
+                v-show="currentPage > 1"
+                @click="currentPage = currentPage - 1"
+              >
+                &lt;
+              </div>
+              <div
+                v-show="currentPage > 8"
+                @click="currentPage = getListPage[0] - 1"
+              >
+                ...
+              </div>
+              <div
+                v-for="page in getListPage"
+                :key="page"
+                :class="currentPage === page ? 'active' : ''"
+                @click="currentPage = page"
+              >
+                {{ page }}
+              </div>
+              <div
+                v-show="totalPages > 8 && totalPages - currentPage > 8"
+                @click="currentPage = getListPage[getListPage.length - 1] + 1"
+              >
+                ...
+              </div>
+              <div
+                v-show="currentPage < totalPages"
+                @click="currentPage = currentPage + 1"
+              >
+                &gt;
+              </div>
             </div>
           </div>
         </div>
@@ -96,6 +135,7 @@ export default {
         brand: [],
         size: [],
         limit: 12,
+        page: 1,
       }
       const productsData = await $axios.get('/products', {
         params: {
@@ -108,6 +148,9 @@ export default {
           brands: [],
         },
         products: productsData.data.products,
+        currentPage: 1,
+        totalCount: productsData.data.totalCount,
+        totalPages: productsData.data.totalPages,
         filters,
         titlePage,
       }
@@ -129,6 +172,47 @@ export default {
     getTitlePage() {
       return this.categories.find((el) => el._id === this.titlePage)?.name || ''
     },
+    getListPage() {
+      if (this.totalPages === 1) {
+        return
+      }
+      const pages = []
+      if (this.currentPage <= 8) {
+        for (let i = 1; i < this.totalPages; i++) {
+          if (i <= 8) {
+            pages.push(i)
+          } else {
+            break
+          }
+        }
+      } else if (this.totalPages - this.currentPage < 8) {
+        for (
+          let i = this.totalPages - this.currentPage;
+          i < this.totalPages;
+          i++
+        ) {
+          if (i <= 8) {
+            pages.push(i)
+          } else {
+            break
+          }
+        }
+      } else {
+        for (let i = this.currentPage - 3; i < this.totalPages; i++) {
+          if (i <= this.currentPage + 3) {
+            pages.push(i)
+          } else {
+            break
+          }
+        }
+      }
+      return pages
+    },
+  },
+  watch: {
+    currentPage() {
+      this.getData()
+    },
   },
   methods: {
     async getData() {
@@ -137,6 +221,7 @@ export default {
           params: {
             limit: 25,
             ...this.filters,
+            page: this.currentPage,
           },
         })
         this.filtersValue = {
@@ -144,6 +229,7 @@ export default {
           brands: [],
         }
         this.products = productsData.data.products
+        this.totalPages = productsData.data.totalPages
       } catch (e) {
         console.log(e)
       }
@@ -156,6 +242,7 @@ export default {
         titlePage: '',
         limit: 12,
       }
+      this.currentPage = 1
       this.getData()
     },
     setNewFilter({ key, value }) {
@@ -173,6 +260,7 @@ export default {
           }`
         )
       } else {
+        this.currentPage = 1
         this.getData()
       }
     },

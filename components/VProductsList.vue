@@ -34,6 +34,11 @@ export default {
   grid-template-rows: 1fr 1fr 1fr;
   grid-template-columns: 1fr 1fr 1fr;
 
+  @media (max-width: 425px) {
+    grid-template-rows: 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
+  }
+
   &::v-deep {
     .product__wrapper {
       margin: 10px auto;

@@ -29,6 +29,11 @@ export default {
   margin: 0 auto;
   color: white;
 
+  @media (max-width: 960px) {
+    width: 100%;
+    padding: 0 20px;
+  }
+
   &__wrapper {
     padding: 20px 0;
     background-color: #282828;
@@ -61,6 +66,7 @@ export default {
   &__copyright {
     padding: 10px 0;
     font-size: 12px;
+    color: #878484;
   }
 }
 </style>

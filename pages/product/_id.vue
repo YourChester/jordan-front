@@ -543,20 +543,44 @@ export default {
   &__wrapper {
     width: 960px;
     margin: 0 auto;
+
+    @media (max-width: 960px) {
+      width: 100%;
+    }
   }
 
   &__body {
     padding: 18px;
     display: flex;
+
+    @media (max-width: 425px) {
+      display: block;
+    }
   }
 
   &__images {
     margin-right: 40px;
+
+    @media (max-width: 425px) {
+      margin-right: 0;
+      margin-bottom: 10px;
+    }
   }
 
   &__image {
     width: 470px;
     height: 470px;
+
+    @media (max-width: 425px) {
+      margin: 0 auto;
+      width: 470px;
+      height: 470px;
+    }
+
+    @media (max-width: 375px) {
+      width: 250px;
+      height: 250px;
+    }
 
     img {
       width: 100%;
@@ -598,6 +622,10 @@ export default {
   &__price {
     font-size: 18px;
     margin: 20% 0;
+
+    @media (max-width: 425px) {
+      margin: 20px 0;
+    }
   }
 
   &__size {
@@ -635,6 +663,11 @@ export default {
 
     .sizes-table {
       padding: 0 20px;
+      overflow-y: hidden;
+
+      @media (max-width: 425px) {
+        padding: 0 4px;
+      }
 
       table {
         width: 100%;
@@ -646,6 +679,10 @@ export default {
           border-top: solid 1px #dddddd;
           border-bottom: solid 1px #dddddd;
           padding: 5px;
+
+          @media (max-width: 425px) {
+            padding: 1px;
+          }
         }
 
         tr {

@@ -73,6 +73,17 @@ export default {
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
+
+    @media (max-width: 960px) {
+      width: 100%;
+      padding: 10px 0;
+      display: flex;
+      justify-content: center;
+
+      .product__wrapper {
+        margin: 10px;
+      }
+    }
   }
 }
 </style>

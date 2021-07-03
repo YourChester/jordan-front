@@ -3,16 +3,29 @@
   margin: 0 auto;
   display: flex;
 
+  @media (max-width: 960px) {
+    width: 100%;
+    display: block;
+  }
+
   &__wrapper {
     padding: 10px 0;
   }
 
   &__left-side {
     width: 30%;
+
+    @media (max-width: 960px) {
+      width: 100%;
+    }
   }
 
   &__right-side {
     width: 70%;
+
+    @media (max-width: 960px) {
+      width: 100%;
+    }
 
     .right-side {
       display: flex;
@@ -26,6 +39,14 @@
         justify-content: space-between;
         align-items: center;
         font-size: 14px;
+
+        @media (max-width: 960px) {
+          width: 50%;
+        }
+
+        @media (max-width: 425px) {
+          width: 70%;
+        }
 
         .filter-count {
           &__title {
@@ -50,6 +71,34 @@
             }
           }
         } 
+      }
+
+      &__sort {
+        display: flex;
+        justify-content: space-between;
+      }
+
+      &__paginations {
+        display: flex;
+        margin: 15px 0;
+
+        div {
+          padding: 0 12px;
+          border-left: 1px solid black;
+          cursor: pointer;
+
+          &:first-child {
+            border-left: none;
+          }
+
+          &:hover {
+            background-color: #f3f3f3;
+          }
+
+          &.active {
+            font-weight: 600;
+          }
+        }
       }
     }
   }

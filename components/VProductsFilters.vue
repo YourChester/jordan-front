@@ -7,6 +7,37 @@
       >
         <div class="products-filters__title">
           <h1>Фильтры</h1>
+          <div
+            class="products-filters__title-btn"
+            @click="openFilter = !openFilter"
+          >
+            <svg
+              height="20px"
+              version="1.1"
+              viewBox="0 0 128 128"
+              width="20px"
+              xml:space="preserve"
+              xmlns="http://www.w3.org/2000/svg"
+              xmlns:xlink="http://www.w3.org/1999/xlink"
+            >
+              <g>
+                <line
+                  :style="`stroke: #fff;stroke-width: 12;stroke-linecap: square;stroke-miterlimit: 10;`"
+                  x1="111"
+                  x2="64"
+                  y1="40.5"
+                  y2="87.499"
+                />
+                <line
+                  :style="`stroke: #fff;stroke-width: 12;stroke-linecap: square;stroke-miterlimit: 10;`"
+                  x1="64"
+                  x2="17"
+                  y1="87.499"
+                  y2="40.5"
+                />
+              </g>
+            </svg>
+          </div>
         </div>
         <div class="products-filters__filters-active">
           <div v-show="filters.gender" class="filters-active__gender">
@@ -45,6 +76,91 @@
         </div>
         <div class="products-filters__filters-clear" @click="clearFilters">
           Очистить фильтры
+        </div>
+      </div>
+      <div v-show="openFilter" class="products-filters__filters-mobile-list">
+        <div class="products-filters__group products-filters__category">
+          <div class="products-filters__group-title category__title">Пол</div>
+          <div class="products-filters__group-list category__list">
+            <template v-for="genders in genders">
+              <label
+                v-if="isHaveFilterSize ? genders._id === filters.genders : true"
+                :key="genders._id"
+                class="products-filters__group-item category__item"
+              >
+                <input
+                  v-model="gendersData"
+                  type="radio"
+                  name="genders"
+                  :value="genders._id"
+                />
+                {{ genders.name }}
+              </label>
+            </template>
+          </div>
+        </div>
+        <div class="products-filters__group products-filters__category">
+          <div class="products-filters__group-title category__title">
+            Категории
+          </div>
+          <div class="products-filters__group-list category__list">
+            <template v-for="category in getCategories">
+              <label
+                v-if="
+                  isHaveFilterSize ? category._id === filters.category : true
+                "
+                :key="category._id"
+                class="products-filters__group-item category__item"
+              >
+                <input
+                  v-model="categoryData"
+                  type="radio"
+                  name="category"
+                  :value="category._id"
+                />
+                {{ category.name }}
+              </label>
+            </template>
+          </div>
+        </div>
+        <div
+          v-show="filtersValue.sizes.length"
+          class="products-filters__group products-filters__size"
+        >
+          <div class="products-filters__group-title size__title">Размеры</div>
+          <div class="size__list">
+            <div
+              v-for="size in filtersValue.sizes"
+              v-show="size"
+              :key="size"
+              :class="isSizeIncludes(size) ? 'active' : ''"
+              class="size__item"
+              @click="selectSize(size)"
+            >
+              {{ size }}
+            </div>
+          </div>
+        </div>
+        <div
+          v-show="filtersValue.brands.length"
+          class="products-filters__group products-filters__brand"
+        >
+          <div class="products-filters__group-title brand__title">Бренд</div>
+          <div class="brand__list">
+            <label
+              v-for="brandName in filtersValue.brands"
+              :key="brandName"
+              class="brand__item"
+            >
+              <input
+                v-model="brandData"
+                type="checkbox"
+                name="brand"
+                :value="brandName"
+              />
+              {{ brandName }}
+            </label>
+          </div>
         </div>
       </div>
       <div class="products-filters__filters-list">
@@ -162,6 +278,7 @@ export default {
   },
   data: () => {
     return {
+      openFilter: false,
       brandData: [],
       sizeData: [],
       categoryData: '',
@@ -258,6 +375,8 @@ export default {
 
 <style lang="scss" scoped>
 .products-filters {
+  position: relative;
+
   &__wrapper {
     width: 100%;
   }
@@ -279,6 +398,27 @@ export default {
     }
   }
 
+  &__filters-mobile-list {
+    width: 100%;
+    padding: 0 30px;
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 100;
+    background-color: white;
+
+    @media (max-width: 960px) {
+      display: block;
+    }
+  }
+
+  &__filters-list {
+    @media (max-width: 960px) {
+      display: none;
+    }
+  }
+
   &__filters-clear {
     cursor: pointer;
     padding: 5px;
@@ -290,8 +430,22 @@ export default {
     padding: 5px 10px;
     background-color: black;
 
+    @media (max-width: 960px) {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
     h1 {
       color: white;
+    }
+
+    &-btn {
+      display: none;
+
+      @media (max-width: 960px) {
+        display: block;
+      }
     }
   }
 
