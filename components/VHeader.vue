@@ -256,6 +256,10 @@ export default {
 
   &__wrapper {
     padding: 5px 0;
+
+    @media (max-width: 425px) {
+      padding: 0;
+    }
   }
 }
 

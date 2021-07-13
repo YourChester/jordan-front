@@ -126,16 +126,19 @@ export default {
     VProductsList,
     VProductsFilters,
   },
-  async asyncData({ $axios, params }) {
+  async asyncData({ $axios, params, query }) {
     try {
+      console.log(query)
       const titlePage = params.category
       const filters = {
         gender: params.gender || '',
-        category: params.category || '',
         brand: [],
         size: [],
         limit: 12,
         page: 1,
+      }
+      if (query.brand) {
+        filters.brand.push(query.brand)
       }
       const productsData = await $axios.get('/products', {
         params: {
@@ -247,6 +250,12 @@ export default {
     },
     setNewFilter({ key, value }) {
       this.filters[key] = value
+      if (
+        (!this.filters.brand.length || !this.filters.size.length) &&
+        this.filters.gender === 'all'
+      ) {
+        this.$router.push('/')
+      }
       if (key === 'category') {
         this.$router.push(
           `${this.filters.gender}${

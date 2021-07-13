@@ -57,6 +57,11 @@ export default {
 
   &.home {
     background: url('~/assets/img/main-back.jpg') no-repeat center top;
+
+    @media (max-width: 425px) {
+      background-image: none;
+      background-color: white;
+    }
   }
 
   .container {

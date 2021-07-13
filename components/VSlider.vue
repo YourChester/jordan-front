@@ -162,6 +162,12 @@ export default {
     @media (max-width: 960px) {
       width: 100%;
     }
+
+    @media (max-width: 425px) {
+      background-image: none;
+      background-color: #f3f3f3;
+      margin: 0;
+    }
   }
 
   &__slides {
@@ -216,6 +222,12 @@ export default {
 
       &:last-child {
         margin-right: 0;
+      }
+
+      @media (max-width: 425px) {
+        flex-grow: 0;
+        width: 25%;
+        padding: 10px 0;
       }
     }
   }

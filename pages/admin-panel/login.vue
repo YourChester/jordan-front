@@ -48,6 +48,7 @@ export default {
         const intervalLogOut = setInterval(async () => {
           if (!this.$auth.strategy.token.status().valid()) {
             await this.$auth.logout()
+            this.$router.push('/admin-panel/login')
             clearInterval(intervalLogOut)
           }
         }, 5000)

@@ -1,6 +1,21 @@
 <template>
   <div class="discount-card">
     <h1>Дисконтрые карты</h1>
+    <div class="discount-card__filter">
+      <label class="filter__code">
+        Номер карточки
+        <input v-model="code" type="text" />
+      </label>
+      <label class="filter__name">
+        ФИО
+        <input v-model="name" type="text" />
+      </label>
+      <label class="filter__phone">
+        Телефон
+        <input v-model="phone" type="text" />
+      </label>
+      <button class="filter__btn" @click="getSearch">Поиск</button>
+    </div>
     <div class="discount-card__table-wrapper">
       <table class="discount-card__table">
         <tr>
@@ -98,6 +113,9 @@ export default {
         },
       })
       return {
+        code: '',
+        name: '',
+        phone: '',
         currentPage: 1,
         totalCount: discountCardsData.data.totalCount,
         totalPages: discountCardsData.data.totalPages,
@@ -108,18 +126,21 @@ export default {
     }
   },
   data() {
-    return {
-      debounceSerch: null,
-    }
+    return {}
   },
   watch: {
     currentPage() {
       this.getList()
     },
   },
+  created() {},
   methods: {
     getCurrentDate(data) {
       return getDateWithTime(data)
+    },
+    getSearch() {
+      this.currentPage = 1
+      this.getList()
     },
     async getList() {
       try {
@@ -127,6 +148,9 @@ export default {
           data: { discountCards, totalCount, totalPages },
         } = await this.$axios.get('/admin/discount-cards', {
           params: {
+            code: this.code,
+            name: this.name,
+            phone: this.phone,
             limit: 100,
             page: this.currentPage,
           },
@@ -153,6 +177,80 @@ export default {
 <style lang="scss" scoped>
 .discount-card {
   padding: 20px;
+
+  &__filter {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+
+    .filter {
+      &__code {
+        width: 200px;
+        font-size: 14px;
+        font-weight: 600;
+        margin-right: 20px;
+
+        input {
+          width: 200px;
+          display: block;
+          box-sizing: border-box;
+          border-radius: 5px;
+          border: 2px solid #000;
+          padding: 5px;
+          font-size: 16px;
+          font-weight: 600;
+          outline: none;
+          margin-bottom: 5px;
+        }
+      }
+
+      &__name {
+        width: 200px;
+        margin-right: 20px;
+        font-size: 14px;
+        font-weight: 600;
+
+        input {
+          width: 200px;
+          display: block;
+          box-sizing: border-box;
+          border-radius: 5px;
+          border: 2px solid #000;
+          padding: 5px;
+          font-size: 16px;
+          font-weight: 600;
+          outline: none;
+          margin-bottom: 5px;
+        }
+      }
+
+      &__phone {
+        width: 200px;
+        margin-right: 20px;
+        font-size: 14px;
+        font-weight: 600;
+
+        input {
+          width: 200px;
+          display: block;
+          box-sizing: border-box;
+          border-radius: 5px;
+          border: 2px solid #000;
+          padding: 5px;
+          font-size: 16px;
+          font-weight: 600;
+          outline: none;
+          margin-bottom: 5px;
+        }
+      }
+
+      &__btn {
+        padding: 10px;
+        font-size: 14px;
+        font-weight: 600;
+      }
+    }
+  }
 
   &__table {
     border-spacing: 0;
