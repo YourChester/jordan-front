@@ -72,7 +72,7 @@
           >
             <div class="title">
               <NuxtLink
-                :to="`/store/${menuItems[activeGender]._id}/${category._id}`"
+                :to="`/${menuItems[activeGender]._id}/${category._id}`"
                 @click.native="menuVisibility = !menuVisibility"
               >
                 {{ category.name }}
@@ -84,7 +84,7 @@
               class="mobile-menu__list-child"
             >
               <NuxtLink
-                :to="`/store/${menuItems[activeGender]._id}/${childCategory._id}`"
+                :to="`/${menuItems[activeGender]._id}/${childCategory._id}`"
                 @click.native="menuVisibility = !menuVisibility"
               >
                 {{ childCategory.name }}
@@ -111,7 +111,7 @@
             @mouseleave="visibilityMenuItem(index, false)"
           >
             <NuxtLink
-              :to="`/store/${menuItem._id}`"
+              :to="`/${menuItem._id}`"
               tag="div"
               class="menu__item-text"
               @click.native="visibilityMenuItem(index, false)"
@@ -126,7 +126,7 @@
                 <div :key="category._id" class="category__item">
                   <NuxtLink
                     tag="div"
-                    :to="`/store/${menuItem._id}/${category._id}`"
+                    :to="`/${menuItem._id}/${category._id}`"
                     class="category__item-text"
                     @click.native="visibilityMenuItem(index, false)"
                   >
@@ -136,7 +136,7 @@
                     v-for="childCategory in category.childs"
                     :key="`${index}${childCategory._id}`"
                     tag="div"
-                    :to="`/store/${menuItem._id}/${childCategory._id}`"
+                    :to="`/${menuItem._id}/${childCategory._id}`"
                     class="category__item-child"
                     @click.native="visibilityMenuItem(index, false)"
                   >

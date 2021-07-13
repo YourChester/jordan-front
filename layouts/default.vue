@@ -1,5 +1,5 @@
 <template>
-  <div class="main" :class="$route.fullPath === '/' ? 'home' : ''">
+  <div ref="main" class="main">
     <v-header />
     <div class="container">
       <Nuxt />
@@ -17,6 +17,15 @@ export default {
     VHeader,
     VFooter,
   },
+  watch: {
+    '$route.fullPath'() {
+      if (this.$route.fullPath === '/') {
+        this.$refs.main.classList.add('home')
+      } else {
+        this.$refs.main.classList.remove('home')
+      }
+    },
+  },
   async created() {
     try {
       const menuResult = await this.$axios.get('/codebooks/menu-tree')
@@ -30,6 +39,11 @@ export default {
       )
     } catch (e) {
       console.log(e)
+    }
+  },
+  mounted() {
+    if (this.$route.fullPath === '/') {
+      this.$refs.main.classList.add('home')
     }
   },
 }

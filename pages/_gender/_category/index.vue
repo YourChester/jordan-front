@@ -266,17 +266,33 @@ export default {
     setNewFilter({ key, value }) {
       this.filters[key] = value
       if (key === 'category') {
-        this.$router.push(
-          `/store/${this.filters.gender}${
-            this.filters.category ? '/' + this.filters.category : ''
-          }`
-        )
+        if (value) {
+          this.$router.push(
+            `/${this.filters.gender}${
+              this.filters.category ? '/' + this.filters.category : ''
+            }`
+          )
+        } else if (this.filters.gender !== 'all') {
+          this.$router.push(
+            `/${this.filters.gender}${
+              this.filters.category ? '/' + this.filters.category : ''
+            }`
+          )
+        } else {
+          this.$router.push(`/`)
+        }
       } else if (key === 'gender') {
-        this.$router.push(
-          `/store/${this.filters.gender}${
-            this.filters.category ? '/' + this.filters.category : ''
-          }`
-        )
+        if (value) {
+          this.$router.push(
+            `/${this.filters.gender}${
+              this.filters.category ? '/' + this.filters.category : ''
+            }`
+          )
+        } else {
+          this.$router.push(
+            `/all${this.filters.category ? '/' + this.filters.category : ''}`
+          )
+        }
       } else {
         this.currentPage = 1
         this.getData()

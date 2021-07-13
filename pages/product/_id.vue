@@ -34,7 +34,10 @@
         </div>
         <div class="product__articul">Код товара: {{ product.articul }}</div>
         <div class="product__price">
-          <h2>{{ product.priceOut }} руб.</h2>
+          <h2>{{ getCurrentPrice }} руб.</h2>
+          <span v-show="isProductHaveDiscount">
+            {{ product.priceOut }} руб.
+          </span>
         </div>
         <div class="product__size">
           Размер в наличии: {{ product.size.join(', ') }}
@@ -524,10 +527,24 @@ export default {
       showTableSize: false,
     }
   },
+  head() {
+    return {
+      title: this.product.name,
+    }
+  },
   computed: {
     ...mapGetters({
       categories: 'codeBooks/categories',
     }),
+    isProductHaveDiscount() {
+      return this.product?.discount
+    },
+    getCurrentPrice() {
+      const discountPrice =
+        this.product?.priceOut -
+        (this.product?.priceOut * this.product?.discount) / 100
+      return this.isProductHaveDiscount ? discountPrice : this.product.priceOut
+    },
     isProductShose() {
       const category = this.categories.find(
         (el) => el._id === this.product.category.parent
@@ -608,6 +625,10 @@ export default {
     }
   }
 
+  &__info {
+    flex-grow: 1;
+  }
+
   &__title {
     h1 {
       font-size: 30px;
@@ -617,11 +638,22 @@ export default {
   &__articul {
     padding: 10px 0;
     font-size: 16px;
+    border-bottom: 1px solid #d9d7d7;
   }
 
   &__price {
     font-size: 18px;
     margin: 20% 0;
+
+    h2 {
+      display: inline;
+    }
+
+    span {
+      color: #a2a2a2;
+      text-decoration: line-through;
+      font-weight: 600;
+    }
 
     @media (max-width: 425px) {
       margin: 20px 0;
@@ -629,8 +661,10 @@ export default {
   }
 
   &__size {
-    font-size: 17px;
+    padding-top: 10px;
+    font-size: 18px;
     font-weight: 600;
+    border-top: 1px solid #d9d7d7;
   }
 
   &__size-table {

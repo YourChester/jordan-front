@@ -5,6 +5,7 @@
       <div class="admin-header__link">
         <NuxtLink
           v-for="link in links"
+          v-show="link.role.includes(getRoleKey)"
           :key="link.name"
           exact
           class="link"
@@ -36,30 +37,37 @@ export default {
         {
           name: 'Склад',
           path: '/admin-panel/products',
+          role: ['admin', 'manager'],
         },
         {
           name: 'Все',
           path: '/admin-panel/products/all',
+          role: ['admin'],
         },
         {
           name: 'Приход',
           path: '/admin-panel/products/new',
+          role: ['admin', 'manager'],
         },
         {
           name: 'Продажи',
           path: '/admin-panel/sold',
+          role: ['admin', 'manager'],
         },
         {
           name: 'Карты',
           path: '/admin-panel/discount-card',
+          role: ['admin', 'manager'],
         },
         {
           name: 'Новые карты',
           path: '/admin-panel/discount-card/new-discount-card',
+          role: ['admin', 'manager'],
         },
         {
           name: 'Менеджеры',
           path: '/admin-panel/manager',
+          role: ['admin'],
         },
       ],
     }
@@ -72,6 +80,10 @@ export default {
     getSellerRole() {
       const { role } = this.$auth.$state.user
       return role?.name
+    },
+    getRoleKey() {
+      const { role } = this.$auth.$state.user
+      return role?.key
     },
   },
   methods: {

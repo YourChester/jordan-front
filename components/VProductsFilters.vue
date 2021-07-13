@@ -40,7 +40,10 @@
           </div>
         </div>
         <div class="products-filters__filters-active">
-          <div v-show="filters.gender" class="filters-active__gender">
+          <div
+            v-show="filters.gender && filters.gender !== 'all'"
+            class="filters-active__gender"
+          >
             <div>Пол: {{ getGendersName }}</div>
             <div>
               <img

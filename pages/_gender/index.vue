@@ -249,13 +249,13 @@ export default {
       this.filters[key] = value
       if (key === 'category') {
         this.$router.push(
-          `/store/${this.filters.gender}${
+          `${this.filters.gender}${
             this.filters.category ? '/' + this.filters.category : ''
           }`
         )
       } else if (key === 'gender') {
         this.$router.push(
-          `/store/${this.filters.gender}${
+          `${this.filters.gender}${
             this.filters.category ? '/' + this.filters.category : ''
           }`
         )
