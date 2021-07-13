@@ -40,7 +40,7 @@
           </span>
         </div>
         <div class="product__size">
-          Размер в наличии: {{ product.size.join(', ') }}
+          Размер в наличии: {{ sizes.join(', ') }}
         </div>
       </div>
     </div>
@@ -524,7 +524,7 @@ export default {
   data: () => {
     return {
       url: process.env.IMG_URL,
-      showTableSize: false,
+      showTableSize: true,
     }
   },
   head() {
@@ -536,6 +536,43 @@ export default {
     ...mapGetters({
       categories: 'codeBooks/categories',
     }),
+    sizes() {
+      const sizes = this.product.size
+      // eslint-disable-next-line prefer-regex-literals
+      const re = new RegExp(/[А-Яа-яA-Za-z]/)
+      sizes.sort((first, next) => {
+        if (re.test(first) && re.test(next)) {
+          if (Number(first.slice(0, -1)) === Number(next.slice(0, -1))) {
+            return 0
+          } else if (Number(first.slice(0, -1)) > Number(next.slice(0, -1))) {
+            return 1
+          } else {
+            return -1
+          }
+        } else if (!re.test(first) && re.test(next)) {
+          if (Number(first) === Number(next.slice(0, -1))) {
+            return 1
+          } else if (Number(first) > Number(next.slice(0, -1))) {
+            return 1
+          } else {
+            return -1
+          }
+        } else if (re.test(first) && !re.test(next)) {
+          if (Number(first.slice(0, -1)) === Number(next)) {
+            return -1
+          } else if (Number(first.slice(0, -1)) > Number(next)) {
+            return 1
+          } else {
+            return -1
+          }
+        } else if (!re.test(first) && !re.test(next)) {
+          return Number(first) > Number(next) ? 1 : -1
+        } else {
+          return 0
+        }
+      })
+      return sizes
+    },
     isProductHaveDiscount() {
       return this.product?.discount
     },
@@ -590,8 +627,8 @@ export default {
 
     @media (max-width: 425px) {
       margin: 0 auto;
-      width: 470px;
-      height: 470px;
+      width: 350px;
+      height: 350px;
     }
 
     @media (max-width: 375px) {

@@ -1,6 +1,6 @@
 <template>
   <div class="store">
-    <h1>Склад</h1>
+    <h1>Весь товар</h1>
     <div class="store__table-filter">
       <label class="table-filter__search">
         Поиск

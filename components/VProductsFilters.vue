@@ -39,7 +39,7 @@
             </svg>
           </div>
         </div>
-        <div class="products-filters__filters-active">
+        <div v-show="isShowFilterBody" class="products-filters__filters-active">
           <div
             v-show="filters.gender && filters.gender !== 'all'"
             class="filters-active__gender"
@@ -77,7 +77,11 @@
             </div>
           </div>
         </div>
-        <div class="products-filters__filters-clear" @click="clearFilters">
+        <div
+          v-show="isShowFilterBody"
+          class="products-filters__filters-clear"
+          @click="clearFilters"
+        >
           Очистить фильтры
         </div>
       </div>
@@ -86,8 +90,8 @@
           <div class="products-filters__group-title category__title">Пол</div>
           <div class="products-filters__group-list category__list">
             <template v-for="genders in genders">
+              <!-- v-if="isHaveFilterSize ? genders._id === filters.genders : true" -->
               <label
-                v-if="isHaveFilterSize ? genders._id === filters.genders : true"
                 :key="genders._id"
                 class="products-filters__group-item category__item"
               >
@@ -172,7 +176,7 @@
           <div class="products-filters__group-list category__list">
             <template v-for="genders in genders">
               <label
-                v-if="isHaveFilterSize ? genders._id === filters.genders : true"
+                v-if="isHaveFilterSize ? genders._id === filters.gender : true"
                 :key="genders._id"
                 class="products-filters__group-item category__item"
               >
@@ -293,6 +297,18 @@ export default {
       categories: 'codeBooks/categories',
       genders: 'codeBooks/genders',
     }),
+    isShowFilterBody() {
+      let haveSomeValue = false
+      if (
+        this.filters.size?.length ||
+        this.filters.brand?.length ||
+        (this.filters.gender?.length && this.filters.gender !== 'all') ||
+        this.filters.category?.length
+      ) {
+        haveSomeValue = true
+      }
+      return haveSomeValue
+    },
     isFiltersEmpty() {
       let haveSomeFilters = false
       for (const key in this.filters) {
@@ -360,13 +376,13 @@ export default {
       this.$emit('clear')
     },
     selectSize(size) {
-      if (this.sizeData.includes(size)) {
+      if (this.isSizeIncludes(size)) {
         const index = this.sizeData.indexOf(size)
         this.sizeData.splice(index, 1)
         this.$emit('set-filter', { key: 'size', value: this.sizeData })
       } else {
         this.sizeData.push(size)
-        this.$emit('set-filter', { key: 'size', value: this.size })
+        this.$emit('set-filter', { key: 'size', value: this.sizeData })
       }
     },
     isSizeIncludes(size) {

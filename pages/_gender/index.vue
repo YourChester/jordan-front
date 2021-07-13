@@ -238,20 +238,12 @@ export default {
       }
     },
     clearFilters() {
-      this.filters = {
-        filtersValue: {},
-        products: [],
-        filters: {},
-        titlePage: '',
-        limit: 12,
-      }
-      this.currentPage = 1
-      this.getData()
+      this.$router.push(`/all`)
     },
     setNewFilter({ key, value }) {
       this.filters[key] = value
       if (
-        (!this.filters.brand.length || !this.filters.size.length) &&
+        (!this.filters.brand?.length || !this.filters.size?.length) &&
         this.filters.gender === 'all'
       ) {
         this.$router.push('/')
@@ -263,11 +255,15 @@ export default {
           }`
         )
       } else if (key === 'gender') {
-        this.$router.push(
-          `${this.filters.gender}${
-            this.filters.category ? '/' + this.filters.category : ''
-          }`
-        )
+        if (value) {
+          this.$router.push(
+            `${this.filters.gender}${
+              this.filters.category ? '/' + this.filters.category : ''
+            }`
+          )
+        } else {
+          this.$router.push('/')
+        }
       } else {
         this.currentPage = 1
         this.getData()

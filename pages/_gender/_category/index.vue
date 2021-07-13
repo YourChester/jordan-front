@@ -228,7 +228,6 @@ export default {
       try {
         const productsData = await this.$axios.get('/products', {
           params: {
-            limit: 12,
             ...this.filters,
             page: this.currentPage,
           },
@@ -254,16 +253,10 @@ export default {
       }
     },
     clearFilters() {
-      this.filters = {
-        gender: '',
-        category: '',
-        brand: '',
-        size: '',
-      }
-      this.currentPage = 1
-      this.getData()
+      this.$router.push(`/all`)
     },
     setNewFilter({ key, value }) {
+      console.log({ key, value })
       this.filters[key] = value
       if (key === 'category') {
         if (value) {

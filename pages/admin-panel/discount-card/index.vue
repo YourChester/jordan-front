@@ -2,10 +2,6 @@
   <div class="discount-card">
     <h1>Дисконтрые карты</h1>
     <div class="discount-card__filter">
-      <label class="filter__code">
-        Номер карточки
-        <input v-model="code" type="text" />
-      </label>
       <label class="filter__name">
         ФИО
         <input v-model="name" type="text" />
@@ -113,7 +109,6 @@ export default {
         },
       })
       return {
-        code: '',
         name: '',
         phone: '',
         currentPage: 1,
@@ -148,7 +143,6 @@ export default {
           data: { discountCards, totalCount, totalPages },
         } = await this.$axios.get('/admin/discount-cards', {
           params: {
-            code: this.code,
             name: this.name,
             phone: this.phone,
             limit: 100,
@@ -184,26 +178,6 @@ export default {
     padding: 10px 0;
 
     .filter {
-      &__code {
-        width: 200px;
-        font-size: 14px;
-        font-weight: 600;
-        margin-right: 20px;
-
-        input {
-          width: 200px;
-          display: block;
-          box-sizing: border-box;
-          border-radius: 5px;
-          border: 2px solid #000;
-          padding: 5px;
-          font-size: 16px;
-          font-weight: 600;
-          outline: none;
-          margin-bottom: 5px;
-        }
-      }
-
       &__name {
         width: 200px;
         margin-right: 20px;

@@ -302,7 +302,9 @@ export default {
       width: 960px;
       display: flex;
       justify-content: space-between;
+      padding-bottom: 20px;
       background-color: white;
+      box-shadow: 0px 10px 20px -6px rgba(0, 0, 0, 0.2);
 
       .category {
         &__item {

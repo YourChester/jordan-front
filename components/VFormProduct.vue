@@ -49,7 +49,7 @@
           Поставшик:
           <input v-model="product.provider" type="text" />
         </label>
-        <label>
+        <label v-show="getRoleKey === 'admin'">
           Цена закупки:
           <input v-model="product.priceIn" type="text" />
         </label>
@@ -152,6 +152,10 @@ export default {
       categories: 'codeBooks/categories',
       sizes: 'codeBooks/sizes',
     }),
+    getRoleKey() {
+      const { role } = this.$auth.$state.user
+      return role?.key
+    },
     getGroupCategories() {
       const categoriesList = []
       this.categories.forEach((category) => {
