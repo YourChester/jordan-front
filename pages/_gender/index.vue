@@ -254,6 +254,8 @@ export default {
             this.filters.category ? '/' + this.filters.category : ''
           }`
         )
+        this.filters.size = []
+        this.filters.brand = []
       } else if (key === 'gender') {
         if (value) {
           this.$router.push(
@@ -264,10 +266,11 @@ export default {
         } else {
           this.$router.push('/')
         }
-      } else {
-        this.currentPage = 1
-        this.getData()
+        this.filters.size = []
+        this.filters.brand = []
       }
+      this.currentPage = 1
+      this.getData()
     },
   },
 }

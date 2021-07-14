@@ -60,5 +60,21 @@ export default {
       },
     },
   },
-  build: {},
+  build: {
+    babelrc: false,
+    cacheDirectory: undefined,
+    babel: {
+      presets: [
+        ['@nuxt/babel-preset-app'],
+        [
+          '@babel/preset-env',
+          {
+            targets: {
+              chrome: '50',
+            },
+          },
+        ],
+      ],
+    },
+  },
 }
