@@ -1,18 +1,14 @@
 <template>
   <div class="store">
     <h1>Весь товар</h1>
-    <div class="store__table-filter">
-      <label class="table-filter__search">
-        Поиск
-        <input v-model="search" type="text" @input="debounceSerch" />
-      </label>
-    </div>
     <table cellpadding="0" cellspacing="0" class="store__table-product">
       <tbody>
         <tr>
+          <th rowspan="2"></th>
           <th rowspan="2">Тип</th>
           <th rowspan="2">Бренд</th>
           <th rowspan="2">Название</th>
+          <th rowspan="2">Поставщик</th>
           <th colspan="4">Цена</th>
           <th rowspan="2">Размер</th>
           <th rowspan="2">Артикул</th>
@@ -37,14 +33,51 @@
           <td></td>
           <td></td>
           <td></td>
+          <td>
+            <input
+              v-model="productName"
+              class="table-search"
+              type="text"
+              @input="debounceSerch"
+            />
+          </td>
+          <td>
+            <input
+              v-model="productProvider"
+              class="table-search"
+              type="text"
+              @input="debounceSerch"
+            />
+          </td>
           <td></td>
           <td></td>
           <td></td>
           <td></td>
           <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
+          <td>
+            <input
+              v-model="search"
+              class="table-search"
+              type="text"
+              @input="debounceSerch"
+            />
+          </td>
+          <td>
+            <input
+              v-model="search"
+              class="table-search"
+              type="text"
+              @input="debounceSerch"
+            />
+          </td>
+          <td>
+            <input
+              v-model="search"
+              class="table-search"
+              type="text"
+              @input="debounceSerch"
+            />
+          </td>
           <td></td>
           <td></td>
           <td></td>
@@ -54,6 +87,9 @@
         </tr>
         <tr v-for="product in products" :key="product._id">
           <td>
+            <input v-model="selected" :value="product._id" type="checkbox" />
+          </td>
+          <td>
             {{ product.category ? product.category.name : '' }}
           </td>
           <td>
@@ -61,6 +97,9 @@
           </td>
           <td>
             {{ product.name }}
+          </td>
+          <td>
+            {{ product.provider }}
           </td>
           <td>
             {{ product.priceIn }}
@@ -79,12 +118,22 @@
           </td>
           <td>
             <div class="articul">
+              <img
+                v-show="product.pairImages && product.pairImages.length"
+                src="~/assets/img/imgpare.jpeg"
+                width="15px"
+                alt="Картинка"
+                class="pair"
+                @mouseover="visibilityImageModal(product.pairImages[0], true)"
+                @mouseleave="visibilityImageModal('', false)"
+              />
               <div>{{ product.articul }}</div>
               <img
                 v-show="product.images && product.images.length"
-                src="~/assets/img/image.svg"
-                width="15px"
+                src="~/assets/img/imgart.jpeg"
+                width="20px"
                 alt="Картинка"
+                class="image"
                 @mouseover="visibilityImageModal(product.images[0], true)"
                 @mouseleave="visibilityImageModal('', false)"
               />
@@ -142,11 +191,26 @@
             <button class="link" @click="deleteProduct(product._id)">X</button>
           </td>
         </tr>
+        <tr>
+          <td colspan="5" style="text-align: right">
+            <button :disabled="!selected.length" @click="updateMany">
+              Изменить
+            </button>
+          </td>
+          <td>
+            <input v-model="priceIn" class="many-update" type="text" />
+          </td>
+          <td colspan="2"></td>
+          <td>
+            <input v-model="discount" class="many-update" type="text" />
+          </td>
+          <td colspan="12"></td>
+        </tr>
       </tbody>
     </table>
     <div class="store__pagination">
       <div class="store__pagination-perpage">
-        <select v-model="perPage" @change="getList">
+        <select v-model="perPage" @change="getNewPerPage">
           <option value="10">10</option>
           <option value="100">100</option>
           <option value="1000">1000</option>
@@ -216,6 +280,11 @@ export default {
       modalVisibility: false,
       imageUrl: '',
       url: process.env.IMG_URL,
+      selected: [],
+      priceIn: '',
+      discount: '',
+      productName: '',
+      productProvider: '',
     }
   },
   computed: {
@@ -239,13 +308,41 @@ export default {
       this.currentPage = 1
       this.getList()
     },
+    getNewPerPage() {
+      this.currentPage = 1
+      this.getList()
+    },
+    async updateMany() {
+      try {
+        const params = {
+          ids: this.selected,
+        }
+        if (this.priceIn) {
+          params.priceIn = this.priceIn
+        }
+        if (this.discount) {
+          params.discount = this.discount
+        }
+        await this.$axios.post('/admin/products/many', {
+          ...params,
+        })
+        this.getList()
+      } catch (e) {
+        console.log(e)
+      }
+    },
     async getList() {
       try {
+        this.selected = []
+        this.priceIn = ''
+        this.discount = ''
         const {
           data: { products, totalCount, totalPages },
         } = await this.$axios.get('/admin/products', {
           params: {
             search: this.search,
+            name: this.productName,
+            provider: this.productProvider,
             limit: this.perPage,
             page: this.currentPage,
           },
@@ -279,6 +376,7 @@ export default {
     async deleteProduct(id) {
       try {
         await this.$axios.delete(`/admin/products/${id}`)
+        this.getList()
       } catch (e) {
         console.log(e)
       }
@@ -343,9 +441,21 @@ export default {
         justify-content: center;
         align-items: center;
 
-        img {
+        .pair {
+          margin-right: 10px;
+        }
+
+        .image {
           margin-left: 10px;
         }
+      }
+
+      .many-update {
+        width: 80px;
+      }
+
+      .table-search {
+        width: 100px;
       }
     }
   }

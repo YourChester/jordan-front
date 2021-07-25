@@ -115,6 +115,13 @@
       </tbody>
     </table>
     <div class="store__pagination">
+      <div class="store__pagination-perpage">
+        <select v-model="perPage" @change="getNewPerPage">
+          <option value="10">10</option>
+          <option value="100">100</option>
+          <option value="1000">1000</option>
+        </select>
+      </div>
       <div class="store__pagination-total">
         Всего на складе: {{ totalCount }}
       </div>
@@ -198,6 +205,10 @@ export default {
       return getDateWithTime(data)
     },
     getSearch() {
+      this.currentPage = 1
+      this.getList()
+    },
+    getNewPerPage() {
       this.currentPage = 1
       this.getList()
     },
@@ -304,6 +315,10 @@ export default {
   }
 
   &__pagination {
+    &-perpage {
+      margin-top: 10px;
+    }
+
     &-total {
       padding: 10px 0;
       font-size: 16px;
@@ -312,6 +327,7 @@ export default {
     &-page_control {
       cursor: pointer;
       display: flex;
+      flex-wrap: wrap;
 
       div {
         padding: 5px;

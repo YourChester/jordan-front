@@ -19,6 +19,7 @@
         <div v-show="isProductHaveDiscount" class="image__discount">
           {{ product.discount }}%
         </div>
+        <div v-show="isNewProduct" class="image__new">Новинка</div>
       </div>
       <div class="product__name">
         {{ product.name }}
@@ -48,6 +49,7 @@
           <div v-show="isProductHaveDiscount" class="image__discount">
             {{ product.discount }}%
           </div>
+          <div v-show="isNewProduct" class="image__new">Новинка</div>
         </div>
         <div class="product__name">
           {{ product.name }}
@@ -137,6 +139,15 @@ export default {
     isProductHaveDiscount() {
       return this.product?.discount
     },
+    isNewProduct() {
+      const date = new Date()
+      const productDate = new Date(this.product.dateIn)
+      return (
+        Math.ceil(
+          Math.abs(date.getTime() - productDate.getTime()) / (1000 * 3600 * 24)
+        ) < 7
+      )
+    },
     getDiscountPrice() {
       return (
         this.product?.priceOut -
@@ -186,6 +197,17 @@ export default {
         font-weight: 600;
         color: white;
         background-color: red;
+      }
+
+      &__new {
+        position: absolute;
+        top: 0;
+        right: 0;
+        padding: 10px;
+        font-size: 14px;
+        font-weight: 500;
+        color: white;
+        background-color: #5fc9cb;
       }
     }
   }

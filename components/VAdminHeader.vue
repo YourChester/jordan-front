@@ -1,30 +1,33 @@
 <template>
   <div class="admin-header__wrapper">
     <div class="admin-header">
-      <div class="admin-header__title">Панель администратора</div>
-      <div class="admin-header__link">
-        <NuxtLink
-          v-for="link in links"
-          v-show="link.role.includes(getRoleKey)"
-          :key="link.name"
-          exact
-          class="link"
-          :to="link.path"
-          tag="div"
-          active-class="active"
-        >
-          {{ link.name }}
-        </NuxtLink>
-      </div>
-      <div class="admin-header__user">
-        <div class="user__info">
-          {{ getSellerShorName }} - {{ getSellerRole }}
-        </div>
-        <div class="user__actions">
-          <button @click="$router.push('/')">На сайт</button>
-          <button @click="logOut">Выйти</button>
-        </div>
-      </div>
+      <table class="admin-header__link">
+        <td v-for="link in links" :key="link.name" exact class="link">
+          <nuxt-link
+            v-show="link.path && link.role.includes(getRoleKey)"
+            :to="link.path"
+            active-class="active"
+            exact
+          >
+            {{ link.name }}
+          </nuxt-link>
+          <button v-show="!link.path" @click="logOut">
+            {{ link.name }}
+          </button>
+        </td>
+      </table>
+      <table class="admin-header__admin-link">
+        <td v-for="link in adminLinks" :key="link.name" exact class="link">
+          <nuxt-link
+            v-show="link.path"
+            :to="link.path"
+            active-class="active"
+            exact
+          >
+            {{ link.name }}
+          </nuxt-link>
+        </td>
+      </table>
     </div>
   </div>
 </template>
@@ -40,11 +43,6 @@ export default {
           role: ['admin', 'manager'],
         },
         {
-          name: 'Все',
-          path: '/admin-panel/products/all',
-          role: ['admin'],
-        },
-        {
           name: 'Приход',
           path: '/admin-panel/products/new',
           role: ['admin', 'manager'],
@@ -57,7 +55,7 @@ export default {
         {
           name: 'Карты',
           path: '/admin-panel/discount-card',
-          role: ['admin', 'manager'],
+          role: ['admin'],
         },
         {
           name: 'Новые карты',
@@ -65,9 +63,32 @@ export default {
           role: ['admin', 'manager'],
         },
         {
+          name: 'На сайт',
+          path: '/',
+          role: ['admin', 'manager'],
+        },
+        {
+          name: 'Выход',
+          path: '',
+          role: ['admin', 'manager'],
+        },
+      ],
+      adminLinks: [
+        {
+          name: 'Все',
+          path: '/admin-panel/products/all',
+        },
+        {
+          name: 'Расходы',
+          path: '/admin-panel/costs',
+        },
+        {
+          name: 'Статистика',
+          path: '/admin-panel/statistic',
+        },
+        {
           name: 'Менеджеры',
           path: '/admin-panel/manager',
-          role: ['admin'],
         },
       ],
     }
@@ -98,38 +119,62 @@ export default {
 <style lang="scss" scoped>
 .admin-header {
   height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  &__wrapper {
-    height: 62px;
-    color: white;
-    background-color: #282828;
-  }
-
-  &__title {
-    padding-left: 20px;
-    font-size: 18px;
-    font-weight: 600;
-  }
 
   &__link {
-    height: 100%;
-    display: flex;
+    border-spacing: 0;
+    border-collapse: collapse;
+    margin: 20px;
 
-    .link {
-      height: 100%;
-      padding: 20px 10px;
-      color: white;
-      text-decoration: none;
-      cursor: pointer;
-      font-size: 16px;
+    th,
+    td {
+      border: 1px solid black;
+      padding: 5px;
+      text-align: center;
+
+      a {
+        text-decoration: none;
+        color: black;
+
+        &.active {
+          font-weight: 600;
+        }
+      }
+
+      button {
+        cursor: pointer;
+        outline: none;
+        border: none;
+        background-color: transparent;
+      }
     }
+  }
 
-    .active {
-      font-weight: 600;
-      border-bottom: 3px solid white;
+  &__admin-link {
+    border-spacing: 0;
+    border-collapse: collapse;
+    margin: 20px;
+
+    th,
+    td {
+      border: 1px solid black;
+      padding: 5px;
+      text-align: center;
+
+      a {
+        text-decoration: none;
+        color: black;
+
+        &.active {
+          font-weight: 600;
+        }
+      }
+
+      button {
+        cursor: pointer;
+        outline: none;
+        border: none;
+        background-color: transparent;
+      }
     }
   }
 

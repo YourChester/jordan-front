@@ -61,4 +61,26 @@ const getDateWithTime = (data) => {
   return `${day}.${month}.${year} ${hours}:${minutes}`
 }
 
-export { getDateForInput, getDateWithTime, getDateTimeForInput }
+const getFormatedDate = (data) => {
+  if (!data) {
+    return ''
+  }
+  const day =
+    new Date(data).getDate() < 10
+      ? `0${new Date(data).getDate()}`
+      : new Date(data).getDate()
+  const month =
+    new Date(data).getMonth() + 1 < 10
+      ? `0${new Date(data).getMonth() + 1}`
+      : new Date(data).getMonth() + 1
+  const year = new Date(data).getFullYear()
+
+  return `${day}.${month}.${year}`
+}
+
+export {
+  getDateForInput,
+  getDateWithTime,
+  getDateTimeForInput,
+  getFormatedDate,
+}

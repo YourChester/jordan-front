@@ -1,0 +1,45 @@
+<template>
+  <v-form-cost :cost-props="cost" @add="addCost" />
+</template>
+
+<script>
+import VFormCost from '~/components/VFormCost.vue'
+
+export default {
+  components: {
+    VFormCost,
+  },
+  layout: 'admin',
+  async asyncData({ $axios, query }) {
+    try {
+      if (query.id) {
+        const {
+          data: { cost },
+        } = await $axios.get(`/admin/costs/${query.id}`)
+        delete cost._id
+        return {
+          cost,
+        }
+      } else {
+        return {
+          cost: {},
+        }
+      }
+    } catch (e) {
+      console.log(e)
+    }
+  },
+  methods: {
+    async addCost(form) {
+      try {
+        await this.$axios.post(`/admin/costs`, {
+          ...form,
+        })
+        this.$router.push('/admin-panel/costs')
+      } catch (e) {
+        console.log(e)
+      }
+    },
+  },
+}
+</script>

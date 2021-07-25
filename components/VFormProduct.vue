@@ -6,6 +6,10 @@
           Артикул:
           <input v-model="product.articul" type="text" @input="debounceSerch" />
         </label>
+        <label v-show="product._id">
+          Пара для костюма:
+          <input v-model="product.pair" type="text" />
+        </label>
         <label>
           Тип:
           <select v-model="product.category">
@@ -88,6 +92,22 @@
           Комментарий:
           <textarea v-model="product.comment" />
         </label>
+        <div class="comment-templates">
+          <button @click="product.comment = 'нет кроссовок'">
+            нет кроссовок
+          </button>
+          <button @click="product.comment = 'нет коробки'">нет коробки</button>
+          <button @click="product.comment = 'нет штрих-кода'">
+            нет штрих-кода
+          </button>
+          <button @click="product.comment = 'не родная коробка'">
+            не родная коробка
+          </button>
+          <button @click="product.comment = 'Дельта'">Дельта</button>
+          <button @click="product.comment = 'Артема'">Артема</button>
+          <button @click="product.comment = 'Kids'">Kids</button>
+          <button @click="product.comment = ''">Очистить</button>
+        </div>
         <label>
           Описание:
           <textarea />
@@ -189,6 +209,8 @@ export default {
         ...this.productProps,
         dateIn: getDateTimeForInput(this.productProps.dateIn),
       }
+    } else {
+      this.product.dateIn = getDateTimeForInput(new Date())
     }
     if (this.$router.currentRoute.query.articul) {
       this.product.articul = this.$router.currentRoute.query.articul
@@ -212,6 +234,7 @@ export default {
             articul: this.product.articul,
             discount: 0,
             size: '',
+            priceIn: 0,
             dateIn: getDateTimeForInput(new Date()),
             createAt: getDateTimeForInput(new Date()),
           }
@@ -270,6 +293,24 @@ export default {
       select {
         margin-left: 10px;
         box-sizing: border-box;
+      }
+    }
+
+    .comment-templates {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+
+      button {
+        width: 120px;
+        background-color: transparent;
+        border: none;
+        outline: none;
+        cursor: pointer;
+
+        &:hover {
+          text-decoration: underline;
+        }
       }
     }
   }

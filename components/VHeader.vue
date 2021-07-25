@@ -20,10 +20,10 @@
             <a :href="`tel:${secondPhone}`">{{ secondPhone }}</a>
           </div>
         </div>
-        <div class="header__actions">
+        <!-- <div class="header__actions">
           <button class="login">Войти</button>
           <button class="registration">Регистрация</button>
-        </div>
+        </div> -->
       </div>
     </div>
     <div class="mobile-menu__wrapper">
@@ -112,7 +112,6 @@
           >
             <NuxtLink
               :to="`/${menuItem._id}`"
-              tag="div"
               class="menu__item-text"
               @click.native="visibilityMenuItem(index, false)"
             >
@@ -125,7 +124,6 @@
               <template v-for="category in menuItem.categories">
                 <div :key="category._id" class="category__item">
                   <NuxtLink
-                    tag="div"
                     :to="`/${menuItem._id}/${category._id}`"
                     class="category__item-text"
                     @click.native="visibilityMenuItem(index, false)"
@@ -135,7 +133,6 @@
                   <NuxtLink
                     v-for="childCategory in category.childs"
                     :key="`${index}${childCategory._id}`"
-                    tag="div"
                     :to="`/${menuItem._id}/${childCategory._id}`"
                     class="category__item-child"
                     @click.native="visibilityMenuItem(index, false)"
@@ -205,11 +202,6 @@ export default {
     align-items: center;
     justify-content: space-between;
 
-    @media (max-width: 425px) {
-      flex-direction: column;
-      justify-content: space-around;
-    }
-
     .address {
       display: flex;
       align-items: center;
@@ -225,6 +217,7 @@ export default {
     }
 
     @media (max-width: 425px) {
+      width: 100%;
       font-size: 12px;
     }
   }
@@ -288,7 +281,10 @@ export default {
     }
 
     &-text {
+      display: block;
       padding: 15px;
+      color: black;
+      text-decoration: none;
 
       &:hover {
         color: #5fc9cb;
@@ -296,6 +292,7 @@ export default {
     }
 
     &-categories {
+      display: block;
       z-index: 100;
       position: absolute;
       left: 0;
@@ -310,7 +307,10 @@ export default {
         &__item {
           &-text,
           &-child {
+            display: block;
             padding: 5px 15px;
+            color: black;
+            text-decoration: none;
 
             &:hover {
               color: #5fc9cb;

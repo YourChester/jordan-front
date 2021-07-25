@@ -61,12 +61,22 @@
           </td>
           <td>
             <div class="articul">
+              <img
+                v-show="product.pairImages && product.pairImages.length"
+                src="~/assets/img/imgpare.jpeg"
+                width="15px"
+                alt="Картинка"
+                class="pair"
+                @mouseover="visibilityImageModal(pairImages.images[0], true)"
+                @mouseleave="visibilityImageModal('', false)"
+              />
               <div>{{ product.articul }}</div>
               <img
                 v-show="product.images && product.images.length"
-                src="~/assets/img/image.svg"
-                width="15px"
+                src="~/assets/img/imgart.jpeg"
+                width="20px"
                 alt="Картинка"
+                class="image"
                 @mouseover="visibilityImageModal(product.images[0], true)"
                 @mouseleave="visibilityImageModal('', false)"
               />
@@ -116,7 +126,7 @@
     </table>
     <div class="store__pagination">
       <div class="store__pagination-perpage">
-        <select v-model="perPage" @change="getList">
+        <select v-model="perPage" @change="getNewPerPage">
           <option value="10">10</option>
           <option value="100">100</option>
           <option value="1000">1000</option>
@@ -207,6 +217,10 @@ export default {
       return getDateWithTime(data)
     },
     getSearch() {
+      this.currentPage = 1
+      this.getList()
+    },
+    getNewPerPage() {
       this.currentPage = 1
       this.getList()
     },
@@ -306,7 +320,11 @@ export default {
         justify-content: center;
         align-items: center;
 
-        img {
+        .pair {
+          margin-right: 10px;
+        }
+
+        .image {
           margin-left: 10px;
         }
       }

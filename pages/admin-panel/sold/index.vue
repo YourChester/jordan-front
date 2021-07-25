@@ -27,6 +27,7 @@
           <th rowspan="2">Карта покупателя</th>
           <th rowspan="2">Дата продажи</th>
           <th rowspan="2">Сумма продажи</th>
+          <th rowspan="2">Доход</th>
           <th colspan="3">Действия</th>
         </tr>
         <tr>
@@ -47,6 +48,9 @@
             {{ sold.totalPrice }}
           </td>
           <td>
+            {{ sold.totalIncome }}
+          </td>
+          <td>
             <NuxtLink
               class="link"
               :to="`/admin-panel/sold/${sold._id}`"
@@ -60,6 +64,13 @@
       </table>
     </div>
     <div class="sold__pagination">
+      <div class="sold__pagination-perpage">
+        <select v-model="perPage" @change="getNewPerPage">
+          <option value="10">10</option>
+          <option value="100">100</option>
+          <option value="1000">1000</option>
+        </select>
+      </div>
       <div class="sold__pagination-total">Всего: {{ totalCount }}</div>
       <div v-show="totalPages > 1" class="sold__pagination-page_control">
         <div v-show="currentPage !== 1" @click="currentPage = currentPage - 1">
@@ -104,6 +115,7 @@ export default {
 
       return {
         currentPage: 1,
+        perPage: 100,
         totalCount,
         totalPages,
         solds,
@@ -137,6 +149,10 @@ export default {
     getFormatedDate(date) {
       return getDateWithTime(date)
     },
+    getNewPerPage() {
+      this.currentPage = 1
+      this.getList()
+    },
     async getList() {
       try {
         const {
@@ -144,7 +160,7 @@ export default {
         } = await this.$axios.get('/admin/solds', {
           params: {
             seller: this.payload.seller,
-            limit: 100,
+            limit: this.perPage,
             page: this.currentPage,
           },
         })
@@ -202,6 +218,10 @@ export default {
   }
 
   &__pagination {
+    &-perpage {
+      margin-top: 10px;
+    }
+
     &-total {
       padding: 10px 0;
       font-size: 16px;
@@ -210,6 +230,7 @@ export default {
     &-page_control {
       cursor: pointer;
       display: flex;
+      flex-wrap: wrap;
 
       div {
         padding: 5px;

@@ -72,8 +72,26 @@
               </div>
             </div>
           </div>
-          <div class="right-side__sort">
-            <div></div>
+          <div class="right-side">
+            <div
+              class="right-side__sort"
+              @mouseover="visibleSort = true"
+              @mouseleave="visibleSort = false"
+            >
+              Сортировать: {{ getSortName }}
+              <div v-show="visibleSort" class="right-side__sort-menu">
+                <button @click="setSort('prise')">цена по убыванию</button>
+                <button @click="setSort('prise-reverse')">
+                  цена по возростанию
+                </button>
+                <button @click="setSort('dicount')">акции</button>
+                <button @click="setSort('name-reverse')">
+                  по названию Я-А
+                </button>
+                <button @click="setSort('name')">по названию А-Я</button>
+                <button @click="setSort('')">по умолчанию</button>
+              </div>
+            </div>
             <div v-show="totalPages > 1" class="right-side__paginations">
               <div
                 v-show="currentPage > 1"
@@ -134,6 +152,7 @@ export default {
         category: params.category || '',
         brand: [],
         size: [],
+        sort: '',
         limit: 12,
         page: 1,
       }
@@ -174,10 +193,27 @@ export default {
       products: [],
       filters: {},
       titlePage: '',
+      visibleSort: false,
     }
   },
   computed: {
     ...mapGetters({ categories: 'codeBooks/categories' }),
+    getSortName() {
+      switch (this.filters.sort) {
+        case 'dicount':
+          return 'акции'
+        case 'prise-reverse':
+          return 'цена по убыванию'
+        case 'prise':
+          return 'цена по возростанию'
+        case 'name-reverse':
+          return 'по названию Я-А'
+        case 'name':
+          return 'по названию А-Я'
+        default:
+          return 'по умолчанию'
+      }
+    },
     getTitlePage() {
       return this.categories.find((el) => el._id === this.titlePage)?.name || ''
     },
@@ -255,8 +291,12 @@ export default {
     clearFilters() {
       this.$router.push(`/all`)
     },
+    setSort(key) {
+      this.filters.sort = key
+      this.currentPage = 1
+      this.getData()
+    },
     setNewFilter({ key, value }) {
-      console.log({ key, value })
       this.filters[key] = value
       if (key === 'category') {
         if (value) {
@@ -274,8 +314,6 @@ export default {
         } else {
           this.$router.push(`/`)
         }
-        this.filters.size = []
-        this.filters.brand = []
       } else if (key === 'gender') {
         if (value) {
           this.$router.push(
@@ -288,11 +326,10 @@ export default {
             `/all${this.filters.category ? '/' + this.filters.category : ''}`
           )
         }
-        this.filters.size = []
-        this.filters.brand = []
+      } else {
+        this.currentPage = 1
+        this.getData()
       }
-      this.currentPage = 1
-      this.getData()
     },
   },
 }

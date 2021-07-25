@@ -5,11 +5,11 @@
         v-show="isFiltersEmpty"
         class="products-filters__filters-active_card"
       >
-        <div class="products-filters__title">
+        <div class="products-filters__title" @click="openFilter = !openFilter">
           <h1>Фильтры</h1>
           <div
             class="products-filters__title-btn"
-            @click="openFilter = !openFilter"
+            :class="openFilter ? 'active' : ''"
           >
             <svg
               height="20px"
@@ -65,6 +65,17 @@
               />
             </div>
           </div>
+          <div v-show="filters.size.length" class="filters-active__brand">
+            <div>Размеры: {{ filters.size.join(', ') }}</div>
+            <div>
+              <img
+                src="~/assets/img/close.svg"
+                width="12"
+                height="12"
+                @click="sizeData = []"
+              />
+            </div>
+          </div>
           <div v-show="filters.brand.length" class="filters-active__brand">
             <div>Бренд: {{ filters.brand.join(', ') }}</div>
             <div>
@@ -72,7 +83,7 @@
                 src="~/assets/img/close.svg"
                 width="12"
                 height="12"
-                @click="$emit('set-filter', { key: 'brand', value: [] })"
+                @click="brandData = []"
               />
             </div>
           </div>
@@ -364,6 +375,9 @@ export default {
     gendersData(newVal) {
       this.$emit('set-filter', { key: 'gender', value: newVal })
     },
+    sizeData(newVal) {
+      this.$emit('set-filter', { key: 'size', value: newVal })
+    },
   },
   created() {
     this.categoryData = this.filters.category
@@ -379,10 +393,8 @@ export default {
       if (this.isSizeIncludes(size)) {
         const index = this.sizeData.indexOf(size)
         this.sizeData.splice(index, 1)
-        this.$emit('set-filter', { key: 'size', value: this.sizeData })
       } else {
         this.sizeData.push(size)
-        this.$emit('set-filter', { key: 'size', value: this.sizeData })
       }
     },
     isSizeIncludes(size) {
@@ -461,6 +473,10 @@ export default {
 
     &-btn {
       display: none;
+
+      &.active {
+        transform: rotate(180deg);
+      }
 
       @media (max-width: 960px) {
         display: block;

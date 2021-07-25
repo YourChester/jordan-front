@@ -13,7 +13,6 @@
             <NuxtLink
               :id="slide.key"
               :key="index + slide.name"
-              tag="div"
               :to="slide.link"
               class="slider__slide"
             >
@@ -182,6 +181,7 @@ export default {
   }
 
   &__slide {
+    display: block;
     min-width: 100%;
     height: 100%;
     cursor: pointer;
