@@ -78,9 +78,28 @@ const getFormatedDate = (data) => {
   return `${day}.${month}.${year}`
 }
 
+const getMonthName = (index) => {
+  const month = [
+    'Январь',
+    'Февраль',
+    'Март',
+    'Апрель',
+    'Май',
+    'Июнь',
+    'Июль',
+    'Август',
+    'Сентябрь',
+    'Октябрь',
+    'Ноябырь',
+    'Декабырь',
+  ]
+  return month[index]
+}
+
 export {
   getDateForInput,
   getDateWithTime,
   getDateTimeForInput,
   getFormatedDate,
+  getMonthName,
 }

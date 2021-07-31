@@ -166,6 +166,13 @@ export default {
 
       return Math.round(totalPrice)
     },
+    getTotalOut() {
+      const totalPrice = this.localSold.products.reduce((price, el) => {
+        return (price += el.priceIn)
+      }, 0)
+
+      return Math.round(totalPrice)
+    },
   },
   created() {
     this.debounceSerchCard = debounce(this.getDiscountCard, 1000)
@@ -255,6 +262,7 @@ export default {
       try {
         this.localSold.totalPrice = this.getTotalPrice
         this.localSold.totalIncome = this.getTotalIncome
+        this.localSold.totalOut = this.getTotalOut
 
         if (this.localSold._id) {
           await this.$axios.put(

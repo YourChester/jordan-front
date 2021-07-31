@@ -29,13 +29,41 @@
         <tr>
           <td></td>
           <td></td>
+          <td>
+            <input
+              v-model="productName"
+              class="table-search"
+              type="text"
+              @input="debounceSerch"
+            />
+          </td>
           <td></td>
           <td></td>
           <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
+          <td>
+            <input
+              v-model="search"
+              class="table-search"
+              type="text"
+              @input="debounceSerch"
+            />
+          </td>
+          <td>
+            <input
+              v-model="search"
+              class="table-search"
+              type="text"
+              @input="debounceSerch"
+            />
+          </td>
+          <td>
+            <input
+              v-model="search"
+              class="table-search"
+              type="text"
+              @input="debounceSerch"
+            />
+          </td>
           <td></td>
           <th>Прих.</th>
           <th>Прав.</th>
@@ -67,7 +95,7 @@
                 width="15px"
                 alt="Картинка"
                 class="pair"
-                @mouseover="visibilityImageModal(pairImages.images[0], true)"
+                @mouseover="visibilityImageModal(product.pairImages[0], true)"
                 @mouseleave="visibilityImageModal('', false)"
               />
               <div>{{ product.articul }}</div>
@@ -196,6 +224,7 @@ export default {
       debounceSerch: null,
       modalVisibility: false,
       imageUrl: '',
+      productName: '',
       url: process.env.IMG_URL,
     }
   },
@@ -231,6 +260,7 @@ export default {
         } = await this.$axios.get('/admin/products', {
           params: {
             visibility: true,
+            name: this.productName,
             search: this.search,
             limit: this.perPage,
             page: this.currentPage,
@@ -327,6 +357,10 @@ export default {
         .image {
           margin-left: 10px;
         }
+      }
+
+      .table-search {
+        width: 100px;
       }
     }
   }

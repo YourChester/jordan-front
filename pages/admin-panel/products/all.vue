@@ -119,7 +119,9 @@
           <td>
             <div class="articul">
               <img
-                v-show="product.pairImages && product.pairImages.length"
+                v-show="
+                  product && product.pairImages && product.pairImages.length
+                "
                 src="~/assets/img/imgpare.jpeg"
                 width="15px"
                 alt="Картинка"
@@ -129,7 +131,7 @@
               />
               <div>{{ product.articul }}</div>
               <img
-                v-show="product.images && product.images.length"
+                v-show="product && product.images && product.images.length"
                 src="~/assets/img/imgart.jpeg"
                 width="20px"
                 alt="Картинка"

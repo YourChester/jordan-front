@@ -90,6 +90,10 @@ export default {
           name: 'Менеджеры',
           path: '/admin-panel/manager',
         },
+        {
+          name: 'Группы',
+          path: '/admin-panel/category',
+        },
       ],
     }
   },
@@ -174,6 +178,13 @@ export default {
         outline: none;
         border: none;
         background-color: transparent;
+      }
+
+      @media (max-width: 425px) {
+        padding: 10px;
+        a {
+          font-size: 24px;
+        }
       }
     }
   }
