@@ -25,7 +25,7 @@ export default {
   async asyncData({ $axios }) {
     try {
       const productsData = await $axios.get('/products', {
-        params: { limit: 10 },
+        params: { page: 1, limit: 10 },
       })
       return {
         products: productsData.data.products,
