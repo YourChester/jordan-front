@@ -284,7 +284,8 @@ export default {
     setNewFilter({ key, value }) {
       this.filters[key] = value
       if (
-        (!this.filters.brand?.length || !this.filters.size?.length) &&
+        !this.filters.brand?.length &&
+        !this.filters.size?.length &&
         this.filters.gender === 'all'
       ) {
         this.$router.push('/')

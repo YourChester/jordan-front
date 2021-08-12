@@ -11,9 +11,9 @@
         >
           <template v-for="(slide, index) in getCurrentSlides">
             <NuxtLink
-              :id="slide.key"
+              :id="slide.name"
               :key="index + slide.name"
-              :to="slide.link"
+              :to="slide.key ? getLink(slide.key) : slide.link"
               class="slider__slide"
             >
               <img :src="slide.img" :alt="slide.nam" />
@@ -43,6 +43,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   props: {
     slides: {
@@ -59,6 +60,9 @@ export default {
     }
   },
   computed: {
+    ...mapGetters({
+      genders: 'codeBooks/genders',
+    }),
     getCurrentSlides() {
       if (!this.slides.length) {
         return []
@@ -102,6 +106,11 @@ export default {
     })
   },
   methods: {
+    getLink(key) {
+      return this.genders.length
+        ? `/${this.genders?.find((el) => el.name === key)?._id}`
+        : ''
+    },
     changeSlide() {
       if (this.touchXStart > this.touchXEnd) {
         this.nextSlide()

@@ -41,12 +41,12 @@ export default {
         {
           img: '/img/slide_nikeman.jpg',
           name: 'Nike Men',
-          link: '/60e074a4452a22054c6ca43f',
+          key: 'Мужчины',
         },
         {
           img: '/img/slide_nikewomen.jpg',
           name: 'Nike Women',
-          link: '/60e074a4452a22054c6ca440',
+          key: 'Женщины',
         },
         {
           img: '/img/slide_jordan.jpg',
