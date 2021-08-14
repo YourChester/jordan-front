@@ -69,7 +69,7 @@
           <th>Прав.</th>
         </tr>
         <tr v-for="product in products" :key="product._id">
-          <td>
+          <td :class="getClass(product)">
             {{ product.category ? product.category.name : '' }}
           </td>
           <td>
@@ -292,6 +292,27 @@ export default {
         console.log(e)
       }
     },
+    getClass(product) {
+      if (!product.comment.length) {
+        return ''
+      }
+
+      if (
+        product.comment.includes('нет левого') ||
+        product.comment.includes('нет правого') ||
+        product.comment.includes('нет кроссовок') ||
+        product.comment.includes('нет пары') ||
+        product.comment.includes('распаровка')
+      ) {
+        return 'comment_red'
+      } else if (product.comment.includes('нет коробки')) {
+        return 'comment_yellow'
+      } else if (product.comment.includes('нет штрих-кода')) {
+        return 'comment_green'
+      } else {
+        return 'comment_gray'
+      }
+    },
   },
 }
 </script>
@@ -361,6 +382,30 @@ export default {
 
       .table-search {
         width: 100px;
+      }
+    }
+
+    td {
+      &.comment_red,
+      &.comment_green,
+      &.comment_gray {
+        color: white;
+      }
+
+      &.comment_red {
+        background-color: red;
+      }
+
+      &.comment_green {
+        background-color: green;
+      }
+
+      &.comment_gray {
+        background-color: gray;
+      }
+
+      &.comment_yellow {
+        background-color: yellow;
       }
     }
   }

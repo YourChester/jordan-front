@@ -28,7 +28,7 @@ export default {
         payload.dateIn = payload.dateIn ? new Date(payload.dateIn) : ''
 
         await this.$axios.put(`/admin/products/${this.product._id}`, payload)
-        this.$router.push('/admin-panel')
+        this.$router.push('/admin-panel/products')
       } catch (e) {
         console.log(e)
       }

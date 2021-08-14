@@ -3,10 +3,16 @@
     <div class="footer">
       <div class="footer__info">
         <p class="info__title">Информация</p>
-        <div class="info__contect">Контакты</div>
-        <div class="info__work">Условия работы магазина</div>
-        <div class="info__pay">Оплата и доставка</div>
-        <div class="info__return">Условия возврата</div>
+        <div class="info__contect">
+          <nuxt-link to="/contact">Контакты</nuxt-link>
+        </div>
+        <!-- <div class="info__work">Условия работы магазина</div> -->
+        <div class="info__pay">
+          <nuxt-link to="/pay_delivery"> Оплата и доставка </nuxt-link>
+        </div>
+        <div class="info__return">
+          <nuxt-link to="/return"> Условия возврата </nuxt-link>
+        </div>
       </div>
       <div class="footer__copyright">
         2021 &copy; Jordan-brand - магазин спортивной одежды и обуви в Донецке
@@ -56,8 +62,13 @@ export default {
         font-size: 16px;
         cursor: pointer;
 
-        &:hover {
-          color: #5fc9cb;
+        a {
+          color: white;
+          text-decoration: none;
+
+          &:hover {
+            color: #5fc9cb;
+          }
         }
       }
     }
