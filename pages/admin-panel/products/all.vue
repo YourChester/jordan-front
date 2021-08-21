@@ -31,8 +31,35 @@
         </tr>
         <tr>
           <td></td>
-          <td></td>
-          <td></td>
+          <td>
+            <select
+              v-model="productType"
+              class="table-search"
+              @change="debounceSerch"
+            >
+              <option :value="''">Выберите категорию</option>
+              <template v-for="category in getGroupCategories">
+                <option :key="category._id" disabled :value="category._id">
+                  {{ category.name }}
+                </option>
+                <option
+                  v-for="childCategory in category.child"
+                  :key="childCategory._id"
+                  :value="childCategory._id"
+                >
+                  &ensp;&ensp;&ensp;{{ childCategory.name }}
+                </option>
+              </template>
+            </select>
+          </td>
+          <td>
+            <input
+              v-model="productBrand"
+              class="table-search"
+              type="text"
+              @input="debounceSerch"
+            />
+          </td>
           <td>
             <input
               v-model="productName"
@@ -90,6 +117,9 @@
             <input v-model="selected" :value="product._id" type="checkbox" />
           </td>
           <td :class="getClass(product)">
+            <div v-if="product.comment.length" class="popup">
+              {{ product.comment }}
+            </div>
             {{ product.category ? product.category.name : '' }}
           </td>
           <td>
@@ -287,12 +317,29 @@ export default {
       discount: '',
       productName: '',
       productProvider: '',
+      productBrand: '',
+      productType: '',
     }
   },
   computed: {
     ...mapGetters({
       genders: 'codeBooks/genders',
+      categories: 'codeBooks/categories',
     }),
+    getGroupCategories() {
+      const categoriesList = []
+      this.categories.forEach((category) => {
+        if (!category.parent) {
+          categoriesList.push({
+            ...category,
+            child: this.categories.filter((el) =>
+              el.parent ? el.parent._id === category._id : false
+            ),
+          })
+        }
+      })
+      return categoriesList
+    },
   },
   watch: {
     currentPage() {
@@ -344,6 +391,8 @@ export default {
           params: {
             search: this.search,
             name: this.productName,
+            brand: this.productBrand,
+            category: this.productType,
             provider: this.productProvider,
             limit: this.perPage,
             page: this.currentPage,
@@ -483,6 +532,8 @@ export default {
     }
 
     td {
+      position: relative;
+
       &.comment_red,
       &.comment_green,
       &.comment_gray {
@@ -503,6 +554,25 @@ export default {
 
       &.comment_yellow {
         background-color: yellow;
+      }
+
+      .popup {
+        display: none;
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        padding: 4px;
+        background-color: white;
+        border: 1px solid black;
+        color: black;
+        white-space: nowrap;
+        z-index: 1000;
+      }
+
+      &:hover {
+        .popup {
+          display: block;
+        }
       }
     }
   }

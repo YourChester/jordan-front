@@ -20,12 +20,12 @@
           <th rowspan="2">Телефон</th>
           <th colspan="2">Даты</th>
           <th rowspan="2">Скидка</th>
-          <th rowspan="2">Сумма покупок</th>
-          <th colspan="2">Действия</th>
+          <th colspan="3">Действия</th>
         </tr>
         <tr>
           <th>Рождения</th>
           <th>Выдачи</th>
+          <th>Просм.</th>
           <th>Ред.</th>
           <th>Удал.</th>
         </tr>
@@ -50,7 +50,13 @@
             {{ card.discount }}
           </td>
           <td>
-            {{ card.totalPrice || 0 }}
+            <NuxtLink
+              class="link"
+              :to="`/admin-panel/discount-card/view/${card._id}`"
+              tag="div"
+            >
+              O
+            </NuxtLink>
           </td>
           <td>
             <NuxtLink

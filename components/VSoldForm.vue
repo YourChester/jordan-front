@@ -68,8 +68,9 @@
         </table>
       </div>
       <div class="sold-form__table-wrapper">
-        <div>
-          <h3>Продаваемый товар на сумму {{ getTotalPrice }}p.</h3>
+        <div class="sold-form__title">
+          <h3>Продаваемый товар на сумму</h3>
+          <input v-model="localSold.totalPrice" type="text" />
         </div>
         <table class="sold-form__table">
           <tr>
@@ -87,7 +88,11 @@
               {{ item.priceOut }}
             </td>
             <td>
-              <input v-model="item.priseSold" type="text" />
+              <input
+                v-model="item.priseSold"
+                type="text"
+                @change="updateTotalPrice"
+              />
             </td>
             <td>
               {{ item.discount }}
@@ -191,6 +196,9 @@ export default {
     }
   },
   methods: {
+    updateTotalPrice() {
+      this.localSold.totalPrice = this.getTotalPrice
+    },
     async getDiscountCard() {
       try {
         const discountCardsData = await this.$axios.get(
@@ -205,6 +213,7 @@ export default {
         this.buyer.name = card.name
         this.localSold.card = card._id
         this.localSold.discount = card.discount
+        this.localSold.totalPrice = this.getTotalPrice
       } catch (e) {
         console.log(e)
       }
@@ -235,6 +244,7 @@ export default {
       this.localSold.products.push(localProduct)
       this.products = []
       this.product = ''
+      this.localSold.totalPrice = this.getTotalPrice
     },
     async deleteProduct(index) {
       try {
@@ -254,13 +264,13 @@ export default {
         } else {
           this.localSold.products.splice(index, 1)
         }
+        this.localSold.totalPrice = this.getTotalPrice
       } catch (e) {
         console.log(e)
       }
     },
     async saveSold() {
       try {
-        this.localSold.totalPrice = this.getTotalPrice
         this.localSold.totalIncome = this.getTotalIncome
         this.localSold.totalOut = this.getTotalOut
 
@@ -289,6 +299,13 @@ export default {
 
   h3 {
     margin: 0;
+  }
+
+  &__title {
+    h3 {
+      display: inline-block;
+      margin-right: 10px;
+    }
   }
 
   .seller {

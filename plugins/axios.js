@@ -1,10 +1,15 @@
 export default function (ctx) {
   ctx.$axios.onRequest((config) => {
     if (
-      !ctx.$auth.strategy.token.status().valid() &&
-      config.url.includes('admin')
+      config.url.includes('admin/products') ||
+      config.url.includes('admin/solds') ||
+      config.url.includes('admin/costs') ||
+      config.url.includes('admin/statistic') ||
+      config.url.includes('admin/discount-cards') ||
+      config.url.includes('admin/categoryies') ||
+      config.url.includes('admin/sellers')
     ) {
-      ctx.redirect(ctx.$auth.options.redirect.login)
+      ctx.store.dispatch('loginStatus/updateTimeout')
     }
   })
 }
