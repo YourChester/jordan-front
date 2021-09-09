@@ -228,7 +228,7 @@ import { getDateWithTime } from '@/assets/utils/date'
 export default {
   components: {},
   layout: 'admin',
-  async asyncData({ $axios, redirect, $auth }) {
+  async asyncData({ $axios }) {
     try {
       const productsData = await $axios.get('/admin/products', {
         params: {
@@ -239,10 +239,15 @@ export default {
       })
       return {
         currentPage: 1,
+        perPage: 10,
         totalCount: productsData.data.totalCount,
         totalPages: productsData.data.totalPages,
         search: '',
         products: productsData.data.products,
+        imageUrl: '',
+        productName: '',
+        productBrand: '',
+        productType: '',
       }
     } catch (e) {
       console.log(e)
@@ -250,14 +255,9 @@ export default {
   },
   data() {
     return {
-      perPage: 10,
+      url: process.env.IMG_URL,
       debounceSerch: null,
       modalVisibility: false,
-      imageUrl: '',
-      productName: '',
-      url: process.env.IMG_URL,
-      productBrand: '',
-      productType: '',
     }
   },
   computed: {

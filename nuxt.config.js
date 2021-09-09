@@ -11,7 +11,18 @@ export default {
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: '' },
+      {
+        hid: 'description',
+        name: 'description',
+        content:
+          'Jordan Brand магазин оригинальных кросовок в донецке по адресу г. Донецк, пр. Титова, 8-Б (ориентир "Детский Мир").',
+      },
+      {
+        hid: 'keywords',
+        name: 'keywords',
+        content:
+          'Донецк, донецк, Nike, nike, jordan, jordan-brand, jordan brand, кросовки, Донецк Nike, донецк nike, Донецк Jordan, донецк jordan, Донецк jordan',
+      },
     ],
     link: [
       {

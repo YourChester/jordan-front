@@ -13,7 +13,7 @@ export default {
     VAdminHeader,
   },
   middleware: 'authAdmin',
-  async created() {
+  async mounted() {
     try {
       const gendersResult = await this.$axios.get('/codebooks/genders')
       const categoriesResult = await this.$axios.get('/codebooks/categories')

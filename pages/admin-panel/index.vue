@@ -10,38 +10,96 @@
     <table cellpadding="0" cellspacing="0" class="store__table-product">
       <tbody>
         <tr>
-          <th rowspan="2" width="100px">Тип</th>
-          <th rowspan="2" width="80px">Бренд</th>
-          <th rowspan="2" width="250px">Название</th>
-          <th rowspan="2" width="80px">Цена</th>
-          <th rowspan="2" width="60px">Скидка</th>
-          <th rowspan="2" width="60px">Размер</th>
-          <th rowspan="2" width="150px">Артикул</th>
+          <th rowspan="2">Тип</th>
+          <th rowspan="2">Бренд</th>
+          <th rowspan="2">Название</th>
+          <th rowspan="2">Цена</th>
+          <th rowspan="2">Скидка</th>
+          <th rowspan="2">Размер</th>
+          <th rowspan="2">Артикул</th>
           <th colspan="2">Штрих код</th>
-          <th rowspan="2" width="130px">Дата получения</th>
-          <th rowspan="3" width="150px">Пол</th>
+          <th rowspan="2">Дата получения</th>
+          <th rowspan="3">Пол</th>
           <th rowspan="2" colspan="2">Действия</th>
         </tr>
         <tr>
-          <th width="130px">Товара</th>
-          <th width="130px">Коробка</th>
+          <th>Товара</th>
+          <th>Коробка</th>
         </tr>
         <tr>
+          <td>
+            <select
+              v-model="productType"
+              class="table-search"
+              @change="debounceSerch"
+            >
+              <option :value="''">Выберите категорию</option>
+              <template v-for="category in getGroupCategories">
+                <option :key="category._id" disabled :value="category._id">
+                  {{ category.name }}
+                </option>
+                <option
+                  v-for="childCategory in category.child"
+                  :key="childCategory._id"
+                  :value="childCategory._id"
+                >
+                  &ensp;&ensp;&ensp;{{ childCategory.name }}
+                </option>
+              </template>
+            </select>
+          </td>
+          <td>
+            <input
+              v-model="productBrand"
+              class="table-search"
+              type="text"
+              @input="debounceSerch"
+            />
+          </td>
+          <td>
+            <input
+              v-model="productName"
+              class="table-search"
+              type="text"
+              @input="debounceSerch"
+            />
+          </td>
           <td></td>
           <td></td>
           <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
+          <td>
+            <input
+              v-model="search"
+              class="table-search"
+              type="text"
+              @input="debounceSerch"
+            />
+          </td>
+          <td>
+            <input
+              v-model="search"
+              class="table-search"
+              type="text"
+              @input="debounceSerch"
+            />
+          </td>
+          <td>
+            <input
+              v-model="search"
+              class="table-search"
+              type="text"
+              @input="debounceSerch"
+            />
+          </td>
           <td></td>
           <th>Прих.</th>
           <th>Прав.</th>
         </tr>
         <tr v-for="product in products" :key="product._id">
-          <td>
+          <td :class="getClass(product)">
+            <div v-if="product.comment.length" class="popup">
+              {{ product.comment }}
+            </div>
             {{ product.category ? product.category.name : '' }}
           </td>
           <td>
@@ -61,12 +119,22 @@
           </td>
           <td>
             <div class="articul">
+              <img
+                v-show="product.pairImages && product.pairImages.length"
+                src="~/assets/img/imgpare.jpeg"
+                width="15px"
+                alt="Картинка"
+                class="pair"
+                @mouseover="visibilityImageModal(product.pairImages[0], true)"
+                @mouseleave="visibilityImageModal('', false)"
+              />
               <div>{{ product.articul }}</div>
               <img
                 v-show="product.images && product.images.length"
-                src="~/assets/img/image.svg"
-                width="15px"
+                src="~/assets/img/imgart.jpeg"
+                width="20px"
                 alt="Картинка"
+                class="image"
                 @mouseover="visibilityImageModal(product.images[0], true)"
                 @mouseleave="visibilityImageModal('', false)"
               />
@@ -164,6 +232,7 @@ export default {
     try {
       const productsData = await $axios.get('/admin/products', {
         params: {
+          visibility: true,
           limit: 10,
           page: 1,
         },
@@ -181,16 +250,35 @@ export default {
   },
   data() {
     return {
+      perPage: 10,
       debounceSerch: null,
       modalVisibility: false,
       imageUrl: '',
+      productName: '',
       url: process.env.IMG_URL,
+      productBrand: '',
+      productType: '',
     }
   },
   computed: {
     ...mapGetters({
       genders: 'codeBooks/genders',
+      categories: 'codeBooks/categories',
     }),
+    getGroupCategories() {
+      const categoriesList = []
+      this.categories.forEach((category) => {
+        if (!category.parent) {
+          categoriesList.push({
+            ...category,
+            child: this.categories.filter((el) =>
+              el.parent ? el.parent._id === category._id : false
+            ),
+          })
+        }
+      })
+      return categoriesList
+    },
   },
   watch: {
     currentPage() {
@@ -218,8 +306,12 @@ export default {
           data: { products, totalCount, totalPages },
         } = await this.$axios.get('/admin/products', {
           params: {
+            visibility: true,
+            name: this.productName,
+            brand: this.productBrand,
+            category: this.productType,
             search: this.search,
-            limit: 10,
+            limit: this.perPage,
             page: this.currentPage,
           },
         })
@@ -247,6 +339,27 @@ export default {
         })
       } catch (e) {
         console.log(e)
+      }
+    },
+    getClass(product) {
+      if (!product.comment.length) {
+        return ''
+      }
+
+      if (
+        product.comment.includes('нет левого') ||
+        product.comment.includes('нет правого') ||
+        product.comment.includes('нет кроссовок') ||
+        product.comment.includes('нет пары') ||
+        product.comment.includes('распаровка')
+      ) {
+        return 'comment_red'
+      } else if (product.comment.includes('нет коробки')) {
+        return 'comment_yellow'
+      } else if (product.comment.includes('нет штрих-кода')) {
+        return 'comment_green'
+      } else {
+        return 'comment_gray'
       }
     },
   },
@@ -307,8 +420,61 @@ export default {
         justify-content: center;
         align-items: center;
 
-        img {
+        .pair {
+          margin-right: 10px;
+        }
+
+        .image {
           margin-left: 10px;
+        }
+      }
+
+      .table-search {
+        width: 100px;
+      }
+    }
+
+    td {
+      position: relative;
+
+      &.comment_red,
+      &.comment_green,
+      &.comment_gray {
+        color: white;
+      }
+
+      &.comment_red {
+        background-color: red;
+      }
+
+      &.comment_green {
+        background-color: green;
+      }
+
+      &.comment_gray {
+        background-color: gray;
+      }
+
+      &.comment_yellow {
+        background-color: yellow;
+      }
+
+      .popup {
+        display: none;
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        padding: 4px;
+        background-color: white;
+        border: 1px solid black;
+        color: black;
+        white-space: nowrap;
+        z-index: 1000;
+      }
+
+      &:hover {
+        .popup {
+          display: block;
         }
       }
     }

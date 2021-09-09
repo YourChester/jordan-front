@@ -530,6 +530,18 @@ export default {
   head() {
     return {
       title: this.product.name,
+      meta: [
+        {
+          hid: 'description',
+          name: 'description',
+          content: `${this.product.name} ${this.product.articul}`,
+        },
+        {
+          hid: 'keywords',
+          name: 'keywords',
+          content: `${this.product.name}, ${this.product.articul}`,
+        },
+      ],
     }
   },
   computed: {
