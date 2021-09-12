@@ -518,7 +518,7 @@ export default {
         currentImage,
       }
     } catch (e) {
-      console.log(e)
+      console.log(e?.message || '')
     }
   },
   data: () => {

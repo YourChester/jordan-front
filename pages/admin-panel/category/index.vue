@@ -75,7 +75,7 @@ export default {
         categories,
       }
     } catch (e) {
-      console.log(e)
+      console.log(e?.message || '')
     }
   },
   computed: {
@@ -99,14 +99,14 @@ export default {
         } = await this.$axios.get('/admin/categoryies')
         this.categories = categories
       } catch (e) {
-        console.log(e)
+        console.log(e?.message || '')
       }
     },
     async deleteCategory(id) {
       try {
         await this.$axios.delete(`/admin/categoryies/${id}`)
       } catch (e) {
-        console.log(e)
+        console.log(e?.message || '')
       }
     },
   },

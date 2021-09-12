@@ -11,7 +11,7 @@
         >
           <template v-for="(slide, index) in getCurrentSlides">
             <NuxtLink
-              :id="slide.name"
+              :id="slide.key"
               :key="index + slide.name"
               :to="slide.key ? getLink(slide.key) : slide.link"
               class="slider__slide"

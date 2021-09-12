@@ -146,7 +146,6 @@ export default {
   },
   async asyncData({ $axios, params, query }) {
     try {
-      console.log(query)
       const titlePage = params.category
       const filters = {
         gender: params.gender || '',
@@ -177,7 +176,7 @@ export default {
         titlePage,
       }
     } catch (e) {
-      console.log(e)
+      console.log(e?.message || '')
     }
   },
   data: () => {
@@ -270,7 +269,7 @@ export default {
         this.products = productsData.data.products
         this.totalPages = productsData.data.totalPages
       } catch (e) {
-        console.log(e)
+        console.log(e?.message || '')
       }
     },
     clearFilters() {

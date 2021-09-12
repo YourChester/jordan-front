@@ -33,6 +33,7 @@
           <tr>
             <th rowspan="2" width="100px">Тип</th>
             <th rowspan="2" width="250px">Название</th>
+            <th rowspan="2" width="250px">Артикул</th>
             <th rowspan="2" width="80px">Цена</th>
             <th rowspan="2" width="60px">Размер</th>
             <th colspan="2">Штрих код</th>
@@ -48,6 +49,29 @@
             </td>
             <td>
               {{ item.name }}
+            </td>
+            <td>
+              <div class="articul">
+                <img
+                  v-show="item.pairImages && item.pairImages.length"
+                  src="~/assets/img/imgpare.jpeg"
+                  width="15px"
+                  alt="Картинка"
+                  class="pair"
+                  @mouseover="visibilityImageModal(item.pairImages[0], true)"
+                  @mouseleave="visibilityImageModal('', false)"
+                />
+                <div>{{ item.articul }}</div>
+                <img
+                  v-show="item.images && item.images.length"
+                  src="~/assets/img/imgart.jpeg"
+                  width="20px"
+                  alt="Картинка"
+                  class="image"
+                  @mouseover="visibilityImageModal(item.images[0], true)"
+                  @mouseleave="visibilityImageModal('', false)"
+                />
+              </div>
             </td>
             <td>
               {{ item.priceOut }}
@@ -70,11 +94,13 @@
       <div class="sold-form__table-wrapper">
         <div class="sold-form__title">
           <h3>Продаваемый товар на сумму</h3>
-          <input v-model="localSold.totalPrice" type="text" />
+          <input v-model="localSold.totalPrice" type="number" />
         </div>
         <table class="sold-form__table">
           <tr>
             <th width="250px">Название</th>
+            <th width="100px">Размер</th>
+            <th width="250px">Артикул</th>
             <th width="120px">Цена витрины</th>
             <th width="120px">Цена продажи</th>
             <th width="120px">Дисконт товара</th>
@@ -85,12 +111,38 @@
               {{ item.name }}
             </td>
             <td>
+              {{ item.size }}
+            </td>
+            <td>
+              <div class="articul">
+                <img
+                  v-show="item.pairImages && item.pairImages.length"
+                  src="~/assets/img/imgpare.jpeg"
+                  width="15px"
+                  alt="Картинка"
+                  class="pair"
+                  @mouseover="visibilityImageModal(item.pairImages[0], true)"
+                  @mouseleave="visibilityImageModal('', false)"
+                />
+                <div>{{ item.articul }}</div>
+                <img
+                  v-show="item.images && item.images.length"
+                  src="~/assets/img/imgart.jpeg"
+                  width="20px"
+                  alt="Картинка"
+                  class="image"
+                  @mouseover="visibilityImageModal(item.images[0], true)"
+                  @mouseleave="visibilityImageModal('', false)"
+                />
+              </div>
+            </td>
+            <td>
               {{ item.priceOut }}
             </td>
             <td>
               <input
                 v-model="item.priseSold"
-                type="text"
+                type="number"
                 @change="updateTotalPrice"
               />
             </td>
@@ -105,7 +157,10 @@
       </div>
     </div>
     <div class="sold-form__actions">
-      <button @click="saveSold">Сохранить</button>
+      <button :disabled="loadData" @click="saveSold">Сохранить</button>
+    </div>
+    <div v-if="modalVisibility" class="sold-form__image-alert">
+      <img width="100%" height="auto" :src="`${url}${imageUrl}`" />
     </div>
   </div>
 </template>
@@ -140,6 +195,10 @@ export default {
       debounceSerch: null,
       debounceSerchCard: null,
       debounceSerchProduct: null,
+      url: process.env.IMG_URL,
+      modalVisibility: false,
+      imageUrl: '',
+      loadData: false,
     }
   },
   computed: {
@@ -153,8 +212,9 @@ export default {
       const totalPrice = this.localSold.products.reduce((price, el) => {
         const priseSold =
           el.discount < 50 && this.localSold.discount
-            ? el.priseSold - (el.priseSold / 100) * this.localSold.discount
-            : el.priseSold
+            ? Number(el.priseSold) -
+              (Number(el.priseSold) / 100) * this.localSold.discount
+            : Number(el.priseSold)
         return price + priseSold
       }, 0)
 
@@ -164,8 +224,9 @@ export default {
       const totalPrice = this.localSold.products.reduce((price, el) => {
         const priseSold =
           el.discount < 50 && this.localSold.discount
-            ? el.priseSold - (el.priseSold / 100) * this.localSold.discount
-            : el.priseSold
+            ? Number(el.priseSold) -
+              (Number(el.priseSold) / 100) * this.localSold.discount
+            : Number(el.priseSold)
         return price + (priseSold - el.priceIn)
       }, 0)
 
@@ -196,11 +257,23 @@ export default {
     }
   },
   methods: {
+    visibilityImageModal(imgUrl, state) {
+      this.imageUrl = imgUrl
+      this.modalVisibility = state
+    },
     updateTotalPrice() {
       this.localSold.totalPrice = this.getTotalPrice
     },
     async getDiscountCard() {
       try {
+        if (!this.buyer.cardCode) {
+          this.buyer.name = ''
+          this.localSold.card = null
+          this.localSold.discount = 0
+          this.localSold.totalPrice = this.getTotalPrice
+          return
+        }
+
         const discountCardsData = await this.$axios.get(
           '/admin/discount-cards',
           {
@@ -215,7 +288,7 @@ export default {
         this.localSold.discount = card.discount
         this.localSold.totalPrice = this.getTotalPrice
       } catch (e) {
-        console.log(e)
+        console.log(e?.message || '')
       }
     },
     async getProduct() {
@@ -224,6 +297,7 @@ export default {
           data: { products },
         } = await this.$axios.get('/admin/products', {
           params: {
+            visibility: true,
             search: this.product,
             limit: 100,
             page: 1,
@@ -231,7 +305,7 @@ export default {
         })
         this.products = products
       } catch (e) {
-        console.log(e)
+        console.log(e?.message || '')
       }
     },
     addProduct(product) {
@@ -266,11 +340,12 @@ export default {
         }
         this.localSold.totalPrice = this.getTotalPrice
       } catch (e) {
-        console.log(e)
+        console.log(e?.message || '')
       }
     },
     async saveSold() {
       try {
+        this.loadData = true
         this.localSold.totalIncome = this.getTotalIncome
         this.localSold.totalOut = this.getTotalOut
 
@@ -282,9 +357,11 @@ export default {
         } else {
           await this.$axios.post('/admin/solds', this.localSold)
         }
+        this.loadData = false
+        alert('Продажа успешно создана')
         this.$router.push('/admin-panel/sold')
       } catch (e) {
-        console.log(e)
+        console.log(e?.message || '')
       }
     },
   },
@@ -364,6 +441,20 @@ export default {
         background-color: transparent;
         border: none;
       }
+
+      .articul {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .pair {
+          margin-right: 10px;
+        }
+
+        .image {
+          margin-left: 10px;
+        }
+      }
     }
   }
 
@@ -377,6 +468,22 @@ export default {
 
   &__actions {
     margin-top: 20px;
+  }
+
+  &__image-alert {
+    position: fixed;
+    top: 50px;
+    left: 50px;
+    width: 520px;
+    height: 520px;
+    padding: 10px;
+    border: 1px solid black;
+    background-color: white;
+
+    img {
+      width: 520px;
+      height: 520px;
+    }
   }
 }
 </style>

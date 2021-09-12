@@ -9,9 +9,12 @@ export const mutations = {
     state.timeout = setTimeout(async () => {
       await this.$auth.logout()
       this.$router.push('/admin-panel/login')
-    }, 1000 * 60 * 8)
+    }, 1000 * 60 * 10)
   },
   UPDATE_TIMEOUT(state) {
+    clearTimeout(state.timeout)
+  },
+  CLEAR_STORE_TIMEOUT(state) {
     clearTimeout(state.timeout)
   },
 }
@@ -23,5 +26,8 @@ export const actions = {
   updateTimeout({ commit }) {
     commit('UPDATE_TIMEOUT')
     commit('SET_TIMEOUT')
+  },
+  clearStoreTimeout({ commit }) {
+    commit('CLEAR_STORE_TIMEOUT')
   },
 }

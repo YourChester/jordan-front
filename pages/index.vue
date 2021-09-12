@@ -22,18 +22,6 @@ export default {
     VProductCard,
     VSlider,
   },
-  async asyncData({ $axios }) {
-    try {
-      const productsData = await $axios.get('/products', {
-        params: { page: 1, limit: 10 },
-      })
-      return {
-        products: productsData.data.products,
-      }
-    } catch (e) {
-      console.log(e)
-    }
-  },
   data() {
     return {
       products: [],
@@ -61,6 +49,17 @@ export default {
       ],
     }
   },
+  async fetch() {
+    try {
+      const productsData = await this.$axios.get('/products', {
+        params: { page: 1, limit: 10 },
+      })
+      this.products = productsData.data.products
+    } catch (e) {
+      console.log(e?.message || '')
+    }
+  },
+  fetchOnServer: false,
 }
 </script>
 

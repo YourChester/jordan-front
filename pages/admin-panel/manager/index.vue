@@ -68,7 +68,7 @@ export default {
         sellers,
       }
     } catch (e) {
-      console.log(e)
+      console.log(e?.message || '')
     }
   },
   data: () => {
@@ -94,7 +94,7 @@ export default {
         } = await this.$axios.get('/admin/sellers')
         this.sellers = sellers
       } catch (e) {
-        console.log(e)
+        console.log(e?.message || '')
       }
     },
     async changeSeller(seller) {
@@ -102,7 +102,7 @@ export default {
         await this.$axios.put(`/admin/sellers/${seller._id}`, this.seller)
         this.getList()
       } catch (e) {
-        console.log(e)
+        console.log(e?.message || '')
       }
     },
     async deleteSeller(seller) {
@@ -112,7 +112,7 @@ export default {
         })
         this.getList()
       } catch (e) {
-        console.log(e)
+        console.log(e?.message || '')
       }
     },
     async addSeller() {
@@ -120,7 +120,7 @@ export default {
         await this.$axios.post(`/admin/sellers/`, this.newSeller)
         this.getList()
       } catch (e) {
-        console.log(e)
+        console.log(e?.message || '')
       }
     },
   },

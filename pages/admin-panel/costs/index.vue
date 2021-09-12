@@ -77,19 +77,19 @@ export default {
     try {
       const costsData = await $axios.get('/admin/costs', {
         params: {
-          limit: 10,
+          limit: 100,
           page: 1,
         },
       })
       return {
         currentPage: 1,
-        perPage: 10,
+        perPage: 100,
         totalCount: costsData.data.totalCount,
         totalPages: costsData.data.totalPages,
         costs: costsData.data.costs,
       }
     } catch (e) {
-      console.log(e)
+      console.log(e?.message || '')
     }
   },
   methods: {
@@ -116,7 +116,7 @@ export default {
         await this.$axios.delete(`/admin/costs/${id}`)
         this.getList()
       } catch (e) {
-        console.log(e)
+        console.log(e?.message || '')
       }
     },
   },

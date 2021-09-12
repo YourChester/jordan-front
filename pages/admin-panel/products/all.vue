@@ -272,7 +272,7 @@
       </div>
     </div>
     <div v-if="modalVisibility" class="store__image-alert">
-      <img :src="`${url}${imageUrl}`" />
+      <img width="100%" height="auto" :src="`${url}${imageUrl}`" />
     </div>
   </div>
 </template>
@@ -290,7 +290,7 @@ export default {
     try {
       const productsData = await $axios.get('/admin/products', {
         params: {
-          limit: 10,
+          limit: 100,
           page: 1,
         },
       })
@@ -302,12 +302,12 @@ export default {
         products: productsData.data.products,
       }
     } catch (e) {
-      console.log(e)
+      console.log(e?.message || '')
     }
   },
   data() {
     return {
-      perPage: 10,
+      perPage: 100,
       debounceSerch: null,
       modalVisibility: false,
       imageUrl: '',
@@ -377,7 +377,7 @@ export default {
         })
         this.getList()
       } catch (e) {
-        console.log(e)
+        console.log(e?.message || '')
       }
     },
     async getList() {
@@ -402,7 +402,7 @@ export default {
         this.totalCount = totalCount
         this.totalPages = totalPages
       } catch (e) {
-        console.log(e)
+        console.log(e?.message || '')
       }
     },
     openItem(product) {
@@ -421,7 +421,7 @@ export default {
           gender: product.gender,
         })
       } catch (e) {
-        console.log(e)
+        console.log(e?.message || '')
       }
     },
     async deleteProduct(id) {
@@ -429,7 +429,7 @@ export default {
         await this.$axios.delete(`/admin/products/${id}`)
         this.getList()
       } catch (e) {
-        console.log(e)
+        console.log(e?.message || '')
       }
     },
     getClass(product) {

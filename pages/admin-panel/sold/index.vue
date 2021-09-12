@@ -27,40 +27,65 @@
           <th rowspan="2">Карта покупателя</th>
           <th rowspan="2">Дата продажи</th>
           <th rowspan="2">Сумма продажи</th>
-          <th rowspan="2">Доход</th>
+          <th v-show="getRoleKey === 'admin'" rowspan="2">Доход</th>
           <th colspan="3">Действия</th>
         </tr>
         <tr>
           <th>Ред.</th>
           <th>Удал.</th>
         </tr>
-        <tr v-for="sold in solds" :key="sold._id">
-          <td>
-            {{ sold.seller.map((el) => el.name).join(', ') }}
-          </td>
-          <td>
-            {{ sold.card ? sold.card.code : '' }}
-          </td>
-          <td>
-            {{ getFormatedDate(sold.date) }}
-          </td>
-          <td>
-            {{ sold.totalPrice }}
-          </td>
-          <td>
-            {{ sold.totalIncome }}
-          </td>
-          <td>
-            <NuxtLink
-              class="link"
-              :to="`/admin-panel/sold/${sold._id}`"
-              tag="div"
-            >
-              E
-            </NuxtLink>
-          </td>
-          <td><button class="link" @click="deleteSold(sold._id)">X</button></td>
-        </tr>
+        <template v-for="item in solds">
+          <tr :key="item._id" style="background-color: grey; color: white">
+            <td>Касса:</td>
+            <td>
+              {{ item.totalPrice }}
+              р.
+            </td>
+            <td colspan="5">{{ item._id }}</td>
+          </tr>
+          <template v-for="sold in item.solds">
+            <tr :key="sold._id">
+              <td>
+                {{
+                  sold.seller_info && sold.seller_info.length
+                    ? sold.seller_info.map((el) => el.name).join(', ')
+                    : ''
+                }}
+              </td>
+              <td>
+                {{
+                  sold.card_info && sold.card_info.length
+                    ? sold.card_info.map((el) => el.code).join(', ')
+                    : ''
+                }}
+              </td>
+              <td>
+                {{ getFormatedDateWithTime(sold.date) }}
+              </td>
+              <td>
+                {{ sold.totalPrice }}
+              </td>
+              <td v-show="getRoleKey === 'admin'">
+                {{ sold.totalIncome }}
+              </td>
+              <td>
+                <NuxtLink
+                  class="link"
+                  :to="`/admin-panel/sold/${sold._id}`"
+                  tag="div"
+                >
+                  E
+                </NuxtLink>
+              </td>
+              <td>
+                <button class="link" @click="deleteSold(sold._id)">X</button>
+              </td>
+            </tr>
+          </template>
+          <tr :key="item._id + new Date()">
+            <td colspan="7"></td>
+          </tr>
+        </template>
       </table>
     </div>
     <div class="sold__pagination">
@@ -97,7 +122,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { getDateWithTime } from '@/assets/utils/date'
+import { getDateWithTime, getFormatedDate } from '@/assets/utils/date'
 
 export default {
   layout: 'admin',
@@ -121,7 +146,7 @@ export default {
         solds,
       }
     } catch (e) {
-      console.log(e)
+      console.log(e?.message || '')
     }
   },
   data() {
@@ -135,9 +160,14 @@ export default {
   computed: {
     ...mapGetters({
       sellers: 'codeBooks/sellers',
+      categories: 'codeBooks/categories',
     }),
     getOnlySeller() {
       return this.sellers.filter((el) => el.role.key === 'manager')
+    },
+    getRoleKey() {
+      const { role } = this.$auth.$state.user
+      return role?.key
     },
   },
   watch: {
@@ -146,8 +176,14 @@ export default {
     },
   },
   methods: {
-    getFormatedDate(date) {
+    getCategoryName(id) {
+      return this.categories.find((el) => el._id === id)?.name || ''
+    },
+    getFormatedDateWithTime(date) {
       return getDateWithTime(date)
+    },
+    getDate(date) {
+      return getFormatedDate(date)
     },
     getNewPerPage() {
       this.currentPage = 1
@@ -168,7 +204,7 @@ export default {
         this.totalCount = totalCount
         this.totalPages = totalPages
       } catch (e) {
-        console.log(e)
+        console.log(e?.message || '')
       }
     },
     async deleteSold(id) {
@@ -176,7 +212,7 @@ export default {
         await this.$axios.delete(`/admin/solds/${id}`)
         this.getList()
       } catch (e) {
-        console.log(e)
+        console.log(e?.message || '')
       }
     },
   },

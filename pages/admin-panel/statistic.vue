@@ -177,7 +177,7 @@ export default {
         monthStatistic,
       }
     } catch (e) {
-      console.log(e)
+      console.log(e?.message || '')
     }
   },
   computed: {

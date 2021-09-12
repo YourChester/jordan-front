@@ -31,7 +31,7 @@
       </label>
     </div>
     <div class="card-form__actions">
-      <button @click="saveCard">Сохранить</button>
+      <button :disabled="loadData" @click="saveCard">Сохранить</button>
     </div>
   </div>
 </template>
@@ -59,6 +59,7 @@ export default {
         name: '',
         discount: 10,
       },
+      loadData: false,
     }
   },
   created() {
@@ -75,6 +76,7 @@ export default {
   methods: {
     async saveCard() {
       try {
+        this.loadData = true
         if (this.localCard._id) {
           await this.$axios.put(`/admin/discount-cards/${this.localCard._id}`, {
             ...this.localCard,
@@ -84,9 +86,11 @@ export default {
             ...this.localCard,
           })
         }
+        this.loadData = false
+        alert('Карта успешно создана')
         this.$router.push('/admin-panel/discount-card')
       } catch (e) {
-        console.log(e)
+        console.log(e?.message || '')
       }
     },
   },

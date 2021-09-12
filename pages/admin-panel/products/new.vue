@@ -18,7 +18,7 @@ export default {
         })
         this.$router.push('/admin-panel/products')
       } catch (e) {
-        console.log(e)
+        console.log(e?.message || '')
       }
     },
   },

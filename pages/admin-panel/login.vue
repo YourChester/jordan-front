@@ -47,7 +47,7 @@ export default {
         this.$store.dispatch('loginStatus/setTimeout')
         this.$router.push('/admin-panel/products')
       } catch (e) {
-        alert(e.message)
+        alert(e?.message || '')
       }
     },
   },

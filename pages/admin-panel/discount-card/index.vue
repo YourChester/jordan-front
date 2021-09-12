@@ -123,7 +123,7 @@ export default {
         discountCards: discountCardsData.data.discountCards,
       }
     } catch (e) {
-      console.log(e)
+      console.log(e?.message || '')
     }
   },
   data() {
@@ -159,7 +159,7 @@ export default {
         this.totalCount = totalCount
         this.totalPages = totalPages
       } catch (e) {
-        console.log(e)
+        console.log(e?.message || '')
       }
     },
     async deleteCard(id) {
@@ -167,7 +167,7 @@ export default {
         await this.$axios.delete(`/admin/discount-cards/${id}`)
         this.getList()
       } catch (e) {
-        console.log(e)
+        console.log(e?.message || '')
       }
     },
   },

@@ -18,13 +18,12 @@ export default {
       const {
         data: { category },
       } = await $axios.get(`/admin/categoryies/${params.id}`)
-      console.log(category)
 
       return {
         category,
       }
     } catch (e) {
-      console.log(e)
+      console.log(e?.message || '')
     }
   },
   methods: {
@@ -35,7 +34,7 @@ export default {
         await this.$axios.put(`/admin/categoryies/${payload._id}`, payload)
         this.$router.push('/admin-panel/category')
       } catch (e) {
-        console.log(e)
+        console.log(e?.message || '')
       }
     },
   },

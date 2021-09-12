@@ -61,7 +61,6 @@ export default {
       }
     }
     if (this.parent) {
-      console.log(this.parent)
       this.category.parent = this.parent
     }
   },

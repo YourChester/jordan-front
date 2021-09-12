@@ -29,8 +29,11 @@ export default {
       this.$store.dispatch('codeBooks/setSizes', sizesResult.data.sizes)
       this.$store.dispatch('codeBooks/setRoles', rolesResult.data.roles)
     } catch (e) {
-      console.log(e)
+      console.log(e?.message || '')
     }
+  },
+  beforeDestroy() {
+    this.$store.dispatch('loginStatus/clearStoreTimeout')
   },
 }
 </script>

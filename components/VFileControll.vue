@@ -79,7 +79,7 @@ export default {
         )
         this.files.push(result.data)
       } catch (e) {
-        console.log(e)
+        console.log(e?.message || '')
       }
     },
     async deleteFile(file) {
@@ -88,7 +88,7 @@ export default {
         const index = this.files.indexOf(file)
         this.files.splice(index, 1)
       } catch (e) {
-        console.log(e)
+        console.log(e?.message || '')
       }
     },
     noArticul() {

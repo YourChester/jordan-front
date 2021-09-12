@@ -2,9 +2,15 @@
   <div class="admin-header__wrapper">
     <div class="admin-header">
       <table class="admin-header__link">
-        <td v-for="link in links" :key="link.name" exact class="link">
+        <td
+          v-for="link in links"
+          v-show="link.role.includes(getRoleKey)"
+          :key="link.name"
+          exact
+          class="link"
+        >
           <nuxt-link
-            v-show="link.path && link.role.includes(getRoleKey)"
+            v-show="link.path"
             :to="link.path"
             active-class="active"
             exact
@@ -16,7 +22,7 @@
           </button>
         </td>
       </table>
-      <table class="admin-header__admin-link">
+      <table v-if="getRoleKey === 'admin'" class="admin-header__admin-link">
         <td v-for="link in adminLinks" :key="link.name" exact class="link">
           <nuxt-link
             v-show="link.path"
@@ -98,14 +104,6 @@ export default {
     }
   },
   computed: {
-    getSellerShorName() {
-      const { name } = this.$auth.$state.user
-      return `${name}`
-    },
-    getSellerRole() {
-      const { role } = this.$auth.$state.user
-      return role?.name
-    },
     getRoleKey() {
       const { role } = this.$auth.$state.user
       return role?.key
@@ -114,6 +112,7 @@ export default {
   methods: {
     async logOut() {
       await this.$auth.logout()
+      this.$store.dispatch('loginStatus/clearStoreTimeout')
       this.$router.push('/admin-panel/login')
     },
   },

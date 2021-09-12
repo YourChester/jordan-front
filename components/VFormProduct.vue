@@ -4,8 +4,13 @@
       <div class="form__field">
         <label>
           Артикул:
-          <input v-model="product.articul" type="text" @input="debounceSerch" />
+          <input
+            v-model="product.articul"
+            type="text"
+            @change="getProductByArticul"
+          />
         </label>
+        <p style="text-align: right">Введите артикул и нажмите Enter</p>
         <label v-show="product._id">
           Пара для костюма:
           <input v-model="product.pair" type="text" />
@@ -124,7 +129,6 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import debounce from 'lodash.debounce'
 
 import VFileControll from '@/components/VFileControll.vue'
 import { getDateTimeForInput } from '@/assets/utils/date'
@@ -142,7 +146,6 @@ export default {
   },
   data: () => {
     return {
-      debounceSerch: null,
       images: [],
       localSize: '',
       product: {
@@ -200,7 +203,6 @@ export default {
     },
   },
   created() {
-    this.debounceSerch = debounce(this.getProductByArticul, 1000)
     if (this.productProps) {
       this.images = this.productProps.images
 
@@ -233,7 +235,6 @@ export default {
             visibility: true,
             articul: this.product.articul,
             discount: 0,
-            size: '',
             priceIn: 0,
             dateIn: getDateTimeForInput(new Date()),
             createAt: getDateTimeForInput(new Date()),
@@ -242,7 +243,7 @@ export default {
           delete this.product._id
         }
       } catch (e) {
-        console.log(e)
+        console.log(e?.message || '')
       }
     },
     addProduct() {

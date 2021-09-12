@@ -214,7 +214,7 @@
       </div>
     </div>
     <div v-if="modalVisibility" class="store__image-alert">
-      <img :src="`${url}${imageUrl}`" />
+      <img width="100%" height="auto" :src="`${url}${imageUrl}`" />
     </div>
   </div>
 </template>
@@ -233,13 +233,13 @@ export default {
       const productsData = await $axios.get('/admin/products', {
         params: {
           visibility: true,
-          limit: 10,
+          limit: 100,
           page: 1,
         },
       })
       return {
         currentPage: 1,
-        perPage: 10,
+        perPage: 100,
         totalCount: productsData.data.totalCount,
         totalPages: productsData.data.totalPages,
         search: '',
@@ -250,7 +250,7 @@ export default {
         productType: '',
       }
     } catch (e) {
-      console.log(e)
+      console.log(e?.message || '')
     }
   },
   data() {
@@ -319,7 +319,7 @@ export default {
         this.totalCount = totalCount
         this.totalPages = totalPages
       } catch (e) {
-        console.log(e)
+        console.log(e?.message || '')
       }
     },
     openItem(product) {
@@ -338,7 +338,7 @@ export default {
           gender: product.gender,
         })
       } catch (e) {
-        console.log(e)
+        console.log(e?.message || '')
       }
     },
     getClass(product) {

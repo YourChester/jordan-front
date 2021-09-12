@@ -18,11 +18,12 @@ export default {
       const discountCardsData = await $axios.get(
         `/admin/discount-cards/${params.id}`
       )
+
       return {
         discountCard: discountCardsData.data.discountCard,
       }
     } catch (e) {
-      console.log(e)
+      console.log(e?.message || '')
     }
   },
 }

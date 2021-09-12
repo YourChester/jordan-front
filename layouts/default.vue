@@ -38,7 +38,7 @@ export default {
         categoriesResult.data.categories
       )
     } catch (e) {
-      console.log(e)
+      console.log(e?.message || '')
     }
   },
   mounted() {

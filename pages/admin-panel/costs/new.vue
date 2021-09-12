@@ -26,7 +26,7 @@ export default {
         }
       }
     } catch (e) {
-      console.log(e)
+      console.log(e?.message || '')
     }
   },
   methods: {
@@ -37,7 +37,7 @@ export default {
         })
         this.$router.push('/admin-panel/costs')
       } catch (e) {
-        console.log(e)
+        console.log(e?.message || '')
       }
     },
   },

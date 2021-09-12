@@ -17,7 +17,7 @@ export default {
         product: productsData.data.product,
       }
     } catch (e) {
-      console.log(e)
+      console.log(e?.message || '')
     }
   },
   methods: {
@@ -30,7 +30,7 @@ export default {
         await this.$axios.put(`/admin/products/${this.product._id}`, payload)
         this.$router.push('/admin-panel/products')
       } catch (e) {
-        console.log(e)
+        console.log(e?.message || '')
       }
     },
   },

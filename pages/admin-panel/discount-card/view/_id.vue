@@ -69,12 +69,11 @@ export default {
       const discountCardsData = await $axios.get(
         `/admin/discount-cards/${params.id}`
       )
-      console.log(discountCardsData.data)
       return {
         discountCard: discountCardsData.data,
       }
     } catch (e) {
-      console.log(e)
+      console.log(e?.message || '')
     }
   },
   computed: {
@@ -85,7 +84,6 @@ export default {
   methods: {
     getCategoryName(id) {
       const category = this.categories.find((el) => el._id === id)
-      console.log(category)
       return category ? category.name : ''
     },
     getCurrentDate(data) {

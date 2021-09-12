@@ -23,7 +23,7 @@ export default {
         parent,
       }
     } catch (e) {
-      console.log(e)
+      console.log(e?.message || '')
     }
   },
   methods: {
@@ -34,7 +34,7 @@ export default {
         await this.$axios.post('/admin/categoryies/', payload)
         this.$router.push('/admin-panel/category')
       } catch (e) {
-        console.log(e)
+        console.log(e?.message || '')
       }
     },
   },
