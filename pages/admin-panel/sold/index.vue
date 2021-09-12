@@ -25,43 +25,49 @@
         <table class="sold__table">
           <tbody>
             <template v-for="group in solds">
-              <tr :key="group._id">
-                <td colspan="3">Касса: {{ group.totalPrice }} р.</td>
-                <td colspan="4">
+              <tr
+                :key="group._id"
+                style="background-color: green; color: white; height: 50px"
+              >
+                <td colspan="6">Касса: {{ group.totalPrice }} р.</td>
+                <td colspan="7">
                   {{ group._id }}
                 </td>
               </tr>
               <tr :key="group._id + 'header'">
-                <td>Продавцы</td>
-                <td>Карта покупателя</td>
-                <td>Дата Продажи</td>
-                <td>Сумма покупки</td>
-                <td>Доход</td>
+                <td colspan="2">Продавцы</td>
+                <td colspan="2">Карта покупателя</td>
+                <td colspan="2">Дата Продажи</td>
+                <td colspan="3">Сумма покупки</td>
+                <td v-show="getRoleKey === 'admin'" colspan="2">Доход</td>
                 <td colspan="2">Действия</td>
               </tr>
               <template v-for="sold in group.solds">
-                <tr :key="sold._id + group._id">
-                  <td>
+                <tr
+                  :key="sold._id + group._id"
+                  style="background-color: grey; color: white"
+                >
+                  <td colspan="2">
                     {{
                       sold.seller_info && sold.seller_info.length
                         ? sold.seller_info.map((el) => el.name).join(', ')
                         : ''
                     }}
                   </td>
-                  <td>
+                  <td colspan="2">
                     {{
                       sold.card_info && sold.card_info.length
                         ? sold.card_info.map((el) => el.code).join(', ')
                         : ''
                     }}
                   </td>
-                  <td>
+                  <td colspan="2">
                     {{ getFormatedDateWithTime(sold.date) }}
                   </td>
-                  <td>
+                  <td colspan="3">
                     {{ sold.totalPrice }}
                   </td>
-                  <td v-show="getRoleKey === 'admin'">
+                  <td v-show="getRoleKey === 'admin'" colspan="2">
                     {{ sold.totalIncome }}
                   </td>
                   <td>
@@ -74,7 +80,11 @@
                     </NuxtLink>
                   </td>
                   <td>
-                    <button class="link" @click="deleteSold(sold._id)">
+                    <button
+                      class="link"
+                      style="color: white"
+                      @click="deleteSold(sold._id)"
+                    >
                       X
                     </button>
                   </td>
@@ -83,12 +93,14 @@
                   <th rowspan="2">Тип</th>
                   <th rowspan="2">Бренд</th>
                   <th rowspan="2">Название</th>
+                  <th rowspan="2">Артикул</th>
                   <th v-show="getRoleKey === 'admin'" rowspan="2">Поставщик</th>
                   <th :colspan="getRoleKey === 'admin' ? 5 : 3">Цена</th>
                   <th rowspan="2">Размер</th>
-                  <th rowspan="2">Артикул</th>
                   <th rowspan="2">Дата продажи</th>
-                  <th rowspan="2">Пол</th>
+                  <th rowspan="2" :colspan="getRoleKey === 'admin' ? 0 : 2">
+                    Пол
+                  </th>
                 </tr>
                 <tr :key="sold._id + group._id + 'subproducthead'">
                   <th v-show="getRoleKey === 'admin'">Прих.</th>
@@ -100,41 +112,13 @@
                 <template v-for="product in sold.products_info">
                   <tr :key="product._id">
                     <td>
-                      {{ product.category ? product.category.name : '' }}
+                      {{ getCategoryName(product.category) }}
                     </td>
                     <td>
                       {{ product.brand }}
                     </td>
                     <td>
                       {{ product.name }}
-                    </td>
-                    <td v-show="getRoleKey === 'admin'">
-                      {{ product.provider }}
-                    </td>
-                    <td v-show="getRoleKey === 'admin'">
-                      {{ product.priceIn }}
-                    </td>
-                    <td>
-                      {{ product.priceOut }}
-                    </td>
-                    <td>
-                      {{ product.priseSold }}
-                    </td>
-                    <td>
-                      {{ product.discount }}
-                    </td>
-                    <td v-show="getRoleKey === 'admin'">
-                      {{
-                        Math.round(
-                          Number(product.priseSold) -
-                            (Number(product.priseSold) / 100) *
-                              product.discount -
-                            Number(product.priceIn)
-                        )
-                      }}
-                    </td>
-                    <td>
-                      {{ product.size }}
                     </td>
                     <td>
                       <div class="articul">
@@ -169,10 +153,38 @@
                         />
                       </div>
                     </td>
+                    <td v-show="getRoleKey === 'admin'">
+                      {{ product.provider }}
+                    </td>
+                    <td v-show="getRoleKey === 'admin'">
+                      {{ product.priceIn }}
+                    </td>
+                    <td>
+                      {{ product.priceOut }}
+                    </td>
+                    <td>
+                      {{ product.priseSold }}
+                    </td>
+                    <td>
+                      {{ product.discount }}
+                    </td>
+                    <td v-show="getRoleKey === 'admin'">
+                      {{
+                        Math.round(
+                          Number(product.priseSold) -
+                            (Number(product.priseSold) / 100) *
+                              product.discount -
+                            Number(product.priceIn)
+                        )
+                      }}
+                    </td>
+                    <td>
+                      {{ product.size }}
+                    </td>
                     <td>
                       {{ getFormatedDateWithTime(product.dateOut) }}
                     </td>
-                    <td>
+                    <td :colspan="getRoleKey === 'admin' ? 0 : 2">
                       <label v-for="gender in genders" :key="gender._id">
                         {{ gender.name[0] }}
                         <input
@@ -187,6 +199,9 @@
                     </td>
                   </tr>
                 </template>
+                <tr :key="sold._id + group._id + 'br'">
+                  <td colspan="13" style="background-color: yellow"></td>
+                </tr>
               </template>
             </template>
           </tbody>
@@ -196,6 +211,7 @@
         <div class="sold__pagination-perpage">
           <select v-model="perPage" @change="getNewPerPage">
             <option value="10">10</option>
+            <option value="50">50</option>
             <option value="100">100</option>
             <option value="1000">1000</option>
           </select>
