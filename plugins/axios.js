@@ -9,7 +9,7 @@ export default function (ctx) {
       config.url.includes('admin/categoryies') ||
       config.url.includes('admin/sellers')
     ) {
-      ctx.store.dispatch('loginStatus/updateTimeout')
+      // ctx.store.dispatch('loginStatus/updateTimeout')
     }
   })
 }

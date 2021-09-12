@@ -59,6 +59,11 @@ export default {
           role: ['admin', 'manager'],
         },
         {
+          name: 'Проданый товар',
+          path: '/admin-panel/sold/products',
+          role: ['admin', 'manager'],
+        },
+        {
           name: 'Карты',
           path: '/admin-panel/discount-card',
           role: ['admin'],

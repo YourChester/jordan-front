@@ -1,122 +1,233 @@
 <template>
   <div class="sold">
-    <h1>Продажи</h1>
-    <div class="sold__filter">
-      <div>
-        <select v-model="payload.seller" @change="getList">
-          <option value="">выберите продавца</option>
-          <option
-            v-for="seller in getOnlySeller"
-            :key="seller._id"
-            :value="seller._id"
+    <client-only>
+      <h1>Продажи</h1>
+      <div class="sold__filter">
+        <div>
+          <select v-model="payload.seller" @change="getList">
+            <option value="">выберите продавца</option>
+            <option
+              v-for="seller in getOnlySeller"
+              :key="seller._id"
+              :value="seller._id"
+            >
+              {{ seller.name }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <button @click="$router.push('/admin-panel/sold/new-sold')">
+            Добавить продажу
+          </button>
+        </div>
+      </div>
+      <div class="sold__table-wrapper">
+        <table class="sold__table">
+          <tbody>
+            <template v-for="group in solds">
+              <tr :key="group._id">
+                <td colspan="3">Касса: {{ group.totalPrice }} р.</td>
+                <td colspan="4">
+                  {{ group._id }}
+                </td>
+              </tr>
+              <tr :key="group._id + 'header'">
+                <td>Продавцы</td>
+                <td>Карта покупателя</td>
+                <td>Дата Продажи</td>
+                <td>Сумма покупки</td>
+                <td>Доход</td>
+                <td colspan="2">Действия</td>
+              </tr>
+              <template v-for="sold in group.solds">
+                <tr :key="sold._id + group._id">
+                  <td>
+                    {{
+                      sold.seller_info && sold.seller_info.length
+                        ? sold.seller_info.map((el) => el.name).join(', ')
+                        : ''
+                    }}
+                  </td>
+                  <td>
+                    {{
+                      sold.card_info && sold.card_info.length
+                        ? sold.card_info.map((el) => el.code).join(', ')
+                        : ''
+                    }}
+                  </td>
+                  <td>
+                    {{ getFormatedDateWithTime(sold.date) }}
+                  </td>
+                  <td>
+                    {{ sold.totalPrice }}
+                  </td>
+                  <td v-show="getRoleKey === 'admin'">
+                    {{ sold.totalIncome }}
+                  </td>
+                  <td>
+                    <NuxtLink
+                      class="link"
+                      :to="`/admin-panel/sold/${sold._id}`"
+                      tag="div"
+                    >
+                      E
+                    </NuxtLink>
+                  </td>
+                  <td>
+                    <button class="link" @click="deleteSold(sold._id)">
+                      X
+                    </button>
+                  </td>
+                </tr>
+                <tr :key="sold._id + group._id + 'producthead'">
+                  <th rowspan="2">Тип</th>
+                  <th rowspan="2">Бренд</th>
+                  <th rowspan="2">Название</th>
+                  <th v-show="getRoleKey === 'admin'" rowspan="2">Поставщик</th>
+                  <th :colspan="getRoleKey === 'admin' ? 5 : 3">Цена</th>
+                  <th rowspan="2">Размер</th>
+                  <th rowspan="2">Артикул</th>
+                  <th rowspan="2">Дата продажи</th>
+                  <th rowspan="2">Пол</th>
+                </tr>
+                <tr :key="sold._id + group._id + 'subproducthead'">
+                  <th v-show="getRoleKey === 'admin'">Прих.</th>
+                  <th>Витрина</th>
+                  <th>Прод.</th>
+                  <th>Скидка</th>
+                  <th v-show="getRoleKey === 'admin'">Доход</th>
+                </tr>
+                <template v-for="product in sold.products_info">
+                  <tr :key="product._id">
+                    <td>
+                      {{ product.category ? product.category.name : '' }}
+                    </td>
+                    <td>
+                      {{ product.brand }}
+                    </td>
+                    <td>
+                      {{ product.name }}
+                    </td>
+                    <td v-show="getRoleKey === 'admin'">
+                      {{ product.provider }}
+                    </td>
+                    <td v-show="getRoleKey === 'admin'">
+                      {{ product.priceIn }}
+                    </td>
+                    <td>
+                      {{ product.priceOut }}
+                    </td>
+                    <td>
+                      {{ product.priseSold }}
+                    </td>
+                    <td>
+                      {{ product.discount }}
+                    </td>
+                    <td v-show="getRoleKey === 'admin'">
+                      {{
+                        Math.round(
+                          Number(product.priseSold) -
+                            (Number(product.priseSold) / 100) *
+                              product.discount -
+                            Number(product.priceIn)
+                        )
+                      }}
+                    </td>
+                    <td>
+                      {{ product.size }}
+                    </td>
+                    <td>
+                      <div class="articul">
+                        <img
+                          v-show="
+                            product &&
+                            product.pairImages &&
+                            product.pairImages.length
+                          "
+                          src="~/assets/img/imgpare.jpeg"
+                          width="15px"
+                          alt="Картинка"
+                          class="pair"
+                          @mouseover="
+                            visibilityImageModal(product.pairImages[0], true)
+                          "
+                          @mouseleave="visibilityImageModal('', false)"
+                        />
+                        <div>{{ product.articul }}</div>
+                        <img
+                          v-show="
+                            product && product.images && product.images.length
+                          "
+                          src="~/assets/img/imgart.jpeg"
+                          width="20px"
+                          alt="Картинка"
+                          class="image"
+                          @mouseover="
+                            visibilityImageModal(product.images[0], true)
+                          "
+                          @mouseleave="visibilityImageModal('', false)"
+                        />
+                      </div>
+                    </td>
+                    <td>
+                      {{ getFormatedDateWithTime(product.dateOut) }}
+                    </td>
+                    <td>
+                      <label v-for="gender in genders" :key="gender._id">
+                        {{ gender.name[0] }}
+                        <input
+                          v-model="product.gender"
+                          type="checkbox"
+                          name=""
+                          disabled
+                          :value="gender._id"
+                          @change="changeGender(product)"
+                        />
+                      </label>
+                    </td>
+                  </tr>
+                </template>
+              </template>
+            </template>
+          </tbody>
+        </table>
+      </div>
+      <div class="sold__pagination">
+        <div class="sold__pagination-perpage">
+          <select v-model="perPage" @change="getNewPerPage">
+            <option value="10">10</option>
+            <option value="100">100</option>
+            <option value="1000">1000</option>
+          </select>
+        </div>
+        <div class="sold__pagination-total">Всего: {{ totalCount }}</div>
+        <div v-show="totalPages > 1" class="sold__pagination-page_control">
+          <div
+            v-show="currentPage !== 1"
+            @click="currentPage = currentPage - 1"
           >
-            {{ seller.name }}
-          </option>
-        </select>
-      </div>
-      <div>
-        <button @click="$router.push('/admin-panel/sold/new-sold')">
-          Добавить продажу
-        </button>
-      </div>
-    </div>
-    <div class="sold__table-wrapper">
-      <table class="sold__table">
-        <tr>
-          <th rowspan="2">Продавец</th>
-          <th rowspan="2">Карта покупателя</th>
-          <th rowspan="2">Дата продажи</th>
-          <th rowspan="2">Сумма продажи</th>
-          <th v-show="getRoleKey === 'admin'" rowspan="2">Доход</th>
-          <th colspan="3">Действия</th>
-        </tr>
-        <tr>
-          <th>Ред.</th>
-          <th>Удал.</th>
-        </tr>
-        <template v-for="item in solds">
-          <tr :key="item._id" style="background-color: grey; color: white">
-            <td>Касса:</td>
-            <td>
-              {{ item.totalPrice }}
-              р.
-            </td>
-            <td colspan="5">{{ item._id }}</td>
-          </tr>
-          <template v-for="sold in item.solds">
-            <tr :key="sold._id">
-              <td>
-                {{
-                  sold.seller_info && sold.seller_info.length
-                    ? sold.seller_info.map((el) => el.name).join(', ')
-                    : ''
-                }}
-              </td>
-              <td>
-                {{
-                  sold.card_info && sold.card_info.length
-                    ? sold.card_info.map((el) => el.code).join(', ')
-                    : ''
-                }}
-              </td>
-              <td>
-                {{ getFormatedDateWithTime(sold.date) }}
-              </td>
-              <td>
-                {{ sold.totalPrice }}
-              </td>
-              <td v-show="getRoleKey === 'admin'">
-                {{ sold.totalIncome }}
-              </td>
-              <td>
-                <NuxtLink
-                  class="link"
-                  :to="`/admin-panel/sold/${sold._id}`"
-                  tag="div"
-                >
-                  E
-                </NuxtLink>
-              </td>
-              <td>
-                <button class="link" @click="deleteSold(sold._id)">X</button>
-              </td>
-            </tr>
-          </template>
-          <tr :key="item._id + new Date()">
-            <td colspan="7"></td>
-          </tr>
-        </template>
-      </table>
-    </div>
-    <div class="sold__pagination">
-      <div class="sold__pagination-perpage">
-        <select v-model="perPage" @change="getNewPerPage">
-          <option value="10">10</option>
-          <option value="100">100</option>
-          <option value="1000">1000</option>
-        </select>
-      </div>
-      <div class="sold__pagination-total">Всего: {{ totalCount }}</div>
-      <div v-show="totalPages > 1" class="sold__pagination-page_control">
-        <div v-show="currentPage !== 1" @click="currentPage = currentPage - 1">
-          &lt;
-        </div>
-        <div
-          v-for="page in totalPages"
-          :key="page"
-          :class="currentPage === page ? 'active' : ''"
-          @click="currentPage = page"
-        >
-          {{ page }}
-        </div>
-        <div
-          v-show="currentPage !== totalPages"
-          @click="currentPage = currentPage + 1"
-        >
-          &gt;
+            &lt;
+          </div>
+          <div
+            v-for="page in totalPages"
+            :key="page"
+            :class="currentPage === page ? 'active' : ''"
+            @click="currentPage = page"
+          >
+            {{ page }}
+          </div>
+          <div
+            v-show="currentPage !== totalPages"
+            @click="currentPage = currentPage + 1"
+          >
+            &gt;
+          </div>
         </div>
       </div>
-    </div>
+      <div v-if="modalVisibility" class="sold__image-alert">
+        <img width="100%" height="100%" :src="`${url}${imageUrl}`" />
+      </div>
+    </client-only>
   </div>
 </template>
 
@@ -154,11 +265,15 @@ export default {
       payload: {
         seller: '',
       },
+      imageUrl: '',
+      url: process.env.IMG_URL,
+      modalVisibility: false,
       debounceSerch: null,
     }
   },
   computed: {
     ...mapGetters({
+      genders: 'codeBooks/genders',
       sellers: 'codeBooks/sellers',
       categories: 'codeBooks/categories',
     }),
@@ -176,6 +291,10 @@ export default {
     },
   },
   methods: {
+    visibilityImageModal(imgUrl, state) {
+      this.imageUrl = imgUrl
+      this.modalVisibility = state
+    },
     getCategoryName(id) {
       return this.categories.find((el) => el._id === id)?.name || ''
     },
@@ -246,6 +365,20 @@ export default {
         border: none;
         background-color: transparent;
       }
+
+      .articul {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .pair {
+          margin-right: 10px;
+        }
+
+        .image {
+          margin-left: 10px;
+        }
+      }
     }
 
     &-wrapper {
@@ -277,6 +410,17 @@ export default {
         }
       }
     }
+  }
+
+  &__image-alert {
+    position: fixed;
+    top: 100px;
+    left: 50px;
+    width: 520px;
+    height: 520px;
+    padding: 10px;
+    border: 1px solid black;
+    background-color: white;
   }
 }
 </style>

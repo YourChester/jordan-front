@@ -201,7 +201,7 @@ export default {
     getSummSoldPrice(solds, sellerId) {
       const sellerSolds = solds.filter((sold) => sold.seller.includes(sellerId))
       const summ = sellerSolds.reduce(
-        (sum, el) => (sum += Number(el.totalPrice)),
+        (sum, el) => (sum += Number(el.totalPrice / el.seller.length)),
         0
       )
       return summ
@@ -209,7 +209,7 @@ export default {
     getSummSoldIncomePrice(solds, sellerId) {
       const sellerSolds = solds.filter((sold) => sold.seller.includes(sellerId))
       const summ = sellerSolds.reduce(
-        (sum, el) => (sum += Number(el.totalIncome)),
+        (sum, el) => (sum += Number(el.totalIncome / el.seller.length)),
         0
       )
       return summ

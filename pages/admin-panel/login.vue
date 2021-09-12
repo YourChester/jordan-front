@@ -44,7 +44,7 @@ export default {
     async getAuth() {
       try {
         await this.$auth.loginWith('local', { data: this.form })
-        this.$store.dispatch('loginStatus/setTimeout')
+        // this.$store.dispatch('loginStatus/setTimeout')
         this.$router.push('/admin-panel/products')
       } catch (e) {
         alert(e?.message || '')
