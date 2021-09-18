@@ -223,7 +223,7 @@ export default {
       }
       const pages = []
       if (this.currentPage <= 8) {
-        for (let i = 1; i < this.totalPages; i++) {
+        for (let i = 1; i <= this.totalPages; i++) {
           if (i <= 8) {
             pages.push(i)
           } else {

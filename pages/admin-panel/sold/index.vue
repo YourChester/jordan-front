@@ -14,6 +14,13 @@
               {{ seller.name }}
             </option>
           </select>
+          <input
+            v-model="payload.searchText"
+            style="margin-left: 20px"
+            type="text"
+            placeholder="Поиск"
+            @change="getList"
+          />
         </div>
         <div>
           <button @click="$router.push('/admin-panel/sold/new-sold')">
@@ -171,10 +178,7 @@
                     <td v-show="getRoleKey === 'admin'">
                       {{
                         Math.round(
-                          Number(product.priseSold) -
-                            (Number(product.priseSold) / 100) *
-                              product.discount -
-                            Number(product.priceIn)
+                          Number(product.priseSold) - Number(product.priceIn)
                         )
                       }}
                     </td>
@@ -260,6 +264,7 @@ export default {
       } = await $axios.get('/admin/solds', {
         params: {
           sellers: '',
+          search: '',
           limit: 100,
           page: 1,
         },
@@ -280,6 +285,7 @@ export default {
     return {
       payload: {
         seller: '',
+        searchText: '',
       },
       imageUrl: '',
       url: process.env.IMG_URL,
@@ -331,6 +337,7 @@ export default {
         } = await this.$axios.get('/admin/solds', {
           params: {
             seller: this.payload.seller,
+            search: this.payload.searchText,
             limit: this.perPage,
             page: this.currentPage,
           },
@@ -359,7 +366,7 @@ export default {
   padding: 20px;
 
   &__filter {
-    width: 30%;
+    width: 50%;
     display: flex;
     justify-content: space-between;
     align-items: center;

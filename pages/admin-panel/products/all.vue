@@ -238,6 +238,24 @@
           </td>
           <td colspan="12"></td>
         </tr>
+        <tr>
+          <td colspan="5">Общая сумма на складе:</td>
+          <td>{{ getTotalPriceInWarehouse }}</td>
+          <td>{{ getTotalPriceOutWarehouse }}</td>
+          <td colspan="14"></td>
+        </tr>
+        <tr>
+          <td colspan="5">Общая сумма проданного:</td>
+          <td>{{ getTotalPriceInSold }}</td>
+          <td>{{ getTotalPriceOutSold }}</td>
+          <td colspan="14"></td>
+        </tr>
+        <tr>
+          <td colspan="5">Общая сумма:</td>
+          <td>{{ getTotalPriceIn }}</td>
+          <td>{{ getTotalPriceOut }}</td>
+          <td colspan="14"></td>
+        </tr>
       </tbody>
     </table>
     <div class="store__pagination">
@@ -298,6 +316,7 @@ export default {
         currentPage: 1,
         totalCount: productsData.data.totalCount,
         totalPages: productsData.data.totalPages,
+        totalMoney: productsData.data.totalMoney,
         search: '',
         products: productsData.data.products,
       }
@@ -339,6 +358,36 @@ export default {
         }
       })
       return categoriesList
+    },
+    getTotalPriceIn() {
+      let totalPriceOut = 0
+      this.totalMoney.forEach((el) => {
+        totalPriceOut += el.totalPriceIn
+      })
+      return totalPriceOut
+    },
+    getTotalPriceInWarehouse() {
+      return this.totalMoney.find((el) => el._id === true)?.totalPriceIn
+    },
+    getTotalPriceInSold() {
+      return this.totalMoney.find((el) => el._id === false)?.totalPriceIn
+    },
+    getTotalPriceOut() {
+      let totalPriceOut = 0
+      this.totalMoney.forEach((el) => {
+        totalPriceOut += el.totalPriceOut
+      })
+      return Math.round(totalPriceOut)
+    },
+    getTotalPriceOutWarehouse() {
+      return Math.round(
+        this.totalMoney.find((el) => el._id === true)?.totalPriceOut
+      )
+    },
+    getTotalPriceOutSold() {
+      return Math.round(
+        this.totalMoney.find((el) => el._id === false)?.totalPriceOut
+      )
     },
   },
   watch: {
