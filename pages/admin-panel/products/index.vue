@@ -165,17 +165,12 @@
             <NuxtLink
               class="link"
               :to="`/admin-panel/products/new?articul=${product.articul}`"
-              tag="div"
             >
               +
             </NuxtLink>
           </td>
           <td>
-            <NuxtLink
-              class="link"
-              :to="`/admin-panel/products/${product._id}`"
-              tag="div"
-            >
+            <NuxtLink class="link" :to="`/admin-panel/products/${product._id}`">
               E
             </NuxtLink>
           </td>
@@ -228,26 +223,35 @@ import { getDateWithTime } from '@/assets/utils/date'
 export default {
   components: {},
   layout: 'admin',
-  async asyncData({ $axios }) {
+  async asyncData({ $axios, query }) {
     try {
+      const name = query.name || ''
+      const brand = query.name || ''
+      const type = query.name || ''
+      const search = query.search || ''
+      const page = query.page || 1
       const productsData = await $axios.get('/admin/products', {
         params: {
           visibility: true,
           limit: 100,
-          page: 1,
+          page,
+          name,
+          brand,
+          category: type,
+          search,
         },
       })
       return {
-        currentPage: 1,
+        currentPage: page,
         perPage: 100,
         totalCount: productsData.data.totalCount,
         totalPages: productsData.data.totalPages,
-        search: '',
         products: productsData.data.products,
         imageUrl: '',
-        productName: '',
-        productBrand: '',
-        productType: '',
+        search,
+        productName: name,
+        productBrand: brand,
+        productType: type,
       }
     } catch (e) {
       console.log(e?.message || '')
@@ -284,6 +288,9 @@ export default {
     currentPage() {
       this.getList()
     },
+    '$route.query'() {
+      this.getList()
+    },
   },
   created() {
     this.debounceSerch = debounce(this.getSearch, 1000)
@@ -294,23 +301,47 @@ export default {
     },
     getSearch() {
       this.currentPage = 1
-      this.getList()
+      const query = {
+        search: this.search,
+        name: this.productName,
+        brand: this.productBrand,
+        type: this.productType,
+        page: this.currentPage,
+      }
+      if (!this.search) {
+        delete query.search
+      }
+      if (!this.name) {
+        delete query.name
+      }
+      if (!this.brand) {
+        delete query.brand
+      }
+      if (!this.type) {
+        delete query.type
+      }
+      this.$router
+        .replace({
+          query,
+        })
+        .catch(() => {})
     },
     getNewPerPage() {
       this.currentPage = 1
       this.getList()
     },
     async getList() {
+      const query = this.$route.query
       try {
         const {
           data: { products, totalCount, totalPages },
         } = await this.$axios.get('/admin/products', {
           params: {
             visibility: true,
-            name: this.productName,
-            brand: this.productBrand,
-            category: this.productType,
-            search: this.search,
+            name: query.name || '',
+            brand: query.brand || '',
+            category: query.type || '',
+            search: query.search || '',
             limit: this.perPage,
             page: this.currentPage,
           },
@@ -318,6 +349,10 @@ export default {
         this.products = products
         this.totalCount = totalCount
         this.totalPages = totalPages
+        this.search = query.search || ''
+        this.productName = query.name || ''
+        this.productBrand = query.brand || ''
+        this.productType = query.type || ''
       } catch (e) {
         console.log(e?.message || '')
       }
@@ -413,6 +448,9 @@ export default {
       .link {
         text-decoration: underline;
         cursor: pointer;
+        border: none;
+        background-color: transparent;
+        color: black;
       }
 
       .articul {

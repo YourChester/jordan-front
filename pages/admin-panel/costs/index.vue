@@ -10,7 +10,7 @@
           <th>Название</th>
           <th>Сумма</th>
           <th>Дата</th>
-          <th colspan="2">Управление</th>
+          <th colspan="3">Управление</th>
         </tr>
         <tr v-for="cost in costs" :key="cost._id">
           <td>
@@ -25,6 +25,11 @@
           <td>
             <NuxtLink :to="`/admin-panel/costs/new?id=${cost._id}`">
               Добавить
+            </NuxtLink>
+          </td>
+          <td>
+            <NuxtLink :to="`/admin-panel/costs/${cost._id}`">
+              Редактировать
             </NuxtLink>
           </td>
           <td>
@@ -113,6 +118,9 @@ export default {
     },
     async deleteCosts(id) {
       try {
+        if (!confirm('Вы уверены что хотите удалить расходы?')) {
+          return
+        }
         await this.$axios.delete(`/admin/costs/${id}`)
         this.getList()
       } catch (e) {

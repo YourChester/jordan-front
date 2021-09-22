@@ -238,6 +238,8 @@ export default {
             priceIn: 0,
             dateIn: getDateTimeForInput(new Date()),
             createAt: getDateTimeForInput(new Date()),
+            dateOut: null,
+            priseSold: 0,
           }
 
           delete this.product._id

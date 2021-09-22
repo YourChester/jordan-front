@@ -205,17 +205,12 @@
             <NuxtLink
               class="link"
               :to="`/admin-panel/products/new?articul=${product.articul}`"
-              tag="div"
             >
               +
             </NuxtLink>
           </td>
           <td>
-            <NuxtLink
-              class="link"
-              :to="`/admin-panel/products/${product._id}`"
-              tag="div"
-            >
+            <NuxtLink class="link" :to="`/admin-panel/products/${product._id}`">
               E
             </NuxtLink>
           </td>
@@ -304,12 +299,23 @@ import { getDateWithTime } from '@/assets/utils/date'
 export default {
   components: {},
   layout: 'admin',
-  async asyncData({ $axios, redirect, $auth }) {
+  async asyncData({ $axios, query }) {
     try {
+      const name = query.name || ''
+      const brand = query.name || ''
+      const type = query.name || ''
+      const search = query.search || ''
+      const provider = query.provider || ''
+      const page = query.page || 1
       const productsData = await $axios.get('/admin/products', {
         params: {
           limit: 100,
-          page: 1,
+          page,
+          name,
+          brand,
+          category: type,
+          search,
+          provider,
         },
       })
       return {
@@ -317,7 +323,11 @@ export default {
         totalCount: productsData.data.totalCount,
         totalPages: productsData.data.totalPages,
         totalMoney: productsData.data.totalMoney,
-        search: '',
+        search,
+        productName: name,
+        productBrand: brand,
+        productType: type,
+        productProvider: provider,
         products: productsData.data.products,
       }
     } catch (e) {
@@ -334,10 +344,6 @@ export default {
       selected: [],
       priceIn: '',
       discount: '',
-      productName: '',
-      productProvider: '',
-      productBrand: '',
-      productType: '',
     }
   },
   computed: {
@@ -394,6 +400,9 @@ export default {
     currentPage() {
       this.getList()
     },
+    '$route.query'() {
+      this.getList()
+    },
   },
   created() {
     this.debounceSerch = debounce(this.getSearch, 1000)
@@ -404,7 +413,34 @@ export default {
     },
     getSearch() {
       this.currentPage = 1
-      this.getList()
+      const query = {
+        search: this.search,
+        name: this.productName,
+        brand: this.productBrand,
+        type: this.productType,
+        provider: this.productProvider,
+        page: this.currentPage,
+      }
+      if (!this.search) {
+        delete query.search
+      }
+      if (!this.name) {
+        delete query.name
+      }
+      if (!this.brand) {
+        delete query.brand
+      }
+      if (!this.type) {
+        delete query.type
+      }
+      if (!this.provider) {
+        delete query.provider
+      }
+      this.$router
+        .replace({
+          query,
+        })
+        .catch(() => {})
     },
     getNewPerPage() {
       this.currentPage = 1
@@ -431,6 +467,7 @@ export default {
     },
     async getList() {
       try {
+        const query = this.$route.query
         this.selected = []
         this.priceIn = ''
         this.discount = ''
@@ -438,11 +475,12 @@ export default {
           data: { products, totalCount, totalPages },
         } = await this.$axios.get('/admin/products', {
           params: {
-            search: this.search,
-            name: this.productName,
-            brand: this.productBrand,
-            category: this.productType,
-            provider: this.productProvider,
+            visibility: true,
+            name: query.name || '',
+            brand: query.brand || '',
+            category: query.type || '',
+            search: query.search || '',
+            provider: query.provider || '',
             limit: this.perPage,
             page: this.currentPage,
           },
@@ -450,6 +488,11 @@ export default {
         this.products = products
         this.totalCount = totalCount
         this.totalPages = totalPages
+        this.search = query.search || ''
+        this.productName = query.name || ''
+        this.productBrand = query.brand || ''
+        this.productType = query.type || ''
+        this.productProvider = query.provider || ''
       } catch (e) {
         console.log(e?.message || '')
       }
@@ -475,6 +518,9 @@ export default {
     },
     async deleteProduct(id) {
       try {
+        if (!confirm('Вы уверены что хотите удалить товар?')) {
+          return
+        }
         await this.$axios.delete(`/admin/products/${id}`)
         this.getList()
       } catch (e) {
@@ -555,6 +601,7 @@ export default {
         cursor: pointer;
         border: none;
         background-color: transparent;
+        color: black;
       }
 
       .articul {

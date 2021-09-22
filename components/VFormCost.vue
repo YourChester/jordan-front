@@ -31,7 +31,7 @@ export default {
   props: {
     costProps: {
       type: Object,
-      default: () => {},
+      default: null,
     },
   },
   data: () => {

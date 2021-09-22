@@ -322,6 +322,9 @@ export default {
     },
     async deleteProduct(index) {
       try {
+        if (!confirm('Вы уверены что хотите удалить товар из продажи?')) {
+          return
+        }
         if (this.localSold._id) {
           const product = this.localSold.products[index]
           this.localSold.products.splice(index, 1)

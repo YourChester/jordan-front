@@ -22,7 +22,7 @@ export default {
         }
       } else {
         return {
-          cost: {},
+          cost: null,
         }
       }
     } catch (e) {

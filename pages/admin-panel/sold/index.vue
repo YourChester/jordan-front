@@ -351,6 +351,9 @@ export default {
     },
     async deleteSold(id) {
       try {
+        if (!confirm('Вы уверены что хотите удалить продажу?')) {
+          return
+        }
         await this.$axios.delete(`/admin/solds/${id}`)
         this.getList()
       } catch (e) {

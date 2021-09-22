@@ -12,7 +12,7 @@ export default {
   layout: 'admin',
   async asyncData({ $axios, params }) {
     try {
-      const costData = await $axios.get(`/admin/cost/${params.id}`)
+      const costData = await $axios.get(`/admin/costs/${params.id}`)
       return {
         cost: costData.data.cost,
       }
@@ -23,11 +23,9 @@ export default {
   methods: {
     async saveCost(form) {
       try {
-        const payload = JSON.parse(JSON.stringify(form))
-
-        payload.dateIn = payload.dateIn ? new Date(payload.dateIn) : ''
-
-        await this.$axios.put(`/admin/products/${this.product._id}`, payload)
+        await this.$axios.put(`/admin/costs/${form._id}`, {
+          ...form,
+        })
         this.$router.push('/admin-panel/costs')
       } catch (e) {
         console.log(e?.message || '')

@@ -2,7 +2,10 @@ const getDateForInput = (data) => {
   if (!data) {
     return ''
   }
-  const day = new Date(data).getDate()
+  const day =
+    new Date(data).getDate() < 10
+      ? `0${new Date(data).getDate()}`
+      : new Date(data).getDate()
   const month =
     new Date(data).getMonth() + 1 < 10
       ? `0${new Date(data).getMonth() + 1}`
