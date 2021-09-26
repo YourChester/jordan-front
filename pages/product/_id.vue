@@ -634,6 +634,7 @@ export default {
   }
 
   &__image {
+    overflow: hidden;
     width: 470px;
     height: 470px;
 

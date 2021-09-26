@@ -30,7 +30,9 @@
           <th>Создано</th>
         </tr>
         <tr>
-          <td></td>
+          <td>
+            <input v-model="selectAll" type="checkbox" @change="setSelected" />
+          </td>
           <td>
             <select
               v-model="productType"
@@ -204,7 +206,7 @@
           <td>
             <NuxtLink
               class="link"
-              :to="`/admin-panel/products/new?articul=${product.articul}`"
+              :to="`/admin-panel/products/new?id=${product._id}`"
             >
               +
             </NuxtLink>
@@ -336,6 +338,7 @@ export default {
   },
   data() {
     return {
+      selectAll: false,
       perPage: 100,
       debounceSerch: null,
       modalVisibility: false,
@@ -405,9 +408,20 @@ export default {
     },
   },
   created() {
-    this.debounceSerch = debounce(this.getSearch, 1000)
+    this.debounceSerch = debounce(this.getSearch, 2000)
   },
   methods: {
+    setSelected() {
+      if (this.selectAll) {
+        this.products.forEach((el) => {
+          if (!el.dateOut && !el.priseSold) {
+            this.selected.push(el._id)
+          }
+        })
+      } else {
+        this.selected = []
+      }
+    },
     getCurrentDate(data) {
       return getDateWithTime(data)
     },
@@ -475,7 +489,6 @@ export default {
           data: { products, totalCount, totalPages },
         } = await this.$axios.get('/admin/products', {
           params: {
-            visibility: true,
             name: query.name || '',
             brand: query.brand || '',
             category: query.type || '',

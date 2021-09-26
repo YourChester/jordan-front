@@ -122,8 +122,12 @@
         <v-file-controll :images="images" :articul="product.articul" />
       </div>
     </div>
-    <button v-if="!product._id" @click="addProduct">Добавить</button>
-    <button v-if="product._id" @click="saveProduct">Сохранить</button>
+    <button v-if="!product._id" :disabled="isDisabled" @click="saveProduct">
+      Добавить
+    </button>
+    <button v-if="product._id" :disabled="isDisabled" @click="saveProduct">
+      Сохранить
+    </button>
   </div>
 </template>
 
@@ -148,6 +152,7 @@ export default {
     return {
       images: [],
       localSize: '',
+      isDisabled: false,
       product: {
         name: '',
         gender: [],
@@ -214,12 +219,38 @@ export default {
     } else {
       this.product.dateIn = getDateTimeForInput(new Date())
     }
-    if (this.$router.currentRoute.query.articul) {
-      this.product.articul = this.$router.currentRoute.query.articul
-      this.getProductByArticul()
+    if (this.$router.currentRoute.query.id) {
+      this.dublicateProduct(this.$router.currentRoute.query.id)
     }
   },
   methods: {
+    async dublicateProduct(id) {
+      try {
+        const {
+          data: { product },
+        } = await this.$axios.get(`/admin/products/${id}`)
+        if (product) {
+          this.images = product.images
+
+          this.product = {
+            ...this.product,
+            ...product,
+            visibility: true,
+            articul: product.articul,
+            discount: 0,
+            priceIn: 0,
+            dateIn: getDateTimeForInput(new Date()),
+            createAt: getDateTimeForInput(new Date()),
+            dateOut: null,
+            priseSold: 0,
+          }
+
+          delete this.product._id
+        }
+      } catch (e) {
+        console.log(e?.message || '')
+      }
+    },
     async getProductByArticul() {
       try {
         const productsData = await this.$axios.get(
@@ -243,16 +274,40 @@ export default {
           }
 
           delete this.product._id
+        } else {
+          this.images = []
         }
       } catch (e) {
         console.log(e?.message || '')
       }
     },
-    addProduct() {
-      this.$emit('add', this.product)
+    firstChaptUpperCase(brand) {
+      const localBrand = brand
+      return localBrand[0].toUpperCase() + localBrand.slice(1)
     },
-    saveProduct() {
-      this.$emit('save', this.product)
+    async saveProduct() {
+      try {
+        this.isDisabled = true
+        const payload = JSON.parse(JSON.stringify(this.product))
+        payload.brand = this.firstChaptUpperCase(
+          payload.brand.toLowerCase().trim()
+        )
+        if (this.product._id) {
+          payload.dateIn = payload.dateIn ? new Date(payload.dateIn) : ''
+
+          await this.$axios.put(`/admin/products/${this.product._id}`, payload)
+          alert('Товар успешно обновлен')
+        } else {
+          await this.$axios.post(`/admin/products`, {
+            ...payload,
+          })
+          alert('Товар успешно создан')
+        }
+        this.isDisabled = false
+        this.$router.push('/admin-panel/products')
+      } catch (e) {
+        console.log(e?.message || '')
+      }
     },
   },
 }

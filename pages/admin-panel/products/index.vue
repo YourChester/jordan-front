@@ -20,7 +20,7 @@
           <th colspan="2">Штрих код</th>
           <th rowspan="2">Дата получения</th>
           <th rowspan="3">Пол</th>
-          <th rowspan="2" colspan="2">Действия</th>
+          <th rowspan="2" colspan="3">Действия</th>
         </tr>
         <tr>
           <th>Товара</th>
@@ -93,6 +93,7 @@
           </td>
           <td></td>
           <th>Прих.</th>
+          <th>Прод.</th>
           <th>Прав.</th>
         </tr>
         <tr v-for="product in products" :key="product._id">
@@ -164,9 +165,17 @@
           <td>
             <NuxtLink
               class="link"
-              :to="`/admin-panel/products/new?articul=${product.articul}`"
+              :to="`/admin-panel/products/new?id=${product._id}`"
             >
               +
+            </NuxtLink>
+          </td>
+          <td>
+            <NuxtLink
+              class="link"
+              :to="`/admin-panel/sold/new-sold?id=${product._id}`"
+            >
+              $
             </NuxtLink>
           </td>
           <td>
@@ -293,7 +302,7 @@ export default {
     },
   },
   created() {
-    this.debounceSerch = debounce(this.getSearch, 1000)
+    this.debounceSerch = debounce(this.getSearch, 2000)
   },
   methods: {
     getCurrentDate(data) {

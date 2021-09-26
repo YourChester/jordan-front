@@ -255,6 +255,9 @@ export default {
         this.buyer.name = this.sold.card.name
       }
     }
+    if (this.$router.currentRoute.query.id) {
+      this.getProductById(this.$router.currentRoute.query.id)
+    }
   },
   methods: {
     visibilityImageModal(imgUrl, state) {
@@ -308,6 +311,18 @@ export default {
         console.log(e?.message || '')
       }
     },
+    async getProductById(id) {
+      try {
+        const {
+          data: { product },
+        } = await this.$axios.get(`/admin/products/${id}`)
+        if (product) {
+          this.addProduct(product)
+        }
+      } catch (e) {
+        console.log(e?.message || '')
+      }
+    },
     addProduct(product) {
       const localProduct = JSON.parse(JSON.stringify(product))
       const discount = (localProduct.priceOut / 100) * localProduct.discount
@@ -348,6 +363,10 @@ export default {
     },
     async saveSold() {
       try {
+        if (!this.localSold.seller.length) {
+          alert('Добавте продавцов')
+          return
+        }
         this.loadData = true
         this.localSold.totalIncome = this.getTotalIncome
         this.localSold.totalOut = this.getTotalOut
@@ -357,11 +376,12 @@ export default {
             `/admin/solds/${this.localSold._id}`,
             this.localSold
           )
+          alert('Продажа успешно обновлена')
         } else {
           await this.$axios.post('/admin/solds', this.localSold)
+          alert('Продажа успешно создана')
         }
         this.loadData = false
-        alert('Продажа успешно создана')
         this.$router.push('/admin-panel/sold')
       } catch (e) {
         console.log(e?.message || '')

@@ -1,5 +1,5 @@
 <template>
-  <v-form-product @add="addProduct" />
+  <v-form-product />
 </template>
 
 <script>
@@ -10,17 +10,5 @@ export default {
     VFormProduct,
   },
   layout: 'admin',
-  methods: {
-    async addProduct(form) {
-      try {
-        await this.$axios.post(`/admin/products`, {
-          ...form,
-        })
-        this.$router.push('/admin-panel/products')
-      } catch (e) {
-        console.log(e?.message || '')
-      }
-    },
-  },
 }
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <v-form-product :product-props="product" @save="saveProduct" />
+  <v-form-product :product-props="product" />
 </template>
 
 <script>
@@ -19,20 +19,6 @@ export default {
     } catch (e) {
       console.log(e?.message || '')
     }
-  },
-  methods: {
-    async saveProduct(form) {
-      try {
-        const payload = JSON.parse(JSON.stringify(form))
-
-        payload.dateIn = payload.dateIn ? new Date(payload.dateIn) : ''
-
-        await this.$axios.put(`/admin/products/${this.product._id}`, payload)
-        this.$router.push('/admin-panel/products')
-      } catch (e) {
-        console.log(e?.message || '')
-      }
-    },
   },
 }
 </script>

@@ -179,6 +179,8 @@ export default {
   }
 
   &__image {
+    width: 165px;
+    height: 168px;
     overflow: hidden;
     position: relative;
 
