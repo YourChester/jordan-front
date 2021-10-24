@@ -37,7 +37,7 @@
             <select
               v-model="productType"
               class="table-search"
-              @change="debounceSerch"
+              @change="getSearch"
             >
               <option :value="''">Выберите категорию</option>
               <template v-for="category in getGroupCategories">
@@ -59,7 +59,7 @@
               v-model="productBrand"
               class="table-search"
               type="text"
-              @input="debounceSerch"
+              @change="getSearch"
             />
           </td>
           <td>
@@ -67,7 +67,7 @@
               v-model="productName"
               class="table-search"
               type="text"
-              @input="debounceSerch"
+              @change="getSearch"
             />
           </td>
           <td>
@@ -75,7 +75,7 @@
               v-model="productProvider"
               class="table-search"
               type="text"
-              @input="debounceSerch"
+              @change="getSearch"
             />
           </td>
           <td></td>
@@ -88,7 +88,7 @@
               v-model="search"
               class="table-search"
               type="text"
-              @input="debounceSerch"
+              @change="getSearch"
             />
           </td>
           <td>
@@ -96,7 +96,7 @@
               v-model="search"
               class="table-search"
               type="text"
-              @input="debounceSerch"
+              @change="getSearch"
             />
           </td>
           <td>
@@ -104,7 +104,7 @@
               v-model="search"
               class="table-search"
               type="text"
-              @input="debounceSerch"
+              @change="getSearch"
             />
           </td>
           <td></td>
@@ -294,7 +294,6 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import debounce from 'lodash.debounce'
 
 import { getDateWithTime } from '@/assets/utils/date'
 
@@ -340,7 +339,6 @@ export default {
     return {
       selectAll: false,
       perPage: 100,
-      debounceSerch: null,
       modalVisibility: false,
       imageUrl: '',
       url: process.env.IMG_URL,
@@ -407,9 +405,6 @@ export default {
       this.getList()
     },
   },
-  created() {
-    this.debounceSerch = debounce(this.getSearch, 2000)
-  },
   methods: {
     setSelected() {
       if (this.selectAll) {
@@ -438,16 +433,16 @@ export default {
       if (!this.search) {
         delete query.search
       }
-      if (!this.name) {
+      if (!this.productName) {
         delete query.name
       }
-      if (!this.brand) {
+      if (!this.productBrand) {
         delete query.brand
       }
-      if (!this.type) {
+      if (!this.productType) {
         delete query.type
       }
-      if (!this.provider) {
+      if (!this.productProvider) {
         delete query.provider
       }
       this.$router

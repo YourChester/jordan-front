@@ -4,7 +4,7 @@
     <div class="store__table-filter">
       <label class="table-filter__search">
         Поиск
-        <input v-model="search" type="text" @input="debounceSerch" />
+        <input v-model="search" type="text" @change="getSearch" />
       </label>
     </div>
     <table cellpadding="0" cellspacing="0" class="store__table-product">
@@ -31,7 +31,7 @@
             <select
               v-model="productType"
               class="table-search"
-              @change="debounceSerch"
+              @change="getSearch"
             >
               <option :value="''">Выберите категорию</option>
               <template v-for="category in getGroupCategories">
@@ -53,7 +53,7 @@
               v-model="productBrand"
               class="table-search"
               type="text"
-              @input="debounceSerch"
+              @change="getSearch"
             />
           </td>
           <td>
@@ -61,7 +61,7 @@
               v-model="productName"
               class="table-search"
               type="text"
-              @input="debounceSerch"
+              @change="getSearch"
             />
           </td>
           <td></td>
@@ -72,7 +72,7 @@
               v-model="search"
               class="table-search"
               type="text"
-              @input="debounceSerch"
+              @change="getSearch"
             />
           </td>
           <td>
@@ -80,7 +80,7 @@
               v-model="search"
               class="table-search"
               type="text"
-              @input="debounceSerch"
+              @change="getSearch"
             />
           </td>
           <td>
@@ -88,7 +88,7 @@
               v-model="search"
               class="table-search"
               type="text"
-              @input="debounceSerch"
+              @change="getSearch"
             />
           </td>
           <td></td>
@@ -225,7 +225,6 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import debounce from 'lodash.debounce'
 
 import { getDateWithTime } from '@/assets/utils/date'
 
@@ -269,7 +268,6 @@ export default {
   data() {
     return {
       url: process.env.IMG_URL,
-      debounceSerch: null,
       modalVisibility: false,
     }
   },
@@ -301,9 +299,6 @@ export default {
       this.getList()
     },
   },
-  created() {
-    this.debounceSerch = debounce(this.getSearch, 2000)
-  },
   methods: {
     getCurrentDate(data) {
       return getDateWithTime(data)
@@ -320,13 +315,13 @@ export default {
       if (!this.search) {
         delete query.search
       }
-      if (!this.name) {
+      if (!this.productName) {
         delete query.name
       }
-      if (!this.brand) {
+      if (!this.productBrand) {
         delete query.brand
       }
-      if (!this.type) {
+      if (!this.productType) {
         delete query.type
       }
       this.$router

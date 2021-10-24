@@ -285,6 +285,10 @@ export default {
       const localBrand = brand
       return localBrand[0].toUpperCase() + localBrand.slice(1)
     },
+    fixSize(size) {
+      const localSize = size
+      return localSize.trim().replace(',', '.')
+    },
     async saveProduct() {
       try {
         this.isDisabled = true
@@ -292,6 +296,7 @@ export default {
         payload.brand = this.firstChaptUpperCase(
           payload.brand.toLowerCase().trim()
         )
+        payload.size = this.fixSize(payload.size)
         if (this.product._id) {
           payload.dateIn = payload.dateIn ? new Date(payload.dateIn) : ''
 

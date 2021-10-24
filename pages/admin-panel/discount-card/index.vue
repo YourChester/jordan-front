@@ -10,6 +10,10 @@
         Телефон
         <input v-model="phone" type="text" />
       </label>
+      <label v-show="getRoleKey === 'admin'" class="filter__phone">
+        Номер карты
+        <input v-model="cardNumber" type="text" />
+      </label>
       <button class="filter__btn" @click="getSearch">Поиск</button>
     </div>
     <div class="discount-card__table-wrapper">
@@ -117,6 +121,7 @@ export default {
       return {
         name: '',
         phone: '',
+        cardNumber: '',
         currentPage: 1,
         totalCount: discountCardsData.data.totalCount,
         totalPages: discountCardsData.data.totalPages,
@@ -129,12 +134,17 @@ export default {
   data() {
     return {}
   },
+  computed: {
+    getRoleKey() {
+      const { role } = this.$auth.$state.user
+      return role?.key
+    },
+  },
   watch: {
     currentPage() {
       this.getList()
     },
   },
-  created() {},
   methods: {
     getCurrentDate(data) {
       return getDateWithTime(data)
@@ -151,6 +161,7 @@ export default {
           params: {
             name: this.name,
             phone: this.phone,
+            code: this.cardNumber,
             limit: 100,
             page: this.currentPage,
           },

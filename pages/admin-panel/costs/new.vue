@@ -3,6 +3,7 @@
 </template>
 
 <script>
+import { getDateForInput } from '@/assets/utils/date'
 import VFormCost from '~/components/VFormCost.vue'
 
 export default {
@@ -17,6 +18,7 @@ export default {
           data: { cost },
         } = await $axios.get(`/admin/costs/${query.id}`)
         delete cost._id
+        cost.date = getDateForInput(new Date())
         return {
           cost,
         }
