@@ -155,6 +155,16 @@
           </tr>
         </table>
       </div>
+      <div class="sold-form__comment">
+        <label>
+          Комментарии
+          <textarea
+            v-model="localSold.comment"
+            type="text"
+            @input="debounceSerchCard"
+          />
+        </label>
+      </div>
     </div>
     <div class="sold-form__actions">
       <button :disabled="loadData" @click="saveSold">Сохранить</button>
@@ -185,6 +195,7 @@ export default {
         seller: [],
         totalPrice: 0,
         date: '',
+        comment: '',
       },
       buyer: {
         cardCode: '',
@@ -486,6 +497,16 @@ export default {
 
     h3 {
       margin-bottom: 10px;
+    }
+  }
+
+  &__comment {
+    margin-top: 20px;
+
+    label {
+      display: flex;
+      flex-direction: column;
+      width: 400px;
     }
   }
 

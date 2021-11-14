@@ -4,7 +4,7 @@
     <div class="store__table-filter">
       <label class="table-filter__search">
         Поиск
-        <input v-model="search" type="text" @change="getSearch" />
+        <input v-model.trim="search" type="text" @change="getSearch" />
       </label>
     </div>
     <table cellpadding="0" cellspacing="0" class="store__table-product">
@@ -50,7 +50,7 @@
           </td>
           <td>
             <input
-              v-model="productBrand"
+              v-model.trim="productBrand"
               class="table-search"
               type="text"
               @change="getSearch"
@@ -69,7 +69,7 @@
           <td></td>
           <td>
             <input
-              v-model="search"
+              v-model.trim="search"
               class="table-search"
               type="text"
               @change="getSearch"
@@ -77,7 +77,7 @@
           </td>
           <td>
             <input
-              v-model="search"
+              v-model.trim="search"
               class="table-search"
               type="text"
               @change="getSearch"
@@ -85,7 +85,7 @@
           </td>
           <td>
             <input
-              v-model="search"
+              v-model.trim="search"
               class="table-search"
               type="text"
               @change="getSearch"

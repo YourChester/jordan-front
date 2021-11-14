@@ -44,6 +44,16 @@
         </div>
       </div>
     </div>
+    <div v-if="product.pairProduct" class="product__pair">
+      <h3>Возьми в пару к костюму</h3>
+      <div class="product__pair-list">
+        <v-product-card
+          :product="product.pairProduct.pairs[0]"
+          :products="product.pairProduct.pairs"
+          :images="product.pairProduct.images"
+        />
+      </div>
+    </div>
     <div v-show="isProductShose" class="product__size-table">
       <div class="sizes">
         <div class="size__title" @click="showTableSize = !showTableSize">
@@ -506,7 +516,12 @@
 <script>
 import { mapGetters } from 'vuex'
 
+import VProductCard from '@/components/VProductCard'
+
 export default {
+  components: {
+    VProductCard,
+  },
   async asyncData({ $axios, params }) {
     try {
       const productData = await $axios.get(`/products/${params.id}`)
@@ -715,6 +730,20 @@ export default {
     font-size: 18px;
     font-weight: 600;
     border-top: 1px solid #d9d7d7;
+  }
+
+  &__pair {
+    padding: 18px;
+    h3 {
+      margin-bottom: 20px;
+      font-size: 18px;
+    }
+
+    &-list {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
   }
 
   &__size-table {

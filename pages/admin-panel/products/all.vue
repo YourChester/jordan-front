@@ -56,7 +56,7 @@
           </td>
           <td>
             <input
-              v-model="productBrand"
+              v-model.trim="productBrand"
               class="table-search"
               type="text"
               @change="getSearch"
@@ -72,7 +72,7 @@
           </td>
           <td>
             <input
-              v-model="productProvider"
+              v-model.trim="productProvider"
               class="table-search"
               type="text"
               @change="getSearch"
@@ -85,7 +85,7 @@
           <td></td>
           <td>
             <input
-              v-model="search"
+              v-model.trim="search"
               class="table-search"
               type="text"
               @change="getSearch"
@@ -93,7 +93,7 @@
           </td>
           <td>
             <input
-              v-model="search"
+              v-model.trim="search"
               class="table-search"
               type="text"
               @change="getSearch"
@@ -101,7 +101,7 @@
           </td>
           <td>
             <input
-              v-model="search"
+              v-model.trim="search"
               class="table-search"
               type="text"
               @change="getSearch"

@@ -80,10 +80,10 @@
             >
               Сортировать: {{ getSortName }}
               <div v-show="visibleSort" class="right-side__sort-menu">
-                <button @click="setSort('prise')">цена по убыванию</button>
                 <button @click="setSort('prise-reverse')">
-                  цена по возростанию
+                  цена по убыванию
                 </button>
+                <button @click="setSort('prise')">цена по возрастанию</button>
                 <button @click="setSort('dicount')">акции</button>
                 <button @click="setSort('name-reverse')">
                   по названию Я-А
@@ -205,7 +205,7 @@ export default {
         case 'prise-reverse':
           return 'цена по убыванию'
         case 'prise':
-          return 'цена по возростанию'
+          return 'цена по возрастанию'
         case 'name-reverse':
           return 'по названию Я-А'
         case 'name':

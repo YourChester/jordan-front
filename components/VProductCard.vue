@@ -1,11 +1,11 @@
 <template>
-  <NuxtLink :to="`/product/${product._id}`" class="product__wrapper">
+  <NuxtLink :to="`/product/${product._id}`" class="product-card__wrapper">
     <div
-      class="product"
+      class="product-card"
       @mouseover="visibleCard = true"
       @mouseleave="visibleCard = false"
     >
-      <div class="product__image">
+      <div class="product-card__image">
         <img
           v-if="isProductHaveImages"
           :src="`${url}${images[0]}`"
@@ -21,21 +21,21 @@
         </div>
         <div v-show="isNewProduct" class="image__new">Новинка</div>
       </div>
-      <div class="product__name">
+      <div class="product-card__name">
         {{ product.name }}
       </div>
-      <div class="product__articul">Артикул: {{ product.articul }}</div>
+      <div class="product-card__articul">Артикул: {{ product.articul }}</div>
       <div
-        class="product__price"
-        :class="isProductHaveDiscount ? 'product__price-discount' : ''"
+        class="product-card__price"
+        :class="isProductHaveDiscount ? 'product-card__price-discount' : ''"
       >
         <span v-show="isProductHaveDiscount" class="discount_price">
           {{ getDiscountPrice }} РУБ
         </span>
         <span class="price"> {{ product.priceOut }} РУБ </span>
       </div>
-      <div v-show="visibleCard && getSizes.length" class="product__hovers">
-        <div class="product__image">
+      <div v-show="visibleCard && getSizes.length" class="product-card__hovers">
+        <div class="product-card__image">
           <img
             v-if="isProductHaveImages"
             :src="`${url}${images[0]}`"
@@ -51,14 +51,14 @@
           </div>
           <div v-show="isNewProduct" class="image__new">Новинка</div>
         </div>
-        <div class="product__name">
+        <div class="product-card__name">
           {{ product.name }}
         </div>
-        <div class="product__sizes">
+        <div class="product-card__sizes">
           <div
             v-for="(size, index) in getSizes"
             :key="size + index"
-            class="product__size"
+            class="product-card__size"
           >
             {{ size }}
           </div>
@@ -159,7 +159,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.product {
+.product-card {
   position: relative;
 
   &__hovers {
