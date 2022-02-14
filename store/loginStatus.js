@@ -14,7 +14,8 @@ export const mutations = {
   UPDATE_TIMEOUT(state) {
     clearTimeout(state.timeout)
   },
-  CLEAR_STORE_TIMEOUT(state) {
+  async CLEAR_STORE_TIMEOUT(state) {
+    await this.$auth.logout()
     clearTimeout(state.timeout)
   },
 }

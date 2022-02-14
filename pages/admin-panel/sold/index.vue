@@ -36,15 +36,15 @@
                 :key="group._id"
                 style="background-color: green; color: white; height: 50px"
               >
-                <td colspan="6">Касса: {{ group.totalPrice }} р.</td>
-                <td colspan="7">
-                  {{ group._id }}
+                <td colspan="5">Касса: {{ group.totalPrice }} р.</td>
+                <td colspan="6">
+                  {{ formatDate(group._id) }}
                 </td>
               </tr>
               <tr :key="group._id + 'header'">
-                <td colspan="2">Продавцы</td>
+                <td colspan="1">Продавцы</td>
                 <td colspan="2">Карта покупателя</td>
-                <td colspan="2">Дата Продажи</td>
+                <td colspan="1">Дата Продажи</td>
                 <td colspan="3">Сумма покупки</td>
                 <td v-show="getRoleKey === 'admin'" colspan="2">Доход</td>
                 <td colspan="2">Действия</td>
@@ -54,7 +54,7 @@
                   :key="sold._id + group._id"
                   style="background-color: grey; color: white"
                 >
-                  <td colspan="2">
+                  <td colspan="1">
                     {{
                       sold.seller_info && sold.seller_info.length
                         ? sold.seller_info.map((el) => el.name).join(', ')
@@ -68,7 +68,7 @@
                         : ''
                     }}
                   </td>
-                  <td colspan="2">
+                  <td colspan="1">
                     {{ getFormatedDateWithTime(sold.date) }}
                   </td>
                   <td colspan="3">
@@ -102,7 +102,7 @@
                   <th rowspan="2">Название</th>
                   <th rowspan="2">Артикул</th>
                   <th v-show="getRoleKey === 'admin'" rowspan="2">Поставщик</th>
-                  <th :colspan="getRoleKey === 'admin' ? 5 : 3">Цена</th>
+                  <th :colspan="getRoleKey === 'admin' ? 3 : 2">Цена</th>
                   <th rowspan="2">Размер</th>
                   <th rowspan="2">Дата продажи</th>
                   <th rowspan="2" :colspan="getRoleKey === 'admin' ? 0 : 2">
@@ -111,10 +111,8 @@
                 </tr>
                 <tr :key="sold._id + group._id + 'subproducthead'">
                   <th v-show="getRoleKey === 'admin'">Прих.</th>
-                  <th>Витрина</th>
-                  <th>Прод.</th>
+                  <th>Витрина со скидкой</th>
                   <th>Скидка</th>
-                  <th v-show="getRoleKey === 'admin'">Доход</th>
                 </tr>
                 <template v-for="product in sold.products_info">
                   <tr :key="product._id">
@@ -130,31 +128,25 @@
                     <td>
                       <div class="articul">
                         <img
-                          v-show="
-                            product &&
-                            product.pairImages &&
-                            product.pairImages.length
-                          "
+                          v-show="product && product.pairImages"
                           src="~/assets/img/imgpare.jpeg"
                           width="15px"
                           alt="Картинка"
                           class="pair"
                           @mouseover="
-                            visibilityImageModal(product.pairImages[0], true)
+                            visibilityImageModal(product.pairImages, true)
                           "
                           @mouseleave="visibilityImageModal('', false)"
                         />
                         <div>{{ product.articul }}</div>
                         <img
-                          v-show="
-                            product && product.images && product.images.length
-                          "
+                          v-show="product && product.images"
                           src="~/assets/img/imgart.jpeg"
                           width="20px"
                           alt="Картинка"
                           class="image"
                           @mouseover="
-                            visibilityImageModal(product.images[0], true)
+                            visibilityImageModal(product.images, true)
                           "
                           @mouseleave="visibilityImageModal('', false)"
                         />
@@ -167,20 +159,10 @@
                       {{ product.priceIn }}
                     </td>
                     <td>
-                      {{ product.priceOut }}
-                    </td>
-                    <td>
                       {{ product.priseSold }}
                     </td>
                     <td>
                       {{ product.discount }}
-                    </td>
-                    <td v-show="getRoleKey === 'admin'">
-                      {{
-                        Math.round(
-                          Number(product.priseSold) - Number(product.priceIn)
-                        )
-                      }}
                     </td>
                     <td>
                       {{ product.size }}
@@ -212,14 +194,6 @@
         </table>
       </div>
       <div class="sold__pagination">
-        <div class="sold__pagination-perpage">
-          <select v-model="perPage" @change="getNewPerPage">
-            <option value="10">10</option>
-            <option value="50">50</option>
-            <option value="100">100</option>
-            <option value="1000">1000</option>
-          </select>
-        </div>
         <div class="sold__pagination-total">Всего: {{ totalCount }}</div>
         <div v-show="totalPages > 1" class="sold__pagination-page_control">
           <div
@@ -265,14 +239,14 @@ export default {
         params: {
           sellers: '',
           search: '',
-          limit: 100,
+          limit: 1,
           page: 1,
         },
       })
 
       return {
         currentPage: 1,
-        perPage: 100,
+        perPage: 1,
         totalCount,
         totalPages,
         solds,
@@ -359,6 +333,17 @@ export default {
       } catch (e) {
         console.log(e?.message || '')
       }
+    },
+    formatDate(date) {
+      let arr = date.split('-')
+      arr = arr.map((el) => {
+        if (el.length < 2) {
+          return `0${el}`
+        } else {
+          return el
+        }
+      })
+      return arr.join('.')
     },
   },
 }

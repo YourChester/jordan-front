@@ -149,8 +149,8 @@ export default {
       const titlePage = params.category
       const filters = {
         gender: params.gender || '',
-        brand: [],
-        size: [],
+        brand: query.brand ? query.brand.split(',') : [],
+        size: query.size ? query.size.split(',') : [],
         sort: '',
         limit: 12,
         page: 1,
@@ -282,33 +282,56 @@ export default {
     },
     setNewFilter({ key, value }) {
       this.filters[key] = value
-      if (
-        !this.filters.brand?.length &&
-        !this.filters.size?.length &&
-        this.filters.gender === 'all'
-      ) {
-        this.$router.push('/')
+      const query = JSON.parse(JSON.stringify(this.$route.query))
+
+      if (key === 'size' || key === 'brand') {
+        query[key] = value.join(',')
       }
-      if (key === 'category') {
-        this.$router.push(
-          `${this.filters.gender}${
-            this.filters.category ? '/' + this.filters.category : ''
-          }`
-        )
-      } else if (key === 'gender') {
-        if (value) {
-          this.$router.push(
-            `${this.filters.gender}${
-              this.filters.category ? '/' + this.filters.category : ''
-            }`
-          )
-        } else {
-          this.$router.push('/')
-        }
-      } else {
-        this.currentPage = 1
+
+      this.$router.push({
+        path: `/${this.filters.gender ? this.filters.gender : 'all'}${
+          this.filters.category ? `/${this.filters.category}` : ''
+        }`,
+        query,
+      })
+
+      if (key === 'size' || key === 'brand') {
         this.getData()
       }
+      // if ((key === 'size' || key === 'brand') && value.length) {
+      //   const query = this.$route.query
+      //   query[key] = value.join(', ')
+      //   console.log(query)
+      //   this.$router.replace({ query }).catch(() => {})
+      // }
+      // this.filters[key] = value
+      // if (
+      //   !this.filters.brand?.length &&
+      //   !this.filters.size?.length &&
+      //   this.filters.gender === 'all'
+      // ) {
+      //   this.$router.push('/')
+      // }
+      // if (key === 'category') {
+      //   this.$router.push(
+      //     `${this.filters.gender}${
+      //       this.filters.category ? '/' + this.filters.category : ''
+      //     }`
+      //   )
+      // } else if (key === 'gender') {
+      //   if (value) {
+      //     this.$router.push(
+      //       `${this.filters.gender}${
+      //         this.filters.category ? '/' + this.filters.category : ''
+      //       }`
+      //     )
+      //   } else {
+      //     this.$router.push('/')
+      //   }
+      // } else {
+      //   this.currentPage = 1
+      //   this.getData()
+      // }
     },
   },
 }

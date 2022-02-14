@@ -40,7 +40,7 @@ export default {
   }
 
   &::v-deep {
-    .product__wrapper {
+    .product-card__wrapper {
       margin: 10px auto;
     }
   }

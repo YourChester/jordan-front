@@ -101,8 +101,7 @@
             <th width="250px">Название</th>
             <th width="100px">Размер</th>
             <th width="250px">Артикул</th>
-            <th width="120px">Цена витрины</th>
-            <th width="120px">Цена продажи</th>
+            <th width="120px">Цена витрины со скидкой</th>
             <th width="120px">Дисконт товара</th>
             <th>{{ localSold._id ? 'Возврат' : 'Удалить' }}</th>
           </tr>
@@ -137,14 +136,7 @@
               </div>
             </td>
             <td>
-              {{ item.priceOut }}
-            </td>
-            <td>
-              <input
-                v-model="item.priseSold"
-                type="number"
-                @change="updateTotalPrice"
-              />
+              {{ item.priseSold }}
             </td>
             <td>
               {{ item.discount }}
@@ -232,16 +224,12 @@ export default {
       return Math.round(totalPrice)
     },
     getTotalIncome() {
-      const totalPrice = this.localSold.products.reduce((price, el) => {
-        const priseSold =
-          el.discount < 50 && this.localSold.discount
-            ? Number(el.priseSold) -
-              (Number(el.priseSold) / 100) * this.localSold.discount
-            : Number(el.priseSold)
-        return price + (priseSold - el.priceIn)
+      const totalPriceIn = this.localSold.products.reduce((price, el) => {
+        const priceIn = el.priceIn ? el.priceIn : 0
+        return price + priceIn
       }, 0)
 
-      return Math.round(totalPrice)
+      return Math.round(this.localSold.totalPrice - totalPriceIn)
     },
     getTotalOut() {
       const totalPrice = this.localSold.products.reduce((price, el) => {

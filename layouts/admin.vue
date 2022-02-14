@@ -28,11 +28,23 @@ export default {
       this.$store.dispatch('codeBooks/setSellers', sellerResult.data.sellers)
       this.$store.dispatch('codeBooks/setSizes', sizesResult.data.sizes)
       this.$store.dispatch('codeBooks/setRoles', rolesResult.data.roles)
+      document.addEventListener('keydown', () => {
+        this.$store.dispatch('loginStatus/updateTimeout')
+      })
+      document.addEventListener('click', () => {
+        this.$store.dispatch('loginStatus/updateTimeout')
+      })
     } catch (e) {
       console.log(e?.message || '')
     }
   },
   beforeDestroy() {
+    document.removeEventListener('keydown', () => {
+      this.$store.dispatch('loginStatus/updateTimeout')
+    })
+    document.removeEventListener('click', () => {
+      this.$store.dispatch('loginStatus/updateTimeout')
+    })
     this.$store.dispatch('loginStatus/clearStoreTimeout')
   },
 }

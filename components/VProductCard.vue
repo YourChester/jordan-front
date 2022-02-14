@@ -69,6 +69,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   props: {
     product: {
@@ -91,46 +92,59 @@ export default {
     }
   },
   computed: {
+    ...mapGetters({
+      categories: 'codeBooks/categories',
+    }),
     getSizes() {
+      const category = this.categories.find(
+        (el) => el._id === this.product.category
+      )
       const sizes = []
       this.products.forEach((el) => {
         if (el.size && !sizes.includes(el.size)) {
           sizes.push(el.size)
         }
       })
-      // eslint-disable-next-line prefer-regex-literals
-      const re = new RegExp(/[А-Яа-яA-Za-z]/)
-      sizes.sort((first, next) => {
-        if (re.test(first) && re.test(next)) {
-          if (Number(first.slice(0, -1)) === Number(next.slice(0, -1))) {
+      if (
+        category &&
+        (category.name === 'Обувь' || category.parent.name === 'Обувь')
+      ) {
+        // eslint-disable-next-line prefer-regex-literals
+        const re = new RegExp(/[А-Яа-яA-Za-z]/)
+        sizes.sort((first, next) => {
+          if (re.test(first) && re.test(next)) {
+            if (Number(first.slice(0, -1)) === Number(next.slice(0, -1))) {
+              return 0
+            } else if (Number(first.slice(0, -1)) > Number(next.slice(0, -1))) {
+              return 1
+            } else {
+              return -1
+            }
+          } else if (!re.test(first) && re.test(next)) {
+            if (Number(first) === Number(next.slice(0, -1))) {
+              return 1
+            } else if (Number(first) > Number(next.slice(0, -1))) {
+              return 1
+            } else {
+              return -1
+            }
+          } else if (re.test(first) && !re.test(next)) {
+            if (Number(first.slice(0, -1)) === Number(next)) {
+              return -1
+            } else if (Number(first.slice(0, -1)) > Number(next)) {
+              return 1
+            } else {
+              return -1
+            }
+          } else if (!re.test(first) && !re.test(next)) {
+            return Number(first) > Number(next) ? 1 : -1
+          } else {
             return 0
-          } else if (Number(first.slice(0, -1)) > Number(next.slice(0, -1))) {
-            return 1
-          } else {
-            return -1
           }
-        } else if (!re.test(first) && re.test(next)) {
-          if (Number(first) === Number(next.slice(0, -1))) {
-            return 1
-          } else if (Number(first) > Number(next.slice(0, -1))) {
-            return 1
-          } else {
-            return -1
-          }
-        } else if (re.test(first) && !re.test(next)) {
-          if (Number(first.slice(0, -1)) === Number(next)) {
-            return -1
-          } else if (Number(first.slice(0, -1)) > Number(next)) {
-            return 1
-          } else {
-            return -1
-          }
-        } else if (!re.test(first) && !re.test(next)) {
-          return Number(first) > Number(next) ? 1 : -1
-        } else {
-          return 0
-        }
-      })
+        })
+      } else {
+        sizes.sort()
+      }
       return sizes
     },
     isProductHaveImages() {

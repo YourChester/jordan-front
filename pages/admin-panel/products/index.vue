@@ -12,13 +12,43 @@
         <tr>
           <th rowspan="2">Тип</th>
           <th rowspan="2">Бренд</th>
-          <th rowspan="2">Название</th>
-          <th rowspan="2">Цена</th>
+          <th
+            rowspan="2"
+            class="sortable"
+            :class="{
+              sortable__abc: sort === 'name',
+              sortable__cba: sort === 'name-reverse',
+            }"
+            @click="setSort('name')"
+          >
+            Название
+          </th>
+          <th
+            rowspan="2"
+            class="sortable"
+            :class="{
+              sortable__abc: sort === 'priceOut',
+              sortable__cba: sort === 'priceOut-reverse',
+            }"
+            @click="setSort('priceOut')"
+          >
+            Цена
+          </th>
           <th rowspan="2">Скидка</th>
           <th rowspan="2">Размер</th>
           <th rowspan="2">Артикул</th>
           <th colspan="2">Штрих код</th>
-          <th rowspan="2">Дата получения</th>
+          <th
+            rowspan="2"
+            class="sortable"
+            :class="{
+              sortable__abc: sort === 'dateIn',
+              sortable__cba: sort === 'dateIn-reverse',
+            }"
+            @click="setSort('dateIn')"
+          >
+            Дата получения
+          </th>
           <th rowspan="3">Пол</th>
           <th rowspan="2" colspan="3">Действия</th>
         </tr>
@@ -238,6 +268,7 @@ export default {
       const type = query.name || ''
       const search = query.search || ''
       const page = query.page || 1
+      const sort = ''
       const productsData = await $axios.get('/admin/products', {
         params: {
           visibility: true,
@@ -247,9 +278,11 @@ export default {
           brand,
           category: type,
           search,
+          sort,
         },
       })
       return {
+        sort,
         currentPage: page,
         perPage: 100,
         totalCount: productsData.data.totalCount,
@@ -311,6 +344,7 @@ export default {
         brand: this.productBrand,
         type: this.productType,
         page: this.currentPage,
+        sort: this.sort,
       }
       if (!this.search) {
         delete query.search
@@ -323,6 +357,9 @@ export default {
       }
       if (!this.productType) {
         delete query.type
+      }
+      if (!this.sort) {
+        delete query.sort
       }
       this.$router
         .replace({
@@ -348,6 +385,7 @@ export default {
             search: query.search || '',
             limit: this.perPage,
             page: this.currentPage,
+            sort: this.sort,
           },
         })
         this.products = products
@@ -379,6 +417,16 @@ export default {
       } catch (e) {
         console.log(e?.message || '')
       }
+    },
+    setSort(key) {
+      if (!this.sort || (this.sort !== key && this.sort !== `${key}-reverse`)) {
+        this.sort = key
+      } else if (this.sort === key) {
+        this.sort = `${key}-reverse`
+      } else if (this.sort === `${key}-reverse`) {
+        this.sort = ''
+      }
+      this.getSearch()
     },
     getClass(product) {
       if (!product.comment.length) {
@@ -436,6 +484,35 @@ export default {
   &__table-product {
     border-spacing: 0;
     border-collapse: collapse;
+
+    .sortable {
+      position: relative;
+      cursor: pointer;
+      &::after {
+        content: ' ';
+        position: absolute;
+        background-image: url('~/assets/img/angle-down-solid.svg');
+        background-size: 10px;
+        background-repeat: no-repeat;
+        opacity: 0.2;
+        width: 10px;
+        height: 13px;
+        margin-top: 2px;
+        transform: rotate(180deg);
+      }
+
+      &__abc {
+        &::after {
+          opacity: 1;
+        }
+      }
+      &__cba {
+        &::after {
+          opacity: 1;
+          transform: rotate(360deg);
+        }
+      }
+    }
 
     tr {
       &:hover {

@@ -144,14 +144,14 @@ export default {
     VProductsList,
     VProductsFilters,
   },
-  async asyncData({ $axios, params }) {
+  async asyncData({ $axios, params, query }) {
     try {
       const titlePage = params.category
       const filters = {
         gender: params.gender || '',
         category: params.category || '',
-        brand: [],
-        size: [],
+        brand: query.brand ? query.brand.split(',') : [],
+        size: query.size ? query.size.split(',') : [],
         sort: '',
         limit: 12,
         page: 1,
@@ -298,36 +298,20 @@ export default {
     },
     setNewFilter({ key, value }) {
       this.filters[key] = value
-      if (key === 'category') {
-        if (value) {
-          this.$router.push(
-            `/${this.filters.gender}${
-              this.filters.category ? '/' + this.filters.category : ''
-            }`
-          )
-        } else if (this.filters.gender !== 'all') {
-          this.$router.push(
-            `/${this.filters.gender}${
-              this.filters.category ? '/' + this.filters.category : ''
-            }`
-          )
-        } else {
-          this.$router.push(`/`)
-        }
-      } else if (key === 'gender') {
-        if (value) {
-          this.$router.push(
-            `/${this.filters.gender}${
-              this.filters.category ? '/' + this.filters.category : ''
-            }`
-          )
-        } else {
-          this.$router.push(
-            `/all${this.filters.category ? '/' + this.filters.category : ''}`
-          )
-        }
-      } else {
-        this.currentPage = 1
+      const query = JSON.parse(JSON.stringify(this.$route.query))
+
+      if (key === 'size' || key === 'brand') {
+        query[key] = value.join(',')
+      }
+
+      this.$router.push({
+        path: `/${this.filters.gender ? this.filters.gender : 'all'}${
+          this.filters.category ? `/${this.filters.category}` : ''
+        }`,
+        query,
+      })
+
+      if (key === 'size' || key === 'brand') {
         this.getData()
       }
     },
