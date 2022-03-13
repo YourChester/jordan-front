@@ -522,11 +522,6 @@ export default {
         font-weight: 600;
         cursor: pointer;
 
-        &:hover {
-          background-color: #5fc9cb;
-          color: white;
-        }
-
         &.active {
           background-color: #5fc9cb;
           color: white;

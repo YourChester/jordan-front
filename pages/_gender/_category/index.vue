@@ -153,7 +153,7 @@ export default {
         brand: query.brand ? query.brand.split(',') : [],
         size: query.size ? query.size.split(',') : [],
         sort: '',
-        limit: 12,
+        limit: query.limit || 12,
         page: 1,
       }
       const productsData = await $axios.get('/products', {
@@ -302,6 +302,8 @@ export default {
 
       if (key === 'size' || key === 'brand') {
         query[key] = value.join(',')
+      } else if (key === 'limit') {
+        query[key] = value
       }
 
       this.$router.push({
@@ -311,7 +313,7 @@ export default {
         query,
       })
 
-      if (key === 'size' || key === 'brand') {
+      if (key === 'size' || key === 'brand' || key === 'limit') {
         this.getData()
       }
     },
