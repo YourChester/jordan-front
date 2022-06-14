@@ -1,22 +1,22 @@
-export const state = () => ({
-  timeout: null,
-})
+let timeout = null
+export const state = () => ({})
 
 export const getters = {}
 
 export const mutations = {
-  SET_TIMEOUT(state) {
-    state.timeout = setTimeout(async () => {
+  SET_TIMEOUT() {
+    timeout = setTimeout(async () => {
       await this.$auth.logout()
       this.$router.push('/admin-panel/login')
+      clearTimeout(timeout)
     }, 1000 * 60 * 10)
   },
   UPDATE_TIMEOUT(state) {
-    clearTimeout(state.timeout)
+    clearTimeout(timeout)
   },
   async CLEAR_STORE_TIMEOUT(state) {
     await this.$auth.logout()
-    clearTimeout(state.timeout)
+    clearTimeout(timeout)
   },
 }
 
