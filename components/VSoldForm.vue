@@ -29,7 +29,10 @@
           Товар
           <input v-model="product" type="text" @input="debounceSerchProduct" />
         </label>
-        <table v-show="products.length" class="sold-form__product-table">
+        <table
+          v-show="getFiltredProducts.length"
+          class="sold-form__product-table"
+        >
           <tr>
             <th rowspan="2" width="100px">Тип</th>
             <th rowspan="2" width="250px">Название</th>
@@ -43,7 +46,7 @@
             <th width="130px">Товара</th>
             <th width="130px">Коробка</th>
           </tr>
-          <tr v-for="item in products" :key="item._id">
+          <tr v-for="item in getFiltredProducts" :key="item._id">
             <td>
               {{ item.category ? item.category.name : '' }}
             </td>
@@ -237,6 +240,17 @@ export default {
       }, 0)
 
       return Math.round(totalPrice)
+    },
+    getFiltredProducts() {
+      // eslint-disable-next-line array-callback-return
+      return this.products.filter((el) => {
+        const index = this.localSold.products.findIndex(
+          (prod) => prod._id === el._id
+        )
+        if (index === -1) {
+          return el
+        }
+      })
     },
   },
   created() {

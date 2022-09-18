@@ -93,6 +93,24 @@
           Дата получения:
           <input v-model="product.dateIn" type="datetime-local" />
         </label>
+
+        <hr />
+
+        <label v-if="getRoleKey === 'admin'">
+          Дата продажи:
+          <input v-model="product.dateOut" type="datetime-local" />
+        </label>
+        <label v-if="getRoleKey === 'admin'">
+          Сумма продажи:
+          <input v-model="product.priseSold" type="text" />
+        </label>
+        <label v-if="getRoleKey === 'admin'">
+          Видимость:
+          <input v-model="product.visibility" type="checkbox" />
+        </label>
+
+        <hr />
+
         <label>
           Комментарий:
           <textarea v-model="product.comment" />
@@ -166,6 +184,8 @@ export default {
         pair: '',
         priceIn: 0,
         priceOut: 0,
+        priseSold: 0,
+        dateOut: '',
         discount: 0,
         comment: '',
         dateIn: '',
@@ -215,6 +235,9 @@ export default {
         ...this.product,
         ...this.productProps,
         dateIn: getDateTimeForInput(this.productProps.dateIn),
+        dateOut: this.productProps.dateOut
+          ? getDateTimeForInput(this.productProps.dateOut)
+          : '',
       }
     } else {
       this.product.dateIn = getDateTimeForInput(new Date())
