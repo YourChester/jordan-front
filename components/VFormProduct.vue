@@ -108,6 +108,10 @@
           Видимость:
           <input v-model="product.visibility" type="checkbox" />
         </label>
+        <label>
+          Скоро в продаже:
+          <input v-model="product.onSaleSoon" type="checkbox" />
+        </label>
 
         <hr />
 
@@ -190,6 +194,7 @@ export default {
         comment: '',
         dateIn: '',
         visibility: true,
+        onSaleSoon: false,
         notPair: false,
       },
     }

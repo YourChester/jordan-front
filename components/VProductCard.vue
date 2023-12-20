@@ -19,7 +19,10 @@
         <div v-show="isProductHaveDiscount" class="image__discount">
           {{ product.discount }}%
         </div>
-        <div v-show="isNewProduct" class="image__new">Новинка</div>
+        <div v-show="isNewProduct && !isCommingSoon" class="image__new">
+          Новинка
+        </div>
+        <div v-show="isCommingSoon" class="image__soon">Скоро в продаже</div>
       </div>
       <div class="product-card__name">
         {{ product.name }}
@@ -49,7 +52,10 @@
           <div v-show="isProductHaveDiscount" class="image__discount">
             {{ product.discount }}%
           </div>
-          <div v-show="isNewProduct" class="image__new">Новинка</div>
+          <div v-show="isNewProduct && !isCommingSoon" class="image__new">
+            Новинка
+          </div>
+          <div v-show="isCommingSoon" class="image__soon">Скоро в продаже</div>
         </div>
         <div class="product-card__name">
           {{ product.name }}
@@ -162,6 +168,9 @@ export default {
         ) < 7
       )
     },
+    isCommingSoon() {
+      return this.product.onSaleSoon
+    },
     getDiscountPrice() {
       return (
         this.product?.priceOut -
@@ -215,7 +224,8 @@ export default {
         background-color: red;
       }
 
-      &__new {
+      &__new,
+      &__soon {
         position: absolute;
         top: 0;
         right: 0;
@@ -224,6 +234,10 @@ export default {
         font-weight: 500;
         color: white;
         background-color: #5fc9cb;
+      }
+
+      &__soon {
+        background-color: red;
       }
     }
   }

@@ -43,10 +43,12 @@
               </tr>
               <tr :key="group._id + 'header'">
                 <td colspan="1">Продавцы</td>
-                <td colspan="2">Карта покупателя</td>
+                <td colspan="1">Карта покупателя</td>
                 <td colspan="1">Дата Продажи</td>
-                <td colspan="3">Сумма покупки</td>
+                <td colspan="2">Сумма покупки</td>
                 <td v-show="getRoleKey === 'admin'" colspan="2">Доход</td>
+                <th>Обновлено</th>
+                <th>Создано</th>
                 <td colspan="2">Действия</td>
               </tr>
               <template v-for="sold in group.solds">
@@ -61,7 +63,7 @@
                         : ''
                     }}
                   </td>
-                  <td colspan="2">
+                  <td colspan="1">
                     {{
                       sold.card_info && sold.card_info.length
                         ? sold.card_info.map((el) => el.code).join(', ')
@@ -71,11 +73,17 @@
                   <td colspan="1">
                     {{ getFormatedDateWithTime(sold.date) }}
                   </td>
-                  <td colspan="3">
+                  <td colspan="2">
                     {{ sold.totalPrice }}
                   </td>
                   <td v-show="getRoleKey === 'admin'" colspan="2">
                     {{ sold.totalIncome }}
+                  </td>
+                  <td>
+                    {{ sold.updateBy ? getNameSaller(sold.updateBy) : '' }}
+                  </td>
+                  <td>
+                    {{ sold.createBy ? getNameSaller(sold.createBy) : '' }}
                   </td>
                   <td>
                     <NuxtLink
@@ -274,7 +282,9 @@ export default {
       categories: 'codeBooks/categories',
     }),
     getOnlySeller() {
-      return this.sellers.filter((el) => el.role.key === 'manager')
+      return this.sellers.filter(
+        (el) => el.role.key === 'manager' || el.role.key === 'super_manager'
+      )
     },
     getRoleKey() {
       const { role } = this.$auth.$state.user
@@ -287,6 +297,9 @@ export default {
     },
   },
   methods: {
+    getNameSaller(id) {
+      return this.sellers.filter((el) => el._id === id)?.name || ''
+    },
     visibilityImageModal(imgUrl, state) {
       this.imageUrl = imgUrl
       this.modalVisibility = state

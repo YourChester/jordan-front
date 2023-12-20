@@ -2,7 +2,12 @@
   <div>
     <div class="header__wrapper">
       <div class="header">
-        <div class="header__info">
+        <div
+          class="header__info"
+          :class="{
+            'header__info--view': isVisibleInfo,
+          }"
+        >
           <div v-show="address" class="address">
             <img
               class="address__icon"
@@ -16,10 +21,8 @@
           <div v-show="firstPhone" class="first__phone">
             <a :href="`tel:${firstPhone}`">{{ firstPhone }}</a>
           </div>
-          <div v-show="secondPhone" class="second__phone">
-            <a :href="`tel:${secondPhone}`">{{ secondPhone }}</a>
-          </div>
         </div>
+        <VSearchHeader @on-open-search="(state) => (isVisibleInfo = state)" />
         <!-- <div class="header__actions">
           <button class="login">Войти</button>
           <button class="registration">Регистрация</button>
@@ -150,15 +153,20 @@
 </template>
 
 <script>
+import VSearchHeader from '@/components/Header/VSearchHeader.vue'
 import { mapGetters } from 'vuex'
 
 export default {
+  components: {
+    VSearchHeader,
+  },
   data() {
     return {
       menuVisibility: false,
       address: 'Донецк, пр. Титова, 8б',
-      firstPhone: '+38 095 161 72 67',
-      secondPhone: '+38 071 361 97 67',
+      firstPhone: '+7 (949) 361-97-67',
+      secondPhone: '',
+      isVisibleInfo: true,
       menuItemsVisibility: [false, false, false, false],
       activeGender: 0,
     }
@@ -200,7 +208,6 @@ export default {
     width: 50%;
     display: flex;
     align-items: center;
-    justify-content: space-between;
 
     .address {
       display: flex;
@@ -211,14 +218,23 @@ export default {
       }
     }
 
+    .first__phone {
+      margin-left: 15px;
+    }
+
     @media (max-width: 960px) {
       width: 70%;
       padding: 0 10px;
     }
 
     @media (max-width: 425px) {
+      display: none;
       width: 100%;
       font-size: 12px;
+
+      &--view {
+        display: flex;
+      }
     }
   }
 

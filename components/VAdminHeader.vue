@@ -46,42 +46,42 @@ export default {
         {
           name: 'Склад',
           path: '/admin-panel/products',
-          role: ['admin', 'manager'],
+          role: ['admin', 'manager', 'super_manager'],
         },
         {
           name: 'Приход',
           path: '/admin-panel/products/new',
-          role: ['admin', 'manager'],
+          role: ['admin', 'manager', 'super_manager'],
         },
         {
           name: 'Продажи',
           path: '/admin-panel/sold',
-          role: ['admin', 'manager'],
+          role: ['admin', 'manager', 'super_manager'],
         },
         {
           name: 'Новая продажа',
           path: '/admin-panel/sold/new-sold',
-          role: ['admin', 'manager'],
+          role: ['admin', 'manager', 'super_manager'],
         },
         {
           name: 'Карты',
           path: '/admin-panel/discount-card',
-          role: ['admin'],
+          role: ['admin', 'super_manager'],
         },
         {
           name: 'Новые карты',
           path: '/admin-panel/discount-card/new-discount-card',
-          role: ['admin', 'manager'],
+          role: ['admin', 'manager', 'super_manager'],
         },
         {
           name: 'На сайт',
           path: '/',
-          role: ['admin', 'manager'],
+          role: ['admin', 'manager', 'super_manager'],
         },
         {
           name: 'Выход',
           path: '',
-          role: ['admin', 'manager'],
+          role: ['admin', 'manager', 'super_manager'],
         },
       ],
       adminLinks: [

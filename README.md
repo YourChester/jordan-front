@@ -26,3 +26,5 @@ HOST_NAME="Jordan Brand :: интернет-магазин"
 API_URL1="http://localhost:3000/api"
 IMG_URL1="http://localhost:3000/api/static/"
 ```
+
+nvm use 16.0.0

@@ -27,6 +27,18 @@
         </div>
       </div>
       <div class="product__info">
+        <div class="product__category">
+          <NuxtLink
+            v-if="getNameParentCategory(product.category.parent)"
+            :to="`/${product.gender[0]._id}/${product.category.parent}`"
+          >
+            {{ getNameParentCategory(product.category.parent) }}
+          </NuxtLink>
+          <span v-if="getNameParentCategory(product.category.parent)">/</span>
+          <NuxtLink :to="`/${product.gender[0]._id}/${product.category._id}`">
+            {{ product.category.name }}
+          </NuxtLink>
+        </div>
         <div class="product__title">
           <h1>
             {{ product.name }}
@@ -626,6 +638,11 @@ export default {
       return category?.name === 'Обувь'
     },
   },
+  methods: {
+    getNameParentCategory(id) {
+      return this.categories.find((category) => category._id === id)?.name || ''
+    },
+  },
 }
 </script>
 
@@ -660,6 +677,9 @@ export default {
 
   &__image {
     overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 470px;
     height: 470px;
 
@@ -675,7 +695,8 @@ export default {
     }
 
     img {
-      width: 100%;
+      max-width: 100%;
+      max-height: 100%;
     }
   }
 
@@ -710,9 +731,26 @@ export default {
     }
   }
 
+  &__category {
+    a {
+      margin-right: 2px;
+      color: black;
+      font-size: 14px;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+
+      &:last-child {
+        margin-left: 2px;
+      }
+    }
+  }
+
   &__articul {
     padding: 10px 0;
-    font-size: 16px;
+    font-size: 14px;
     border-bottom: 1px solid #d9d7d7;
   }
 

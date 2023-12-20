@@ -25,6 +25,8 @@
           <th colspan="2">Штрих код</th>
           <th colspan="3">Дата</th>
           <th rowspan="3">Статус</th>
+          <th rowspan="3">Обновлено</th>
+          <th rowspan="3">Создано</th>
           <th rowspan="3">Пол</th>
           <th rowspan="2" colspan="3">Действия</th>
         </tr>
@@ -254,6 +256,12 @@
           </td>
           <td>
             {{ Number(product.priseSold) ? 'Продано' : 'Склад' }}
+          </td>
+          <td>
+            {{ product.updateBy ? product.updateBy.name : '' }}
+          </td>
+          <td>
+            {{ product.createBy ? product.createBy.name : '' }}
           </td>
           <td>
             <label v-for="gender in genders" :key="gender._id">

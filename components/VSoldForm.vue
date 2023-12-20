@@ -212,7 +212,9 @@ export default {
       sellers: 'codeBooks/sellers',
     }),
     getOnlySeller() {
-      return this.sellers.filter((el) => el.role.key === 'manager')
+      return this.sellers.filter(
+        (el) => el.role.key === 'manager' || el.role.key === 'super_manager'
+      )
     },
     getTotalPrice() {
       const totalPrice = this.localSold.products.reduce((price, el) => {

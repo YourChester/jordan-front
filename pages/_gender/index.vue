@@ -146,9 +146,11 @@ export default {
   },
   async asyncData({ $axios, params, query }) {
     try {
+      const search = query.search || ''
       const titlePage = params.category
       const filters = {
         gender: params.gender || '',
+        search,
         brand: query.brand ? query.brand.split(',') : [],
         size: query.size ? query.size.split(',') : [],
         sort: '',

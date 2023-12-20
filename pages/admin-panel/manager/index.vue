@@ -99,7 +99,7 @@ export default {
     },
     async changeSeller(seller) {
       try {
-        await this.$axios.put(`/admin/sellers/${seller._id}`, this.seller)
+        await this.$axios.put(`/admin/sellers/${seller._id}`, seller)
         this.getList()
       } catch (e) {
         console.log(e?.message || '')
