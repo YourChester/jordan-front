@@ -1,5 +1,5 @@
 <template>
-  <div class="product__wrapper">
+  <div v-if="!loading" class="product__wrapper">
     <div class="product__body">
       <div class="product__images">
         <div class="product__image">
@@ -534,24 +534,28 @@ export default {
   components: {
     VProductCard,
   },
-  async asyncData({ $axios, params }) {
-    try {
-      const productData = await $axios.get(`/products/${params.id}`)
-      const product = productData.data.product
-      const currentImage = 0
-
-      return {
-        product,
-        currentImage,
-      }
-    } catch (e) {
-      console.log(e?.message || '')
-    }
-  },
   data: () => {
     return {
-      url: process.env.IMG_URL,
+      loading: true,
+      url: `${process.env.API_URL}/static/`,
       showTableSize: true,
+      product: {},
+      currentImage: 0,
+    }
+  },
+  fetchOnServer: false,
+  async fetch() {
+    try {
+      const { params } = this.$route
+      const productData = await this.$axios.get(`/products/${params.id}`)
+
+      this.product = productData.data.product
+    } catch (e) {
+      console.log(e?.message || '')
+    } finally {
+      this.$nextTick(() => {
+        this.loading = false
+      })
     }
   },
   head() {
@@ -782,6 +786,7 @@ export default {
 
   &__pair {
     padding: 18px;
+
     h3 {
       margin-bottom: 20px;
       font-size: 18px;

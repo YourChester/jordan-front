@@ -201,7 +201,7 @@ export default {
       debounceSerch: null,
       debounceSerchCard: null,
       debounceSerchProduct: null,
-      url: process.env.IMG_URL,
+      url: `${process.env.API_URL}/static/`,
       modalVisibility: false,
       imageUrl: '',
       loadData: false,

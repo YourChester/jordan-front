@@ -94,7 +94,7 @@ export default {
   data: () => {
     return {
       visibleCard: false,
-      url: process.env.IMG_URL,
+      url: `${process.env.API_URL}/static/`,
     }
   },
   computed: {

@@ -58,7 +58,7 @@ export default {
     },
   },
   created() {
-    this.url = process.env.IMG_URL
+    this.url = `${process.env.API_URL}/static/`
     this.files = this.images
   },
   methods: {

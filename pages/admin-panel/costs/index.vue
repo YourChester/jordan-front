@@ -97,6 +97,11 @@ export default {
       console.log(e?.message || '')
     }
   },
+  watch: {
+    currentPage() {
+      this.getList()
+    },
+  },
   methods: {
     getCurrentDate(date) {
       return getFormatedDate(date)

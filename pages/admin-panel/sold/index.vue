@@ -270,7 +270,7 @@ export default {
         searchText: '',
       },
       imageUrl: '',
-      url: process.env.IMG_URL,
+      url: `${process.env.API_URL}/static/`,
       modalVisibility: false,
       debounceSerch: null,
     }

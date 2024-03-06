@@ -416,7 +416,7 @@ export default {
       perPage: 100,
       modalVisibility: false,
       imageUrl: '',
-      url: process.env.IMG_URL,
+      url: `${process.env.API_URL}/static/`,
       selected: [],
       priceIn: '',
       discount: '',

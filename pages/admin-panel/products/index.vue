@@ -308,7 +308,7 @@ export default {
   },
   data() {
     return {
-      url: process.env.IMG_URL,
+      url: `${process.env.API_URL}/static/`,
       modalVisibility: false,
     }
   },
